@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:kateringku_mobile/screens/onboard/onboard_view.dart';
 // ignore: unused_import
 import 'package:kateringku_mobile/themes/app_theme.dart';
 
 void main() {
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent, // transparent status bar
+  ));
   runApp(const KateringKuApp());
 }
 
