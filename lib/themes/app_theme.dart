@@ -5,7 +5,7 @@ class AppTheme {
   // sizing
   static const double bottomNavBarHeight = 64;
   static BorderRadius buttonRadius = BorderRadius.circular(10);
-  static const double buttonHeight = 62.0;
+  static const double buttonHeight = 60.0;
 
   // colors
   static const Color primaryGreen = Color.fromARGB(255, 123, 183, 67);
@@ -17,7 +17,7 @@ class AppTheme {
   static const Color secondaryBlack = Color.fromARGB(255, 88, 88, 88);
 
   static const Color primaryWhite = Colors.white;
-  static const Color secondaryWhite = Color.fromARGB(255, 244, 244, 244);
+  static const Color secondaryWhite = Color.fromARGB(255, 251, 251, 251);
   static const Color greyOutline = Color.fromARGB(255, 217, 217, 217);
 
   // text theme
@@ -41,6 +41,11 @@ class AppTheme {
           fontFamily: 'Inter',
           fontSize: 12,
           color: secondaryBlack,
+          fontWeight: FontWeight.w400),
+      labelMedium: TextStyle(
+          fontFamily: 'Inter',
+          fontSize: 14,
+          color: primaryBlack,
           fontWeight: FontWeight.w400));
 
   // main theme
@@ -57,14 +62,16 @@ class AppTheme {
       primaryIconTheme: const IconThemeData(color: primaryOrange),
       splashColor: primaryOrange.withOpacity(.4),
       inputDecorationTheme: InputDecorationTheme(
+          contentPadding: const EdgeInsets.fromLTRB(22, 20, 20, 20),
+          hintStyle: textTheme.labelSmall,
           fillColor: secondaryWhite,
           filled: true,
           enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(color: greyOutline)),
+              borderSide: const BorderSide(color: greyOutline, width: 0.6)),
           focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),
-              borderSide: const BorderSide(color: primaryGreen))),
+              borderSide: const BorderSide(color: primaryGreen, width: 0.6))),
       visualDensity: VisualDensity.adaptivePlatformDensity,
       textTheme: textTheme,
       textSelectionTheme:
