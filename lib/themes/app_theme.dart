@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 class AppTheme {
   // sizing
   static const double bottomNavBarHeight = 64;
-  static BorderRadius buttonRadius = BorderRadius.circular(9);
-  static const double buttonHeight = 66.0;
+  static BorderRadius buttonRadius = BorderRadius.circular(10);
+  static const double buttonHeight = 62.0;
 
   // colors
   static const Color primaryGreen = Color.fromARGB(255, 123, 183, 67);

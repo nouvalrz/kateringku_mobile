@@ -33,12 +33,6 @@ class _PrimaryButtonState extends State<PrimaryButton> {
       child: Container(
         height: AppTheme.buttonHeight,
         decoration: BoxDecoration(
-            boxShadow: [
-              BoxShadow(
-                  color: AppTheme.secondaryBlack.withOpacity(0.3),
-                  offset: const Offset(0, 4),
-                  blurRadius: 12.0)
-            ],
             color: widget.color ?? AppTheme.primaryGreen,
             borderRadius: AppTheme.buttonRadius),
         child: widget.state == ButtonState.loading

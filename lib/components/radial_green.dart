@@ -7,7 +7,7 @@ class RadialGreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const size = 469.0;
+    const size = 200000000.0;
     return CustomPaint(
       size: Size(
           size,
