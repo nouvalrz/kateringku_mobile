@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 class AppTheme {
   // sizing
   static const double bottomNavBarHeight = 64;
-  static BorderRadius buttonRadius = BorderRadius.circular(10);
+  static BorderRadius buttonRadius = BorderRadius.circular(9);
+  static const double buttonHeight = 66.0;
 
   // colors
   static const Color primaryGreen = Color.fromARGB(255, 123, 183, 67);
@@ -33,7 +34,7 @@ class AppTheme {
           fontWeight: FontWeight.w400),
       labelLarge: TextStyle(
           fontFamily: 'Inter',
-          fontSize: 14,
+          fontSize: 16,
           color: primaryWhite,
           fontWeight: FontWeight.w700),
       labelSmall: TextStyle(
