@@ -5,8 +5,22 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kateringku_mobile/constants/image_path.dart';
 import 'package:kateringku_mobile/themes/app_theme.dart';
 
-class AuthenticationView extends StatelessWidget {
+class AuthenticationView extends StatefulWidget {
   const AuthenticationView({Key? key}) : super(key: key);
+
+  @override
+  State<AuthenticationView> createState() => _AuthenticationViewState();
+}
+
+class _AuthenticationViewState extends State<AuthenticationView> {
+  // Initially password is obscure
+  bool _passwordVisible = true;
+  final TextEditingController _userPasswordController = TextEditingController();
+
+  @override
+  void initState() {
+    _passwordVisible = false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,8 +76,29 @@ class AuthenticationView extends StatelessWidget {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(bottom: 16),
-                      child: TextField(
-                        decoration: const InputDecoration(hintText: 'Password'),
+                      child: TextFormField(
+                        keyboardType: TextInputType.text,
+                        controller: _userPasswordController,
+                        obscureText: !_passwordVisible,
+                        decoration: InputDecoration(
+                            hintText: 'Password',
+                            suffixIcon: IconButton(
+                                splashColor: Colors.transparent,
+                                onPressed: () {
+                                  // Update the state i.e. toogle the state of passwordVisible variable
+                                  setState(() {
+                                    _passwordVisible = !_passwordVisible;
+                                  });
+                                },
+                                icon: Icon(
+                                  // Based on passwordVisible state choose the icon
+                                  _passwordVisible
+                                      ? Icons.visibility_off_outlined
+                                      : Icons.visibility_outlined,
+                                  color:
+                                      AppTheme.secondaryBlack.withOpacity(0.5),
+                                  size: 20,
+                                ))),
                         style: AppTheme.textTheme.labelMedium,
                       ),
                     ),

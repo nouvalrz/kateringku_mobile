@@ -62,7 +62,7 @@ class AppTheme {
       primaryIconTheme: const IconThemeData(color: primaryOrange),
       splashColor: primaryOrange.withOpacity(.4),
       inputDecorationTheme: InputDecorationTheme(
-          contentPadding: const EdgeInsets.fromLTRB(22, 20, 20, 20),
+          contentPadding: const EdgeInsets.fromLTRB(22, 20, 22, 20),
           hintStyle: textTheme.labelSmall,
           fillColor: secondaryWhite,
           filled: true,
