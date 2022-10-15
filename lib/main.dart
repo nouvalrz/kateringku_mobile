@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:kateringku_mobile/screens/register/register_view.dart';
+import 'package:kateringku_mobile/screens/authentication/authentication_view.dart';
 // ignore: unused_import
 import 'package:kateringku_mobile/themes/app_theme.dart';
+import 'helpers/dependencies.dart' as dep;
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await dep.init();
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent, // transparent status bar
   ));
@@ -18,7 +21,7 @@ class KateringKuApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: AppTheme.theme,
-      home: const RegisterView(),
+      home: const AuthenticationView(),
     );
   }
 }

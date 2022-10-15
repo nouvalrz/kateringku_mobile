@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:kateringku_mobile/components/primary_button.dart';
 import 'package:kateringku_mobile/constants/vector_path.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kateringku_mobile/constants/image_path.dart';
+import 'package:kateringku_mobile/controllers/auth_controller.dart';
+import 'package:kateringku_mobile/models/customer_login_body.dart';
 import 'package:kateringku_mobile/themes/app_theme.dart';
 
 class AuthenticationView extends StatefulWidget {
@@ -16,10 +19,28 @@ class _AuthenticationViewState extends State<AuthenticationView> {
   // Initially password is obscure
   bool _passwordVisible = true;
   final TextEditingController _userPasswordController = TextEditingController();
+  final TextEditingController _userEmailController = TextEditingController();
 
   @override
   void initState() {
     _passwordVisible = false;
+  }
+
+  void _login() {
+    var authController = Get.find<AuthController>();
+    String email = _userEmailController.text.trim();
+    String password = _userPasswordController.text.trim();
+    CustomerLoginBody customerLoginBody =
+        CustomerLoginBody(email: email, password: password);
+    print(customerLoginBody.email.toString());
+    print(customerLoginBody.password.toString());
+    authController.login(customerLoginBody).then((status) {
+      if (status.isSuccess) {
+        print("Success Login");
+      } else {
+        print("Failed Login ${status.isSuccess}");
+      }
+    });
   }
 
   @override
@@ -69,7 +90,9 @@ class _AuthenticationViewState extends State<AuthenticationView> {
                   children: [
                     Padding(
                       padding: const EdgeInsets.only(bottom: 16),
-                      child: TextField(
+                      child: TextFormField(
+                        keyboardType: TextInputType.text,
+                        controller: _userEmailController,
                         decoration: const InputDecoration(hintText: 'Email'),
                         style: AppTheme.textTheme.labelMedium,
                       ),
@@ -113,7 +136,11 @@ class _AuthenticationViewState extends State<AuthenticationView> {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 85, bottom: 15),
-                      child: PrimaryButton(title: 'Login', onTap: () {}),
+                      child: PrimaryButton(
+                          title: 'Login',
+                          onTap: () {
+                            _login();
+                          }),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
