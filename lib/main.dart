@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:kateringku_mobile/screens/authentication/authentication_view.dart';
+import 'package:kateringku_mobile/screens/otp/otp_validation_view.dart';
 // ignore: unused_import
 import 'package:kateringku_mobile/themes/app_theme.dart';
 import 'helpers/dependencies.dart' as dep;
@@ -21,7 +21,7 @@ class KateringKuApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: AppTheme.theme,
-      home: const AuthenticationView(),
+      home: const OtpValidationView(),
     );
   }
 }
