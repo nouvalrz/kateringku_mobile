@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 // ignore: unused_import
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
 import 'package:kateringku_mobile/components/primary_button.dart';
 // ignore: unused_import
 import 'package:kateringku_mobile/constants/vector_path.dart';
 import 'package:kateringku_mobile/constants/image_path.dart';
+import 'package:kateringku_mobile/routes/route_helper.dart';
 import 'package:kateringku_mobile/themes/app_theme.dart';
 
 class OnboardView extends StatelessWidget {
@@ -83,11 +85,17 @@ class OnboardView extends StatelessWidget {
                     ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0, 70, 0, 10),
-                      child: PrimaryButton(title: 'Login', onTap: () {}),
+                      child: PrimaryButton(
+                          title: 'Login',
+                          onTap: () {
+                            Get.toNamed(RouteHelper.login);
+                          }),
                     ),
                     PrimaryButton(
                       title: "Register",
-                      onTap: () {},
+                      onTap: () {
+                        Get.toNamed(RouteHelper.register);
+                      },
                       color: const Color.fromARGB(0, 108, 19, 19),
                       titleStyle: const TextStyle(
                           fontFamily: 'Inter',

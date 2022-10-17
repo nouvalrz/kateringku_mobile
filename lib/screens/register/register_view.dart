@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:kateringku_mobile/constants/vector_path.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kateringku_mobile/constants/image_path.dart';
+import 'package:kateringku_mobile/routes/route_helper.dart';
 import 'package:kateringku_mobile/themes/app_theme.dart';
 import 'package:kateringku_mobile/components/primary_button.dart';
 
@@ -14,15 +16,35 @@ class RegisterView extends StatefulWidget {
 
 class _RegisterViewState extends State<RegisterView> {
   bool _passwordVisible = true;
-  final TextEditingController _userPasswordController = TextEditingController();
   bool _passwordConfirmationVisible = true;
+  final TextEditingController _userPasswordController = TextEditingController();
   final TextEditingController _userPasswordConfirmationController =
       TextEditingController();
+  final TextEditingController _userName = TextEditingController();
+  final TextEditingController _userEmail = TextEditingController();
+  final TextEditingController _userPhone = TextEditingController();
 
   @override
   void initState() {
     _passwordVisible = false;
     _passwordConfirmationVisible = false;
+  }
+
+  void _registration() {
+    String name = _userName.text.trim();
+    String email = _userEmail.text.trim();
+    String phone = _userPhone.text.trim();
+    String password = _userPasswordController.text.trim();
+    String passwordConfirmation =
+        _userPasswordConfirmationController.text.trim();
+
+    if (name.isEmpty) {
+    } else if (email.isEmpty) {
+    } else if (!email.isEmail) {
+    } else if (phone.isEmpty) {
+    } else if (password.isEmpty) {
+    } else if (passwordConfirmation.isEmpty) {
+    } else if (!(password == passwordConfirmation)) {}
   }
 
   @override
@@ -72,7 +94,8 @@ class _RegisterViewState extends State<RegisterView> {
                       children: [
                         Padding(
                           padding: const EdgeInsets.only(bottom: 16),
-                          child: TextField(
+                          child: TextFormField(
+                            controller: _userName,
                             decoration:
                                 const InputDecoration(hintText: 'Nama Lengkap'),
                             style: AppTheme.textTheme.labelMedium,
@@ -80,7 +103,8 @@ class _RegisterViewState extends State<RegisterView> {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(bottom: 16),
-                          child: TextField(
+                          child: TextFormField(
+                            controller: _userEmail,
                             decoration:
                                 const InputDecoration(hintText: 'Email'),
                             style: AppTheme.textTheme.labelMedium,
@@ -88,7 +112,8 @@ class _RegisterViewState extends State<RegisterView> {
                         ),
                         Padding(
                           padding: const EdgeInsets.only(bottom: 16),
-                          child: TextField(
+                          child: TextFormField(
+                            controller: _userPhone,
                             decoration: const InputDecoration(
                                 hintText: 'Nomer Telepon'),
                             style: AppTheme.textTheme.labelMedium,
@@ -99,7 +124,11 @@ class _RegisterViewState extends State<RegisterView> {
                         Padding(
                           padding: const EdgeInsets.only(top: 40, bottom: 120),
                           child: PrimaryButton(
-                              title: 'Daftar Sekarang', onTap: () {}),
+                              title: 'Daftar Sekarang',
+                              onTap: () {
+                                Get.toNamed(RouteHelper.getOtpValidation(
+                                    "anjay@gmail.com"));
+                              }),
                         ),
                       ],
                     ),

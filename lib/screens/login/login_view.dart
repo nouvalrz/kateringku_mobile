@@ -8,14 +8,14 @@ import 'package:kateringku_mobile/controllers/auth_controller.dart';
 import 'package:kateringku_mobile/models/customer_login_body.dart';
 import 'package:kateringku_mobile/themes/app_theme.dart';
 
-class AuthenticationView extends StatefulWidget {
-  const AuthenticationView({Key? key}) : super(key: key);
+class LoginView extends StatefulWidget {
+  const LoginView({Key? key}) : super(key: key);
 
   @override
-  State<AuthenticationView> createState() => _AuthenticationViewState();
+  State<LoginView> createState() => _LoginViewState();
 }
 
-class _AuthenticationViewState extends State<AuthenticationView> {
+class _LoginViewState extends State<LoginView> {
   // Initially password is obscure
   bool _passwordVisible = true;
   final TextEditingController _userPasswordController = TextEditingController();

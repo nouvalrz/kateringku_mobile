@@ -7,7 +7,9 @@ import 'package:kateringku_mobile/themes/app_theme.dart';
 import '../../constants/vector_path.dart';
 
 class OtpValidationView extends StatefulWidget {
-  const OtpValidationView({Key? key}) : super(key: key);
+  String email;
+
+  OtpValidationView({Key? key, required this.email}) : super(key: key);
 
   @override
   State<OtpValidationView> createState() => _OtpValidationViewState();
@@ -45,7 +47,7 @@ class _OtpValidationViewState extends State<OtpValidationView> {
             Padding(
               padding: const EdgeInsets.only(top: 2),
               child: Text(
-                'nouvalr@gmail.com',
+                widget.email,
                 style: AppTheme.textTheme.labelMedium!
                     .copyWith(fontWeight: FontWeight.w500),
               ),
