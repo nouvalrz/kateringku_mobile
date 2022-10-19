@@ -4,4 +4,5 @@ class AppConstant {
 
   // auth endpoint
   static const LOGIN_URI = "api/customer/login";
+  static const REGISTER_URI = "api/customer/register";
 }

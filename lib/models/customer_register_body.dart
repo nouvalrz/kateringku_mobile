@@ -19,7 +19,7 @@ class CustomerRegisterBody {
     data["email"] = email;
     data["phone"] = phone;
     data["password"] = password;
-    data["passwordConfirmation"] = passwordConfirmation;
+    data["password_confirmation"] = passwordConfirmation;
     data["gender"] = "U";
     return data;
   }
