@@ -13,7 +13,8 @@ class RouteHelper {
   static String getIntial() => initial;
   static String getLogin() => login;
   static String getRegister() => register;
-  static String getOtpValidation(String email) => "$otpValidation?email=$email";
+  static String getOtpValidation(String email, String password) =>
+      "$otpValidation?email=$email&password=$password";
 
   static List<GetPage> routes = [
     GetPage(name: initial, page: () => const OnboardView()),
@@ -29,7 +30,11 @@ class RouteHelper {
         name: otpValidation,
         page: () {
           var email = Get.parameters["email"];
-          return OtpValidationView(email: email!);
+          var password = Get.parameters["password"];
+          return OtpValidationView(
+            email: email!,
+            password: password!,
+          );
         },
         transition: Transition.cupertino),
   ];

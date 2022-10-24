@@ -73,7 +73,8 @@ class _RegisterViewState extends State<RegisterView> {
           passwordConfirmation: passwordConfirmation);
       registerControler.registration(customerRegisterBody).then((status) {
         if (status.isSuccess) {
-          Get.toNamed(RouteHelper.getOtpValidation(customerRegisterBody.email));
+          Get.toNamed(RouteHelper.getOtpValidation(
+              customerRegisterBody.email, customerRegisterBody.password));
         } else {
           showCustomSnackBar(message: status.message);
         }
