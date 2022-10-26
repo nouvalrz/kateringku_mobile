@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kateringku_mobile/base/show_custom_snackbar.dart';
 import 'package:kateringku_mobile/constants/vector_path.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kateringku_mobile/constants/image_path.dart';
 import 'package:kateringku_mobile/controllers/register_controller.dart';
-import 'package:kateringku_mobile/models/customer_register_body.dart';
-import 'package:kateringku_mobile/routes/route_helper.dart';
 import 'package:kateringku_mobile/themes/app_theme.dart';
 import 'package:kateringku_mobile/components/primary_button.dart';
 
@@ -33,57 +30,60 @@ class _RegisterViewState extends State<RegisterView> {
     _passwordConfirmationVisible = false;
   }
 
-  void _registration() {
-    var registerControler = Get.find<RegisterController>();
+  var password = "";
 
-    String name = _userName.text.trim();
-    String email = _userEmail.text.trim();
-    String phone = _userPhone.text.trim();
-    String password = _userPasswordController.text.trim();
-    String passwordConfirmation =
-        _userPasswordConfirmationController.text.trim();
+  // void _registration() {
+  //   var registerControler = Get.find<RegisterController>();
 
-    if (name.isEmpty) {
-      showCustomSnackBar(
-          message: "Name can't be blank", title: "Invalid Input");
-    } else if (email.isEmpty) {
-      showCustomSnackBar(
-          message: "Email can't be blank", title: "Invalid Input");
-    } else if (!email.isEmail) {
-      showCustomSnackBar(
-          message: "Email is not correct", title: "Invalid Input");
-    } else if (phone.isEmpty) {
-      showCustomSnackBar(
-          message: "Phone can't be blank", title: "Invalid Input");
-    } else if (password.isEmpty) {
-      showCustomSnackBar(
-          message: "Password can't be blank", title: "Invalid Input");
-    } else if (passwordConfirmation.isEmpty) {
-      showCustomSnackBar(
-          message: "Phone confirmation can't be blank", title: "Invalid Input");
-    } else if (!(password == passwordConfirmation)) {
-      showCustomSnackBar(
-          message: "Password confirmation is not same", title: "Invalid Input");
-    } else {
-      CustomerRegisterBody customerRegisterBody = CustomerRegisterBody(
-          name: name,
-          phone: phone,
-          email: email,
-          password: password,
-          passwordConfirmation: passwordConfirmation);
-      registerControler.registration(customerRegisterBody).then((status) {
-        if (status.isSuccess) {
-          Get.toNamed(RouteHelper.getOtpValidation(
-              customerRegisterBody.email, customerRegisterBody.password));
-        } else {
-          showCustomSnackBar(message: status.message);
-        }
-      });
-    }
-  }
+  //   String name = _userName.text.trim();
+  //   String email = _userEmail.text.trim();
+  //   String phone = _userPhone.text.trim();
+  //   String password = _userPasswordController.text.trim();
+  //   String passwordConfirmation =
+  //       _userPasswordConfirmationController.text.trim();
+
+  //   if (name.isEmpty) {
+  //     showCustomSnackBar(
+  //         message: "Name can't be blank", title: "Invalid Input");
+  //   } else if (email.isEmpty) {
+  //     showCustomSnackBar(
+  //         message: "Email can't be blank", title: "Invalid Input");
+  //   } else if (!email.isEmail) {
+  //     showCustomSnackBar(
+  //         message: "Email is not correct", title: "Invalid Input");
+  //   } else if (phone.isEmpty) {
+  //     showCustomSnackBar(
+  //         message: "Phone can't be blank", title: "Invalid Input");
+  //   } else if (password.isEmpty) {
+  //     showCustomSnackBar(
+  //         message: "Password can't be blank", title: "Invalid Input");
+  //   } else if (passwordConfirmation.isEmpty) {
+  //     showCustomSnackBar(
+  //         message: "Phone confirmation can't be blank", title: "Invalid Input");
+  //   } else if (!(password == passwordConfirmation)) {
+  //     showCustomSnackBar(
+  //         message: "Password confirmation is not same", title: "Invalid Input");
+  //   } else {
+  //     CustomerRegisterBody customerRegisterBody = CustomerRegisterBody(
+  //         name: name,
+  //         phone: phone,
+  //         email: email,
+  //         password: password,
+  //         passwordConfirmation: passwordConfirmation);
+  //     registerControler.registration(customerRegisterBody).then((status) {
+  //       if (status.isSuccess) {
+  //         Get.toNamed(RouteHelper.getOtpValidation(
+  //             customerRegisterBody.email, customerRegisterBody.password));
+  //       } else {
+  //         showCustomSnackBar(message: status.message);
+  //       }
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
+    var registerControler = Get.find<RegisterController>();
     return Scaffold(
       body: Stack(children: [
         Align(
@@ -99,77 +99,147 @@ class _RegisterViewState extends State<RegisterView> {
           child: ConstrainedBox(
             constraints: const BoxConstraints(),
             child: Stack(children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Row(children: [
-                    Padding(
-                      padding:
-                          const EdgeInsets.only(left: 40, bottom: 20, top: 90),
-                      child: Image.asset(
-                        ImagePath.kateringkuLogo,
-                        height: 80,
-                      ),
-                    )
-                  ]),
-                  Row(
-                    children: [
+              Form(
+                key: registerControler.registerFormKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(children: [
                       Padding(
-                        padding: const EdgeInsets.only(left: 40, bottom: 40),
-                        child: Text(
-                          'Registrasi Akun',
-                          style: AppTheme.textTheme.titleLarge,
+                        padding: const EdgeInsets.only(
+                            left: 40, bottom: 20, top: 90),
+                        child: Image.asset(
+                          ImagePath.kateringkuLogo,
+                          height: 80,
                         ),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(40, 0, 40, 0),
-                    child: Column(
+                      )
+                    ]),
+                    Row(
                       children: [
                         Padding(
-                          padding: const EdgeInsets.only(bottom: 16),
-                          child: TextFormField(
-                            controller: _userName,
-                            decoration:
-                                const InputDecoration(hintText: 'Nama Lengkap'),
-                            style: AppTheme.textTheme.labelMedium,
+                          padding: const EdgeInsets.only(left: 40, bottom: 40),
+                          child: Text(
+                            'Registrasi Akun',
+                            style: AppTheme.textTheme.titleLarge,
                           ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 16),
-                          child: TextFormField(
-                            controller: _userEmail,
-                            decoration:
-                                const InputDecoration(hintText: 'Email'),
-                            style: AppTheme.textTheme.labelMedium,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 16),
-                          child: TextFormField(
-                            controller: _userPhone,
-                            decoration: const InputDecoration(
-                                hintText: 'Nomer Telepon'),
-                            style: AppTheme.textTheme.labelMedium,
-                          ),
-                        ),
-                        passwordInput(),
-                        passwordConfirmationInput(),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 40, bottom: 120),
-                          child: PrimaryButton(
-                              title: 'Daftar Sekarang',
-                              onTap: () {
-                                // Get.toNamed(RouteHelper.getOtpValidation(
-                                //     "anjay@gmail.com"));
-                                _registration();
-                              }),
                         ),
                       ],
                     ),
-                  ),
-                ],
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(40, 0, 40, 0),
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 16),
+                            child: TextFormField(
+                              controller: registerControler.nameController,
+                              onSaved: (value) {
+                                registerControler.name = value!;
+                              },
+                              validator: (value) {
+                                return registerControler.validateName(value!);
+                              },
+                              decoration: InputDecoration(
+                                hintText: 'Nama Lengkap',
+                                errorBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: const BorderSide(
+                                        color: Color.fromARGB(255, 215, 80, 46),
+                                        width: 0.6)),
+                                focusedErrorBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: const BorderSide(
+                                        color: Color.fromARGB(255, 215, 80, 46),
+                                        width: 0.6)),
+                              ),
+                              style: AppTheme.textTheme.labelMedium,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 16),
+                            child: TextFormField(
+                              controller: registerControler.emailController,
+                              onSaved: (value) {
+                                registerControler.email = value!;
+                              },
+                              validator: (value) {
+                                return registerControler.validateEmail(value!);
+                              },
+                              decoration: InputDecoration(
+                                hintText: 'Email',
+                                errorBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: const BorderSide(
+                                        color: Color.fromARGB(255, 215, 80, 46),
+                                        width: 0.6)),
+                                focusedErrorBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: const BorderSide(
+                                        color: Color.fromARGB(255, 215, 80, 46),
+                                        width: 0.6)),
+                              ),
+                              style: AppTheme.textTheme.labelMedium,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 16),
+                            child: TextFormField(
+                              keyboardType: TextInputType.number,
+                              controller: registerControler.phoneController,
+                              onSaved: (value) {
+                                registerControler.phone = value!;
+                              },
+                              validator: (value) {
+                                return registerControler.validatePhone(value!);
+                              },
+                              decoration: InputDecoration(
+                                hintText: '  Nomer Telepon',
+                                prefixIcon: Padding(
+                                  padding: const EdgeInsets.only(
+                                    top: 8,
+                                    left: 12,
+                                  ),
+                                  child: SvgPicture.asset(VectorPath.phoneCode),
+                                ),
+                                prefixIconConstraints: const BoxConstraints(
+                                    maxHeight: 120,
+                                    maxWidth: 120,
+                                    minWidth: 46,
+                                    minHeight: 56),
+                                errorBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: const BorderSide(
+                                        color: Color.fromARGB(255, 215, 80, 46),
+                                        width: 0.6)),
+                                focusedErrorBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(10),
+                                    borderSide: const BorderSide(
+                                        color: Color.fromARGB(255, 215, 80, 46),
+                                        width: 0.6)),
+                              ),
+                              style: AppTheme.textTheme.labelMedium,
+                            ),
+                          ),
+                          passwordInput(),
+                          passwordConfirmationInput(),
+                          Padding(
+                            padding:
+                                const EdgeInsets.only(top: 40, bottom: 120),
+                            child: PrimaryButton(
+                                title: 'Daftar Sekarang',
+                                onTap: () {
+                                  // Get.toNamed(RouteHelper.getOtpValidation(
+                                  //     "anjay@gmail.com"));
+                                  // _registration();
+                                  registerControler
+                                      .checkFormRegisterValidation();
+                                }),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               )
             ]),
           ),
@@ -179,13 +249,31 @@ class _RegisterViewState extends State<RegisterView> {
   }
 
   Padding passwordInput() {
+    var registerControler = Get.find<RegisterController>();
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: TextFormField(
         keyboardType: TextInputType.text,
-        controller: _userPasswordController,
+        controller: registerControler.passwordController,
+        onSaved: (value) {
+          registerControler.password = value!;
+        },
+        onChanged: (value) {
+          password = value;
+        },
+        validator: (value) {
+          return registerControler.validatePassword(value!);
+        },
         obscureText: !_passwordVisible,
         decoration: InputDecoration(
+            errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide(
+                    color: Color.fromARGB(255, 215, 80, 46), width: 0.6)),
+            focusedErrorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide(
+                    color: Color.fromARGB(255, 215, 80, 46), width: 0.6)),
             hintText: 'Password',
             suffixIcon: IconButton(
                 splashColor: Colors.transparent,
@@ -209,13 +297,29 @@ class _RegisterViewState extends State<RegisterView> {
   }
 
   Padding passwordConfirmationInput() {
+    var registerControler = Get.find<RegisterController>();
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: TextFormField(
         keyboardType: TextInputType.text,
-        controller: _userPasswordConfirmationController,
+        controller: registerControler.passwordConfirmationController,
+        onSaved: (value) {
+          registerControler.passwordConfirmation = value!;
+        },
+        validator: (value) {
+          return registerControler.validatePasswordConfirmation(
+              value!, password);
+        },
         obscureText: !_passwordConfirmationVisible,
         decoration: InputDecoration(
+            errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide(
+                    color: Color.fromARGB(255, 215, 80, 46), width: 0.6)),
+            focusedErrorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: const BorderSide(
+                    color: Color.fromARGB(255, 215, 80, 46), width: 0.6)),
             hintText: 'Ulangi Password',
             suffixIcon: IconButton(
                 splashColor: Colors.transparent,
