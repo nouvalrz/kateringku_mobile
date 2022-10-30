@@ -2,8 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 import 'package:kateringku_mobile/data/repositories/register_repo.dart';
+import 'package:kateringku_mobile/models/customer_check_email_body.dart';
+import 'package:kateringku_mobile/models/customer_check_phone_body.dart';
 import 'package:kateringku_mobile/models/customer_register_body.dart';
 import 'package:kateringku_mobile/models/response_model.dart';
+import 'package:kateringku_mobile/routes/route_helper.dart';
 
 class RegisterController extends GetxController implements GetxService {
   final RegisterRepo registerRepo;
@@ -24,6 +27,12 @@ class RegisterController extends GetxController implements GetxService {
   var phone = '';
   var password = '';
   var passwordConfirmation = '';
+  String lastRejectedEmail = '';
+  String lastAvailableEmail = '';
+  String lastRejectedPhone = '';
+  String lastAvailablePhone = '';
+  var isValid = false;
+  var isLoading = false.obs;
 
   @override
   void onInit() {
@@ -45,17 +54,33 @@ class RegisterController extends GetxController implements GetxService {
   }
 
   String? validateEmail(String value) {
-    if (!GetUtils.isEmail(value)) {
+    if (!value.isEmail) {
       return "Email is not valid format";
+    } else if (lastAvailableEmail == value) {
+      return null;
+    } else if (lastRejectedEmail == value) {
+      return "Email already taken";
+    } else {
+      CustomerCheckEmailBody customerCheckEmailBody =
+          CustomerCheckEmailBody(email: value);
+      checkEmail(customerCheckEmailBody);
+      return "Validation is on progress";
     }
-    return null;
   }
 
   String? validatePhone(String value) {
     if (value.length <= 10) {
       return "Phone lenght must atleast 10 number";
+    } else if (lastAvailablePhone == "62$value") {
+      return null;
+    } else if (lastRejectedPhone == "62$value") {
+      return "Phone already taken";
+    } else {
+      CustomerCheckPhoneBody customerCheckPhoneBody =
+          CustomerCheckPhoneBody(phone: "62$value");
+      checkPhone(customerCheckPhoneBody);
+      return "Validation is on progress";
     }
-    return null;
   }
 
   String? validatePassword(String value) {
@@ -85,20 +110,9 @@ class RegisterController extends GetxController implements GetxService {
     return null;
   }
 
-  void checkFormRegisterValidation() {
-    final isValid = registerFormKey.currentState!.validate();
-    if (!isValid) {
-      return;
-    }
-    registerFormKey.currentState!.save();
-  }
-
-  bool _isLoading = false;
-  bool get isLoading => _isLoading;
-
   Future<ResponseModel> registration(
       CustomerRegisterBody customerRegisterBody) async {
-    _isLoading = true;
+    isLoading.value = true;
     Response response = await registerRepo.registration(customerRegisterBody);
     late ResponseModel responseModel;
 
@@ -107,8 +121,58 @@ class RegisterController extends GetxController implements GetxService {
     } else {
       responseModel = ResponseModel(false, response.body["status"].toString());
     }
-    _isLoading = true;
+    isLoading.value = false;
     update();
     return responseModel;
+  }
+
+  void checkFormRegisterValidation() async {
+    isLoading.value = true;
+    isValid = registerFormKey.currentState!.validate();
+    if (!isValid) {
+      isLoading.value = false;
+      return;
+    } else {
+      isLoading.value = true;
+      registerFormKey.currentState!.save();
+      CustomerRegisterBody customerRegisterBody = CustomerRegisterBody(
+          name: name,
+          phone: "62$phone",
+          email: email,
+          password: password,
+          passwordConfirmation: passwordConfirmation);
+      await registration(customerRegisterBody).then((status) {
+        if (status.isSuccess) {
+          Get.toNamed(RouteHelper.getOtpValidation(
+              customerRegisterBody.email, customerRegisterBody.password));
+          return;
+        }
+      });
+    }
+    isLoading.value = false;
+  }
+
+  Future<void> checkEmail(CustomerCheckEmailBody customerCheckEmailBody) async {
+    Response response =
+        await registerRepo.checkEmailAvail(customerCheckEmailBody);
+    if (response.statusCode == 422) {
+      lastRejectedEmail = customerCheckEmailBody.email;
+    } else {
+      lastAvailableEmail = customerCheckEmailBody.email;
+    }
+    // registerFormKey.currentState!.validate();
+    checkFormRegisterValidation();
+  }
+
+  Future<void> checkPhone(CustomerCheckPhoneBody customerCheckPhoneBody) async {
+    Response response =
+        await registerRepo.checkPhoneAvail(customerCheckPhoneBody);
+    if (response.statusCode == 422) {
+      lastRejectedPhone = customerCheckPhoneBody.phone;
+    } else {
+      lastAvailablePhone = customerCheckPhoneBody.phone;
+    }
+    checkFormRegisterValidation();
+    // registerFormKey.currentState!.validate();
   }
 }

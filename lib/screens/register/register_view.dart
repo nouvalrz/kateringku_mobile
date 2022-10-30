@@ -225,15 +225,19 @@ class _RegisterViewState extends State<RegisterView> {
                           Padding(
                             padding:
                                 const EdgeInsets.only(top: 40, bottom: 120),
-                            child: PrimaryButton(
-                                title: 'Daftar Sekarang',
-                                onTap: () {
-                                  // Get.toNamed(RouteHelper.getOtpValidation(
-                                  //     "anjay@gmail.com"));
-                                  // _registration();
-                                  registerControler
-                                      .checkFormRegisterValidation();
-                                }),
+                            child: Obx(() => PrimaryButton(
+                                  title: 'Daftar Sekarang',
+                                  onTap: () {
+                                    // Get.toNamed(RouteHelper.getOtpValidation(
+                                    //     "anjay@gmail.com"));
+                                    // _registration();
+                                    registerControler
+                                        .checkFormRegisterValidation();
+                                  },
+                                  state: registerControler.isLoading.value
+                                      ? ButtonState.loading
+                                      : ButtonState.idle,
+                                )),
                           ),
                         ],
                       ),
