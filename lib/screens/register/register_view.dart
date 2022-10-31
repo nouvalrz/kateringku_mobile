@@ -17,12 +17,6 @@ class RegisterView extends StatefulWidget {
 class _RegisterViewState extends State<RegisterView> {
   bool _passwordVisible = true;
   bool _passwordConfirmationVisible = true;
-  final TextEditingController _userPasswordController = TextEditingController();
-  final TextEditingController _userPasswordConfirmationController =
-      TextEditingController();
-  final TextEditingController _userName = TextEditingController();
-  final TextEditingController _userEmail = TextEditingController();
-  final TextEditingController _userPhone = TextEditingController();
 
   @override
   void initState() {
@@ -31,55 +25,6 @@ class _RegisterViewState extends State<RegisterView> {
   }
 
   var password = "";
-
-  // void _registration() {
-  //   var registerControler = Get.find<RegisterController>();
-
-  //   String name = _userName.text.trim();
-  //   String email = _userEmail.text.trim();
-  //   String phone = _userPhone.text.trim();
-  //   String password = _userPasswordController.text.trim();
-  //   String passwordConfirmation =
-  //       _userPasswordConfirmationController.text.trim();
-
-  //   if (name.isEmpty) {
-  //     showCustomSnackBar(
-  //         message: "Name can't be blank", title: "Invalid Input");
-  //   } else if (email.isEmpty) {
-  //     showCustomSnackBar(
-  //         message: "Email can't be blank", title: "Invalid Input");
-  //   } else if (!email.isEmail) {
-  //     showCustomSnackBar(
-  //         message: "Email is not correct", title: "Invalid Input");
-  //   } else if (phone.isEmpty) {
-  //     showCustomSnackBar(
-  //         message: "Phone can't be blank", title: "Invalid Input");
-  //   } else if (password.isEmpty) {
-  //     showCustomSnackBar(
-  //         message: "Password can't be blank", title: "Invalid Input");
-  //   } else if (passwordConfirmation.isEmpty) {
-  //     showCustomSnackBar(
-  //         message: "Phone confirmation can't be blank", title: "Invalid Input");
-  //   } else if (!(password == passwordConfirmation)) {
-  //     showCustomSnackBar(
-  //         message: "Password confirmation is not same", title: "Invalid Input");
-  //   } else {
-  //     CustomerRegisterBody customerRegisterBody = CustomerRegisterBody(
-  //         name: name,
-  //         phone: phone,
-  //         email: email,
-  //         password: password,
-  //         passwordConfirmation: passwordConfirmation);
-  //     registerControler.registration(customerRegisterBody).then((status) {
-  //       if (status.isSuccess) {
-  //         Get.toNamed(RouteHelper.getOtpValidation(
-  //             customerRegisterBody.email, customerRegisterBody.password));
-  //       } else {
-  //         showCustomSnackBar(message: status.message);
-  //       }
-  //     });
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {

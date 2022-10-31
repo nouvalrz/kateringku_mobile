@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kateringku_mobile/constants/image_path.dart';
 import 'package:kateringku_mobile/controllers/auth_controller.dart';
 import 'package:kateringku_mobile/models/customer_login_body.dart';
+import 'package:kateringku_mobile/routes/route_helper.dart';
 import 'package:kateringku_mobile/themes/app_theme.dart';
 
 class LoginView extends StatefulWidget {
@@ -149,10 +150,15 @@ class _LoginViewState extends State<LoginView> {
                           "Belum punya akun? ",
                           style: AppTheme.textTheme.labelMedium,
                         ),
-                        Text(
-                          "Registrasi",
-                          style: AppTheme.textTheme.labelMedium!
-                              .copyWith(fontWeight: FontWeight.w600),
+                        GestureDetector(
+                          onTap: () {
+                            Get.offNamed(RouteHelper.getRegister());
+                          },
+                          child: Text(
+                            "Registrasi",
+                            style: AppTheme.textTheme.labelMedium!
+                                .copyWith(fontWeight: FontWeight.w600),
+                          ),
                         )
                       ],
                     )

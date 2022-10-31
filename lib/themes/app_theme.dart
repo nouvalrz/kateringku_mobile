@@ -15,6 +15,7 @@ class AppTheme {
 
   static const Color primaryBlack = Color.fromARGB(255, 65, 65, 65);
   static const Color secondaryBlack = Color.fromARGB(255, 88, 88, 88);
+  static const Color navBarBlack = Color.fromARGB(255, 73, 73, 73);
 
   static const Color primaryWhite = Colors.white;
   static const Color secondaryWhite = Color.fromARGB(255, 251, 251, 251);

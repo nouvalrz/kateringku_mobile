@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:kateringku_mobile/routes/route_helper.dart';
-import 'package:kateringku_mobile/screens/onboard/onboard_view.dart';
+import 'package:kateringku_mobile/screens/home/home_view.dart';
 // ignore: unused_import
 import 'package:kateringku_mobile/themes/app_theme.dart';
 import 'helpers/dependencies.dart' as dep;
@@ -24,7 +24,7 @@ class KateringKuApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.theme,
-      home: const OnboardView(),
+      home: const HomeView(),
       // initialRoute: RouteHelper.initial,
       getPages: RouteHelper.routes,
     );
