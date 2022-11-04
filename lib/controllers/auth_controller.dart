@@ -7,11 +7,10 @@ class AuthController extends GetxController implements GetxService {
   final AuthRepo authRepo;
   AuthController({required this.authRepo});
 
-  bool _isLoading = false;
-  bool get isLoading => _isLoading;
+  var isLoading = false.obs;
 
   Future<ResponseModel> login(CustomerLoginBody customerLoginBody) async {
-    _isLoading = true;
+    isLoading.value = true;
     Response response = await authRepo.login(customerLoginBody);
     late ResponseModel responseModel;
     if (response.statusCode == 200) {
@@ -20,7 +19,7 @@ class AuthController extends GetxController implements GetxService {
     } else {
       responseModel = ResponseModel(false, response.statusText!);
     }
-    _isLoading = true;
+    isLoading.value = false;
     update();
     return responseModel;
   }

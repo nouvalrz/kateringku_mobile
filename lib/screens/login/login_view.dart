@@ -37,7 +37,7 @@ class _LoginViewState extends State<LoginView> {
     print(customerLoginBody.password.toString());
     authController.login(customerLoginBody).then((status) {
       if (status.isSuccess) {
-        print("Success Login");
+        Get.offNamed(RouteHelper.mainHome);
       } else {
         print("Failed Login ${status.isSuccess}");
       }
@@ -46,6 +46,7 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
+    var authController = Get.find<AuthController>();
     return Scaffold(
       body: Stack(
         children: [
@@ -137,11 +138,14 @@ class _LoginViewState extends State<LoginView> {
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 85, bottom: 15),
-                      child: PrimaryButton(
+                      child: Obx((() => PrimaryButton(
                           title: 'Login',
                           onTap: () {
                             _login();
-                          }),
+                          },
+                          state: authController.isLoading.value
+                              ? ButtonState.loading
+                              : ButtonState.idle))),
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
