@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:kateringku_mobile/constants/image_path.dart';
 
+import 'package:kateringku_mobile/constants/image_path.dart';
 import 'package:kateringku_mobile/constants/vector_path.dart';
 import 'package:kateringku_mobile/themes/app_theme.dart';
 
@@ -192,59 +192,263 @@ class _DashboardViewState extends State<DashboardView> {
           ),
           Expanded(
               child: ListView(
+            padding: const EdgeInsets.only(top: 22),
             children: [
               Padding(
-                padding: const EdgeInsets.only(left: 25, right: 25),
-                child: Container(
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Vegan Food Nayla",
-                                style: AppTheme.textTheme.labelMedium!.copyWith(
-                                    fontWeight: FontWeight.w500, fontSize: 15),
-                              ),
-                              Text(
-                                "Aneka Nasi, Vegan",
-                                style: AppTheme.textTheme.labelSmall,
-                              ),
-                              Row(
-                                children: const [
-                                  Icon(
-                                    Icons.map_outlined,
-                                    color: AppTheme.secondaryBlack,
-                                  ),
-                                  Text("Pedungan")
-                                ],
-                                mainAxisAlignment: MainAxisAlignment.start,
-                              ),
-                              const Text("Terjual 256")
-                            ],
-                          )
-                        ],
-                      )
-                    ],
-                  ),
+                padding: const EdgeInsets.only(left: 25, right: 25, bottom: 22),
+                child: DashboardProductCard(
+                  cateringName: "Vegan Food Nayla",
+                  cateringCategory: "Aneka Nasi, Vegan",
+                  cateringLocation: "Pedungan",
+                  categorySalesCount: 234,
+                  bestProductCatering1: "Vegan Rice Box",
+                  bestProductCatering2: "Mashroom Satay",
+                  bestProductCateringPrice1: "Rp. 35.000",
+                  bestProductCateringPrice2: "Rp. 22.000",
                 ),
-              )
-              // Container(
-              //   child: Column(
-              //     children: [
-              //       Row(
-              //         children: Column(
-              //           children: const [],
-              //         ),
-              //       )
-              //     ],
-              //     crossAxisAlignment: CrossAxisAlignment.start,
-              //   ),
-              // )
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 25, right: 25, bottom: 22),
+                child: DashboardProductCard(
+                  cateringName: "Vegan Food Nayla",
+                  cateringCategory: "Aneka Nasi, Vegan",
+                  cateringLocation: "Pedungan",
+                  categorySalesCount: 234,
+                  bestProductCatering1: "Vegan Rice Box",
+                  bestProductCatering2: "Mashroom Satay",
+                  bestProductCateringPrice1: "Rp. 35.000",
+                  bestProductCateringPrice2: "Rp. 22.000",
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 25, right: 25, bottom: 22),
+                child: DashboardProductCard(
+                  cateringName: "Vegan Food Nayla",
+                  cateringCategory: "Aneka Nasi, Vegan",
+                  cateringLocation: "Pedungan",
+                  categorySalesCount: 234,
+                  bestProductCatering1: "Vegan Rice Box",
+                  bestProductCatering2: "Mashroom Satay",
+                  bestProductCateringPrice1: "Rp. 35.000",
+                  bestProductCateringPrice2: "Rp. 22.000",
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 25, right: 25, bottom: 22),
+                child: DashboardProductCard(
+                  cateringName: "Vegan Food Nayla",
+                  cateringCategory: "Aneka Nasi, Vegan",
+                  cateringLocation: "Pedungan",
+                  categorySalesCount: 234,
+                  bestProductCatering1: "Vegan Rice Box",
+                  bestProductCatering2: "Mashroom Satay",
+                  bestProductCateringPrice1: "Rp. 35.000",
+                  bestProductCateringPrice2: "Rp. 22.000",
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 25, right: 25, bottom: 22),
+                child: DashboardProductCard(
+                  cateringName: "Vegan Food Nayla",
+                  cateringCategory: "Aneka Nasi, Vegan",
+                  cateringLocation: "Pedungan",
+                  categorySalesCount: 234,
+                  bestProductCatering1: "Vegan Rice Box",
+                  bestProductCatering2: "Mashroom Satay",
+                  bestProductCateringPrice1: "Rp. 35.000",
+                  bestProductCateringPrice2: "Rp. 22.000",
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 25, right: 25, bottom: 22),
+                child: DashboardProductCard(
+                  cateringName: "Vegan Food Nayla",
+                  cateringCategory: "Aneka Nasi, Vegan",
+                  cateringLocation: "Pedungan",
+                  categorySalesCount: 234,
+                  bestProductCatering1: "Vegan Rice Box",
+                  bestProductCatering2: "Mashroom Satay",
+                  bestProductCateringPrice1: "Rp. 35.000",
+                  bestProductCateringPrice2: "Rp. 22.000",
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 25, right: 25, bottom: 22),
+                child: DashboardProductCard(
+                  cateringName: "Vegan Food Nayla",
+                  cateringCategory: "Aneka Nasi, Vegan",
+                  cateringLocation: "Pedungan",
+                  categorySalesCount: 234,
+                  bestProductCatering1: "Vegan Rice Box",
+                  bestProductCatering2: "Mashroom Satay",
+                  bestProductCateringPrice1: "Rp. 35.000",
+                  bestProductCateringPrice2: "Rp. 22.000",
+                ),
+              ),
             ],
           ))
+        ],
+      ),
+    );
+  }
+}
+
+class DashboardProductCard extends StatelessWidget {
+  String cateringName;
+  String cateringCategory;
+  String cateringLocation;
+  int categorySalesCount;
+
+  String bestProductCatering1;
+  String bestProductCatering2;
+  String bestProductCateringPrice1;
+  String bestProductCateringPrice2;
+
+  DashboardProductCard({
+    Key? key,
+    required this.cateringName,
+    required this.cateringCategory,
+    required this.cateringLocation,
+    required this.categorySalesCount,
+    required this.bestProductCatering1,
+    required this.bestProductCatering2,
+    required this.bestProductCateringPrice1,
+    required this.bestProductCateringPrice2,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    cateringName,
+                    style: AppTheme.textTheme.labelMedium!
+                        .copyWith(fontWeight: FontWeight.w500, fontSize: 15),
+                  ),
+                  const SizedBox(
+                    height: 6,
+                  ),
+                  Text(
+                    cateringCategory,
+                    style:
+                        AppTheme.textTheme.labelSmall!.copyWith(fontSize: 11),
+                  ),
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.map_outlined,
+                        color: AppTheme.secondaryBlack.withOpacity(0.7),
+                        size: 20,
+                      ),
+                      const SizedBox(
+                        width: 4,
+                      ),
+                      Text(cateringLocation,
+                          style: AppTheme.textTheme.labelSmall!
+                              .copyWith(fontSize: 12))
+                    ],
+                    mainAxisAlignment: MainAxisAlignment.start,
+                  ),
+                  const SizedBox(
+                    height: 2,
+                  ),
+                  Text(
+                    "Terjual $categorySalesCount",
+                    style:
+                        AppTheme.textTheme.labelSmall!.copyWith(fontSize: 11),
+                  )
+                ],
+              ),
+              Container(
+                decoration: BoxDecoration(
+                    color: Colors.grey.withOpacity(0.4),
+                    borderRadius: BorderRadius.circular(12)),
+                width: 75,
+                height: 75,
+              )
+            ],
+          ),
+          const SizedBox(
+            height: 12,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                child: Row(
+                  children: [
+                    Container(
+                      width: 48,
+                      height: 48,
+                      decoration: BoxDecoration(
+                          color: Colors.grey.withOpacity(0.4),
+                          borderRadius: BorderRadius.circular(10)),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(bestProductCatering1,
+                            style: AppTheme.textTheme.labelSmall!
+                                .copyWith(fontSize: 12)),
+                        Text(bestProductCateringPrice1,
+                            style: AppTheme.textTheme.labelSmall!.copyWith(
+                                fontSize: 12, fontWeight: FontWeight.w500))
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                child: Row(
+                  children: [
+                    Container(
+                      width: 48,
+                      height: 48,
+                      decoration: BoxDecoration(
+                          color: Colors.grey.withOpacity(0.4),
+                          borderRadius: BorderRadius.circular(10)),
+                    ),
+                    const SizedBox(
+                      width: 10,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(bestProductCatering2,
+                            style: AppTheme.textTheme.labelSmall!
+                                .copyWith(fontSize: 12)),
+                        Text(bestProductCateringPrice2,
+                            style: AppTheme.textTheme.labelSmall!.copyWith(
+                                fontSize: 12, fontWeight: FontWeight.w500))
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(
+                width: 16,
+              )
+            ],
+          ),
+          const SizedBox(
+            height: 6,
+          ),
+          const Divider(
+            color: Colors.grey,
+          )
         ],
       ),
     );

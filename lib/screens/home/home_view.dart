@@ -117,8 +117,14 @@ class _HomeViewState extends State<HomeView> {
       hideNavigationBarWhenKeyboardShows:
           true, // Recommended to set 'resizeToAvoidBottomInset' as true while using this argument. Default is true.
       decoration: NavBarDecoration(
-        borderRadius: BorderRadius.circular(10.0),
+        borderRadius: BorderRadius.circular(2.0),
         colorBehindNavBar: Colors.white,
+        boxShadow: <BoxShadow>[
+          const BoxShadow(
+              color: Color.fromARGB(135, 158, 158, 158),
+              blurRadius: 7.0,
+              offset: Offset(0.0, 0.75))
+        ],
       ),
       popAllScreensOnTapOfSelectedTab: true,
       popActionScreens: PopActionScreensType.all,
