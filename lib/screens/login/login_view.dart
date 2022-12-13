@@ -33,8 +33,8 @@ class _LoginViewState extends State<LoginView> {
     String password = _userPasswordController.text.trim();
     CustomerLoginBody customerLoginBody =
         CustomerLoginBody(email: email, password: password);
-    print(customerLoginBody.email.toString());
-    print(customerLoginBody.password.toString());
+    // print(customerLoginBody.email.toString());
+    // print(customerLoginBody.password.toString());
     authController.login(customerLoginBody).then((status) {
       if (status.isSuccess) {
         Get.offNamed(RouteHelper.mainHome);

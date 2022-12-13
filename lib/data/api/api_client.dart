@@ -6,6 +6,8 @@ class ApiClient extends GetConnect implements GetxService {
   final String appBaseUrl;
   late Map<String, String> _mainHeaders;
 
+  Map<String, String> get mainHeaders => _mainHeaders;
+
   ApiClient({required this.appBaseUrl}) {
     baseUrl = appBaseUrl;
     timeout = const Duration(seconds: 30);
@@ -25,6 +27,21 @@ class ApiClient extends GetConnect implements GetxService {
     }
   }
 
+  Future<Response> getDataWithToken(String uri, String token) async {
+    var headers = {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $token',
+    };
+
+    try {
+      Response response = await get(uri, headers: headers);
+      return response;
+    } catch (e) {
+      return Response(statusCode: 1, statusText: e.toString());
+    }
+  }
+
+
   Future<Response> postData(String uri, dynamic body) async {
     try {
       Response response = await post(uri, body, headers: _mainHeaders);
@@ -34,6 +51,8 @@ class ApiClient extends GetConnect implements GetxService {
       return Response(statusCode: 1, statusText: e.toString());
     }
   }
+
+
 
   void updateHeader(String token) {
     _mainHeaders = {

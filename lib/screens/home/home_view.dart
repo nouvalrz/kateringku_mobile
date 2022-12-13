@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kateringku_mobile/screens/dashboard_view.dart';
+import 'package:kateringku_mobile/screens/dashboard/dashboard_view.dart';
 import 'package:kateringku_mobile/themes/app_theme.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
 
