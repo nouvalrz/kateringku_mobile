@@ -6,7 +6,7 @@ void showCustomSnackBar(
     {bool isError = true, String title = "Error", required String message}) {
   Get.snackbar(title, message,
       titleText: Text(title, style: AppTheme.textTheme.bodyLarge),
-      duration: const Duration(milliseconds: 2000),
+      duration: const Duration(milliseconds: 4000),
       messageText: Text(
         message,
       ));

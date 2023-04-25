@@ -9,6 +9,7 @@ class CateringProductModel {
   int is_available;
   int product_price;
   String product_image;
+  String product_is_customable;
   int quantity = 0;
 
   CateringProductModel({
@@ -21,7 +22,8 @@ class CateringProductModel {
     required this.maximum_quantity,
     required this.is_free_delivery,
     required this.is_available,
-    required this.product_image});
+    required this.product_is_customable,
+    required this.product_image,});
 
   void addQuantity(){
     quantity += 1;

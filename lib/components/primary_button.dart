@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:kateringku_mobile/themes/app_theme.dart';
 
-enum ButtonState { idle, loading, disabled }
+enum ButtonState { idle, loading, disabled, danger, dangerLoading }
 
 class PrimaryButton extends StatefulWidget {
   const PrimaryButton({
@@ -33,9 +33,9 @@ class _PrimaryButtonState extends State<PrimaryButton> {
       child: Container(
         height: AppTheme.buttonHeight,
         decoration: BoxDecoration(
-            color: widget.color ?? AppTheme.primaryGreen,
+            color: widget.state == ButtonState.danger || widget.state == ButtonState.dangerLoading  ? AppTheme.primaryRed : widget.state == ButtonState.disabled ? Colors.black38 : widget.color ?? AppTheme.primaryGreen,
             borderRadius: AppTheme.buttonRadius),
-        child: widget.state == ButtonState.loading
+        child: widget.state == ButtonState.loading || widget.state == ButtonState.dangerLoading
             ? Center(
                 child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -52,7 +52,7 @@ class _PrimaryButtonState extends State<PrimaryButton> {
                   )
                 ],
               ))
-            : Row(
+            : widget.state == ButtonState.idle ? Row(
                 children: [
                   if (widget.leadingIcon != null)
                     Padding(
@@ -65,7 +65,20 @@ class _PrimaryButtonState extends State<PrimaryButton> {
                   )
                 ],
                 mainAxisAlignment: MainAxisAlignment.center,
+              ) : Row(
+          children: [
+            if (widget.leadingIcon != null)
+              Padding(
+                padding: const EdgeInsets.only(right: 14.0),
+                child: widget.leadingIcon,
               ),
+            Text(
+              widget.title,
+              style: widget.titleStyle ?? defaultTextStyle!.copyWith(color: Colors.white),
+            )
+          ],
+          mainAxisAlignment: MainAxisAlignment.center,
+        )
       ),
       onTap: widget.onTap,
     );

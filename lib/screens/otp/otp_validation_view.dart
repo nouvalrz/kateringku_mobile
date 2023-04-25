@@ -159,6 +159,7 @@ class _OtpValidationViewState extends State<OtpValidationView> {
                         showCustomSnackBar(
                             message: "OTP Validation is success",
                             title: "SUCCESS");
+
                       } else {
                         showCustomSnackBar(message: status.message);
                       }

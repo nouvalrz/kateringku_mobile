@@ -5,9 +5,11 @@ class CustomerAddressModel{
   String address;
   double latitude;
   double longitude;
+  String phone;
 
   CustomerAddressModel({
       required this.id,
+    required this.phone,
     required this.customer_id,
     required this.recipient_name,
     required this.address,

@@ -42,6 +42,23 @@ dependencies:
   geolocator: ^9.0.2
   geocoding: ^2.0.5
   google_maps_flutter: ^2.2.1
+  configurable_expansion_tile: ^1.0.0
+  need_resume: ^1.0.7+1
+  day_night_time_picker: ^1.2.0+2
+  time_picker_widget: ^1.0.0+10
+  webview_flutter: ^4.0.7
+  firebase_messaging: ^14.4.0
+  firebase_core: ^2.9.0
+  flutter_easyloading: ^3.0.5
+  flutter_countdown_timer: ^4.1.0
+  focus_detector: ^2.0.1
+
+  mapbox_gl:
+    git: https://github.com/flutter-mapbox-gl/maps
+  flutter_rating_bar: ^4.0.1
+  fancy_shimmer_image: ^2.0.2
+  image_picker: ^0.8.7+3
+  flutter_chat_ui: ^1.5.8
 
 dev_dependencies:
   flutter_test:

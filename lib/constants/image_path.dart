@@ -13,4 +13,30 @@ class ImagePath {
   static const padangCategory = "assets/images/padang_category.png";
   static const riceboxCategory = "assets/images/ricebox_category.png";
   static const japaneseCategory = "assets/images/japanese_category.png";
+  static const vegetarianCategory = "assets/images/vegetarian_category.png";
+  static const snackCategory = "assets/images/snack_category.png";
+
+
+  // add to cart
+  static const addToCart = "assets/images/add_to_cart.svg";
+
+
+  // order icon
+  static const preOrderIcon = "assets/images/pre_order_icon.png";
+  static const subsOrderIcon = "assets/images/subs_order_icon.png";
+
+  // order status
+  static const statusCook = "assets/images/cook.png";
+  static const statusSent = "assets/images/sent.png";
+  static const statusReceived = "assets/images/received.png";
+  static const statusCookDeactived = "assets/images/deactived_cook.png";
+  static const statusSentDeactived = "assets/images/deactived_sent.png";
+  static const statusReceivedDeactived = "assets/images/deactived_received.png";
+
+  static const logout = "assets/images/logout.svg";
+
+
+  // Sent confirmation
+  static const sentConfirmation = "assets/images/sent_confirmation.svg";
+
 }

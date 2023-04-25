@@ -11,17 +11,11 @@ class CustomerAddressRepo {
   void setToken() async{
     SharedPreferences preferences = await SharedPreferences.getInstance();
     var token = preferences.getString(AppConstant.TOKEN);
-    print("TOKEN FROM REPO " + token!);
     apiClient.token = token!;
     apiClient.updateHeader(token);
-    print("HEADER FROM REPO");
-    print(apiClient.mainHeaders);
   }
 
   Future<Response> getAllAddress() async{
-    setToken();
-    print("HEADER");
-    // print(apiClient.mainHeaders);
     SharedPreferences preferences = await SharedPreferences.getInstance();
     var token = preferences.getString(AppConstant.TOKEN);
     return await apiClient.getDataWithToken(
