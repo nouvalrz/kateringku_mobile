@@ -12,6 +12,7 @@ import 'package:kateringku_mobile/routes/route_helper.dart';
 import 'package:kateringku_mobile/screens/address/add_address_detail_view.dart';
 import 'package:kateringku_mobile/screens/address/add_address_map_view.dart';
 import 'package:kateringku_mobile/screens/address/address_list_view.dart';
+import 'package:kateringku_mobile/screens/catering/catering_review_view.dart';
 import 'package:kateringku_mobile/screens/catering/catering_view.dart';
 import 'package:kateringku_mobile/screens/catering/product_option_view.dart';
 import 'package:kateringku_mobile/screens/chat/chat_list_view.dart';
@@ -42,7 +43,7 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  FirebaseMessaging messaging =  FirebaseMessaging.instance;
+  FirebaseMessaging messaging = FirebaseMessaging.instance;
 
   NotificationSettings settings = await messaging.requestPermission(
     alert: true,
@@ -60,25 +61,30 @@ Future<void> main() async {
     print('Got a message whilst in the foreground!');
     print('Message data: ${message.data}');
 
-    if(message.data != null){
+    if (message.data != null) {
       print(message.data);
     }
-
 
     if (message.notification != null) {
       print('Message also contained a notification: ${message.notification}');
       RemoteNotification notification = message.notification!;
 
-      showCustomSnackBar(message: notification.body!, title: notification.title!);
+      showCustomSnackBar(
+          message: notification.body!, title: notification.title!);
 
-      if(message.data["type"] == "chat"){
+      if (message.data["type"] == "chat") {
         var currentRoute = Get.currentRoute;
-        if(currentRoute == "/chat"){
+        if (currentRoute == "/chat") {
           var chatController = Get.find<ChatController>();
-          if(message.data["sender_id"] == chatController.cateringUser.id || message.data["recipient_id"] == chatController.cateringUser.id){
+          if (message.data["sender_id"] == chatController.cateringUser.id ||
+              message.data["recipient_id"] == chatController.cateringUser.id) {
             var chat = types.TextMessage(
-              author: message.data["sender_id"].toString() == chatController.cateringUser.id ? chatController.cateringUser : chatController.customerUser,
-              createdAt: DateTime.parse(message.data['created_at']).millisecondsSinceEpoch,
+              author: message.data["sender_id"].toString() ==
+                      chatController.cateringUser.id
+                  ? chatController.cateringUser
+                  : chatController.customerUser,
+              createdAt: DateTime.parse(message.data['created_at'])
+                  .millisecondsSinceEpoch,
               id: const Uuid().v4(),
               text: message.data["message"],
             );
@@ -87,7 +93,7 @@ Future<void> main() async {
         }
       }
 
-      if(message.data["type"] == "PAYMENT_SUCCESS"){
+      if (message.data["type"] == "PAYMENT_SUCCESS") {
         var homeController = Get.find<HomeController>();
         // var orderListController = Get.find<OrderListController>();
         // orderListController.isLoading.value = true;
@@ -102,13 +108,12 @@ Future<void> main() async {
   SharedPreferences preferences = await SharedPreferences.getInstance();
   var token = preferences.getString(AppConstant.TOKEN);
 
-  if(token!=null){
+  if (token != null) {
     print(token);
-    runApp( KateringKuHomeApp());
-  }else{
+    runApp(KateringKuHomeApp());
+  } else {
     runApp(const KateringKuOnboardApp());
   }
-
 }
 
 class KateringKuHomeApp extends StatelessWidget {
@@ -119,8 +124,8 @@ class KateringKuHomeApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.theme,
-      home:  HomeView(),
-      initialRoute: RouteHelper.mainHome,
+      home: CateringReviewView(),
+      // initialRoute: RouteHelper.mainHome,
       getPages: RouteHelper.routes,
       navigatorObservers: [routeObserver],
       builder: EasyLoading.init(),
@@ -136,7 +141,7 @@ class KateringKuOnboardApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.theme,
-      home:  OnboardView(),
+      home: OnboardView(),
       initialRoute: RouteHelper.onboard,
       getPages: RouteHelper.routes,
       builder: EasyLoading.init(),

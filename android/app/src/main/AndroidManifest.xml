@@ -7,8 +7,8 @@
         android:label="kateringku_mobile"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
-       <meta-data android:name="com.google.android.geo.API_KEY"
-           android:value="AIzaSyDAXO2KMixpicKiEyeq-0EOABv5LPq0ZXA"/>
+<!--       <meta-data android:name="com.google.android.geo.API_KEY"-->
+<!--           android:value="AIzaSyDAXO2KMixpicKiEyeq-0EOABv5LPq0ZXA"/>-->
         <activity
             android:name=".MainActivity"
             android:exported="true"
