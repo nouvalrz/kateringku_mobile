@@ -4,25 +4,25 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../constants/app_constant.dart';
 import '../api/api_client.dart';
 
-class ChatRepo{
-
+class ChatRepo {
   final ApiClient apiClient;
   ChatRepo({required this.apiClient});
 
-  Future<Response> loadMessage({required String recipientId}) async{
+  Future<Response> loadMessage({required String cateringId}) async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     var token = preferences.getString(AppConstant.TOKEN);
     apiClient.token = token!;
     apiClient.updateHeader(token);
-    return await apiClient.postData(
-        AppConstant.SHOW_CHAT, {"recipient_id" : recipientId});
+    return await apiClient
+        .postData(AppConstant.SHOW_CHAT, {"catering_id": cateringId});
   }
 
-  Future<Response> sendMessage({required String recipientId, required String recipientType, required String message}) async{
+  Future<Response> sendMessage(
+      {required String cateringId, required String message}) async {
     Map<String, dynamic> body = {
-      "recipient_id" : recipientId,
-      "recipient_type" : recipientType,
-      "message" : message
+      "catering_id": cateringId,
+      "sender": "customer",
+      "message": message
     };
 
     SharedPreferences preferences = await SharedPreferences.getInstance();
@@ -30,19 +30,15 @@ class ChatRepo{
     apiClient.token = token!;
     apiClient.updateHeader(token);
 
-    return await apiClient.postData(
-        AppConstant.SEND_CHAT, body);
-
+    return await apiClient.postData(AppConstant.SEND_CHAT, body);
   }
 
-  Future<Response> getListChat() async{
+  Future<Response> getListChat() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     var token = preferences.getString(AppConstant.TOKEN);
     apiClient.token = token!;
     apiClient.updateHeader(token);
 
-    return await apiClient.getDataWithToken(
-        AppConstant.GET_LIST_CHAT, token);
+    return await apiClient.getDataWithToken(AppConstant.GET_LIST_CHAT, token);
   }
-
 }

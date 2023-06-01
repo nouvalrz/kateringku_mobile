@@ -5,14 +5,12 @@ import '../constants/app_constant.dart';
 import '../data/repositories/customer_address_repo.dart';
 import '../models/customer_address_model.dart';
 
-class CustomerAddressListController extends GetxController{
-
+class CustomerAddressListController extends GetxController {
   final CustomerAddressRepo customerAddressRepo;
 
   CustomerAddressListController({required this.customerAddressRepo});
 
   var activeId = "".obs;
-
 
   var isLoading = false.obs;
 
@@ -21,22 +19,20 @@ class CustomerAddressListController extends GetxController{
   CustomerAddressModel? mainAddress;
 
   @override
-  void onInit(){
+  void onInit() {
     super.onInit();
     // customerAddressRepo.setToken();
     // getAllAddress();
-
   }
 
-  void setInitialActiveId(String id) async{
+  void setInitialActiveId(String id) async {
     activeId.value = id;
     SharedPreferences preferences = await SharedPreferences.getInstance();
     await preferences.setString(AppConstant.MAIN_ADDRESS, id);
     update();
   }
 
-
-  Future<void> getAllAddress() async{
+  Future<void> getAllAddress() async {
     isLoading.value = true;
     addressList.clear();
     customerAddressRepo.setToken();
@@ -46,27 +42,34 @@ class CustomerAddressListController extends GetxController{
     print(response.body);
     print(response.body['addresses']);
 
-    for(var i = 0 ; i < response.body['addresses'].length; i++){
-      CustomerAddressModel customerAddressModel = CustomerAddressModel(id: response.body['addresses'][i]['id'].toString(), customer_id: response.body['addresses'][i]['customer_id'].toString(), recipient_name: response.body['addresses'][i]['recipient_name'], address: response.body['addresses'][i]['address'], latitude: double.parse(response.body['addresses'][i]['latitude']), longitude: double.parse( response.body['addresses'][i]['longitude']), phone: response.body['addresses'][i]['phone']);
+    for (var i = 0; i < response.body['addresses'].length; i++) {
+      CustomerAddressModel customerAddressModel = CustomerAddressModel(
+          id: response.body['addresses'][i]['id'].toString(),
+          customer_id: response.body['addresses'][i]['customer_id'].toString(),
+          recipient_name: response.body['addresses'][i]['recipient_name'],
+          address: response.body['addresses'][i]['address'],
+          latitude: double.parse(response.body['addresses'][i]['latitude']),
+          longitude: double.parse(response.body['addresses'][i]['longitude']),
+          phone: response.body['addresses'][i]['phone']);
 
       addressList.add(customerAddressModel);
     }
     addressList.refresh();
-    getMainAddress();
-
+    // getMainAddress();
   }
 
-  void getMainAddress() async{
+  void getMainAddress() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     var main_address = preferences.getString(AppConstant.MAIN_ADDRESS);
 
-    if(main_address==null || main_address == ""){
+    if (main_address == null || main_address == "") {
       mainAddress = addressList[0];
       activeId.value = mainAddress!.id.toString();
-      await preferences.setString(AppConstant.MAIN_ADDRESS, addressList[0].id.toString());
-    }else{
+      await preferences.setString(
+          AppConstant.MAIN_ADDRESS, addressList[0].id.toString());
+    } else {
       addressList.forEach((element) {
-        if(element.id.toString() == main_address){
+        if (element.id.toString() == main_address) {
           mainAddress = element;
           activeId.value = element.id;
         }

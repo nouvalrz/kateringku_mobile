@@ -24,6 +24,7 @@ import 'package:kateringku_mobile/screens/pre_order/pre_order_confirmation_view.
 import 'package:kateringku_mobile/screens/maps_test/google_maps_view.dart';
 import 'package:kateringku_mobile/screens/onboard/onboard_view.dart';
 import 'package:kateringku_mobile/screens/chat/chat_view.dart';
+import 'package:kateringku_mobile/screens/sample/datepicker_sample_view.dart';
 // ignore: unused_import
 import 'package:kateringku_mobile/themes/app_theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -124,8 +125,8 @@ class KateringKuHomeApp extends StatelessWidget {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       theme: AppTheme.theme,
-      home: CateringReviewView(),
-      // initialRoute: RouteHelper.mainHome,
+      home: HomeView(),
+      initialRoute: RouteHelper.mainHome,
       getPages: RouteHelper.routes,
       navigatorObservers: [routeObserver],
       builder: EasyLoading.init(),

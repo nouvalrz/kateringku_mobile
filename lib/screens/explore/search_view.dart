@@ -101,8 +101,8 @@ class _SearchViewState extends State<SearchView> {
                               searchController.cateringResult[index].latitude!),
                           cateringLongitude: double.parse(searchController
                               .cateringResult[index].longitude!),
-                          cateringImage: searchController
-                              .cateringResult[index].originalPath!,
+                          cateringImage:
+                              searchController.cateringResult[index].image!,
                           cateringName:
                               searchController.cateringResult[index].name!,
                           cateringCategory: searchController
@@ -136,13 +136,13 @@ class _SearchViewState extends State<SearchView> {
                           bestProductCateringImage1: searchController
                               .cateringResult[index]
                               .recommendationProducts![0]
-                              .originalPath!,
+                              .image!,
                           bestProductCateringImage2: searchController
                                   .cateringResult[index].recommendationProducts!
                                   .asMap()
                                   .containsKey(1)
                               ? searchController.cateringResult[index]
-                                  .recommendationProducts![1].originalPath
+                                  .recommendationProducts![1].image
                               : null,
                           cateringId: searchController.cateringResult[index].id
                               .toString(),

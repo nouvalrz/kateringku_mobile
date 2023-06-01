@@ -66,8 +66,8 @@ class PreOrderController extends GetxController implements GetxService {
   Future<AddressModel> setCurrentAddress() async {
     // Position coordinates = await locationService.getCoordinates();
     var homeController = Get.find<CustomerDashboardController>();
-    AddressModel addressModel =
-        await locationService.getAddressFromCoordinates(homeController.currentCoordinates!);
+    AddressModel addressModel = await locationService
+        .getAddressFromCoordinates(homeController.currentCoordinates!);
     return addressModel;
   }
 
@@ -159,7 +159,8 @@ class PreOrderController extends GetxController implements GetxService {
                           style: AppTheme.textTheme.titleLarge!.copyWith(
                               fontSize: 14, fontWeight: FontWeight.w600)),
                       if (deliveryDateTime.value != null)
-                        Text("${DateFormat.Hm().format(deliveryDateTime.value!)} - ${DateFormat.Hm().format(deliveryDateTime.value!.add(Duration(minutes: 30)))}",
+                        Text(
+                            "${DateFormat.Hm().format(deliveryDateTime.value!)} - ${DateFormat.Hm().format(deliveryDateTime.value!.add(Duration(minutes: 30)))}",
                             style: AppTheme.textTheme.titleLarge!.copyWith(
                                 fontSize: 14, fontWeight: FontWeight.w400)),
                       Flexible(
@@ -192,6 +193,7 @@ class PreOrderController extends GetxController implements GetxService {
 
   Future<void> postPreOrder() async {
     isLoadingPostPreOrder.value = true;
+    preOrderModel.value.cateringId = cateringId!;
     Response response = await preOrderRepo.postPreOrder(preOrderModel.value);
 
     if (response.statusCode == 200) {
@@ -221,5 +223,9 @@ class PreOrderController extends GetxController implements GetxService {
         !(deliveryDateTime.value!.hour == 0) &&
         !isLoading.value &&
         !isLoadingGetDeliveryAvailableTime.value);
+  }
+
+  bool isDiscountUsable({required int minimumSpend}) {
+    return preOrderModel.value.subTotalPrice >= minimumSpend;
   }
 }

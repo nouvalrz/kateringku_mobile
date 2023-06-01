@@ -31,56 +31,68 @@ class _PrimaryButtonState extends State<PrimaryButton> {
     TextStyle? defaultTextStyle = AppTheme.textTheme.labelLarge;
     return InkWell(
       child: Container(
-        height: AppTheme.buttonHeight,
-        decoration: BoxDecoration(
-            color: widget.state == ButtonState.danger || widget.state == ButtonState.dangerLoading  ? AppTheme.primaryRed : widget.state == ButtonState.disabled ? Colors.black38 : widget.color ?? AppTheme.primaryGreen,
-            borderRadius: AppTheme.buttonRadius),
-        child: widget.state == ButtonState.loading || widget.state == ButtonState.dangerLoading
-            ? Center(
-                child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const CircularProgressIndicator(
-                    color: Colors.white,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 14.0),
-                    child: Text(
-                      'Loading',
-                      style: AppTheme.textTheme.labelLarge,
+          height: AppTheme.buttonHeight,
+          decoration: BoxDecoration(
+              color: widget.state == ButtonState.danger ||
+                      widget.state == ButtonState.dangerLoading
+                  ? AppTheme.primaryRed
+                  : widget.state == ButtonState.disabled
+                      ? Colors.black38
+                      : widget.color ?? AppTheme.primaryGreen,
+              borderRadius: AppTheme.buttonRadius),
+          child: widget.state == ButtonState.loading ||
+                  widget.state == ButtonState.dangerLoading
+              ? Center(
+                  child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const CircularProgressIndicator(
+                      color: Colors.white,
                     ),
-                  )
-                ],
-              ))
-            : widget.state == ButtonState.idle ? Row(
-                children: [
-                  if (widget.leadingIcon != null)
                     Padding(
-                      padding: const EdgeInsets.only(right: 14.0),
-                      child: widget.leadingIcon,
-                    ),
-                  Text(
-                    widget.title,
-                    style: widget.titleStyle ?? defaultTextStyle,
-                  )
-                ],
-                mainAxisAlignment: MainAxisAlignment.center,
-              ) : Row(
-          children: [
-            if (widget.leadingIcon != null)
-              Padding(
-                padding: const EdgeInsets.only(right: 14.0),
-                child: widget.leadingIcon,
-              ),
-            Text(
-              widget.title,
-              style: widget.titleStyle ?? defaultTextStyle!.copyWith(color: Colors.white),
-            )
-          ],
-          mainAxisAlignment: MainAxisAlignment.center,
-        )
-      ),
-      onTap: widget.onTap,
+                      padding: const EdgeInsets.only(left: 14.0),
+                      child: Text(
+                        'Loading',
+                        style: AppTheme.textTheme.labelLarge,
+                      ),
+                    )
+                  ],
+                ))
+              : widget.state == ButtonState.idle
+                  ? Row(
+                      children: [
+                        if (widget.leadingIcon != null)
+                          Padding(
+                            padding: const EdgeInsets.only(right: 14.0),
+                            child: widget.leadingIcon,
+                          ),
+                        Text(
+                          widget.title,
+                          style: widget.titleStyle ?? defaultTextStyle,
+                        )
+                      ],
+                      mainAxisAlignment: MainAxisAlignment.center,
+                    )
+                  : Row(
+                      children: [
+                        if (widget.leadingIcon != null)
+                          Padding(
+                            padding: const EdgeInsets.only(right: 14.0),
+                            child: widget.leadingIcon,
+                          ),
+                        Text(
+                          widget.title,
+                          style: widget.titleStyle ??
+                              defaultTextStyle!.copyWith(color: Colors.white),
+                        )
+                      ],
+                      mainAxisAlignment: MainAxisAlignment.center,
+                    )),
+      onTap: widget.state == ButtonState.loading ||
+              widget.state == ButtonState.dangerLoading ||
+              widget.state == ButtonState.disabled
+          ? null
+          : widget.onTap,
     );
   }
 }

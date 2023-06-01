@@ -4,7 +4,7 @@ import 'package:kateringku_mobile/data/repositories/chat_repo.dart';
 import 'package:kateringku_mobile/models/chat_compact_model.dart';
 import 'package:uuid/uuid.dart';
 
-class ChatController extends GetxController{
+class ChatController extends GetxController {
   var messages = <types.Message>[].obs;
   var isLoading = false.obs;
   var isLoadingList = false.obs;
@@ -12,25 +12,27 @@ class ChatController extends GetxController{
   late types.User customerUser;
   late types.User cateringUser;
 
-  var listChat = <ChatCompact>[].obs;
+  var listChat = <ChatCompactModel>[].obs;
 
   final ChatRepo chatRepo;
 
   ChatController({required this.chatRepo});
 
-  Future<void> loadMessage({required String cateringId}) async{
+  Future<void> loadMessage({required String cateringId}) async {
     isLoading.value = true;
 
     messages.clear();
 
-    Response response = await chatRepo.loadMessage(recipientId: cateringId);
+    Response response = await chatRepo.loadMessage(cateringId: cateringId);
 
-    if(response.statusCode == 200){
-      for(var i=0; i< response.body["chats"].length ; i++){
-        print("catering ID = ${cateringId} || Sender ID = ${response.body["chats"][i]['sender_id']}");
+    if (response.statusCode == 200) {
+      for (var i = 0; i < response.body["chats"].length; i++) {
         var chat = types.TextMessage(
-          author: response.body["chats"][i]['sender_id'].toString() == cateringId ? cateringUser : customerUser,
-          createdAt: DateTime.parse(response.body["chats"][i]['created_at']).millisecondsSinceEpoch,
+          author: response.body["chats"][i]['sender'].toString() == "catering"
+              ? cateringUser
+              : customerUser,
+          createdAt: DateTime.parse(response.body["chats"][i]['created_at'])
+              .millisecondsSinceEpoch,
           id: const Uuid().v4(),
           text: response.body["chats"][i]['message'],
         );
@@ -41,7 +43,7 @@ class ChatController extends GetxController{
     isLoading.value = false;
   }
 
-  void setUsers({required String cateringId, required String cateringImage}){
+  void setUsers({required String cateringId, required String cateringImage}) {
     cateringUser = types.User(id: cateringId, imageUrl: cateringImage);
     customerUser = const types.User(id: "customer");
   }
@@ -51,7 +53,7 @@ class ChatController extends GetxController{
     messages.refresh();
   }
 
-  void handleSendPressed(types.PartialText message) async{
+  void handleSendPressed(types.PartialText message) async {
     var textMessage = types.TextMessage(
       author: customerUser,
       createdAt: DateTime.now().millisecondsSinceEpoch,
@@ -63,31 +65,33 @@ class ChatController extends GetxController{
     sendMessage(message: textMessage);
   }
 
-  Future<void> sendMessage({required types.TextMessage message}) async{
-    Response response = await chatRepo.sendMessage(recipientId: cateringUser.id, recipientType: "catering", message: message.text);
-    if(response.statusCode == 200){
-      messages[messages.indexWhere((element) => element.id == message.id)] = message.copyWith(status: types.Status.sent);
+  Future<void> sendMessage({required types.TextMessage message}) async {
+    Response response = await chatRepo.sendMessage(
+        cateringId: cateringUser.id, message: message.text);
+    if (response.statusCode == 200) {
+      messages[messages.indexWhere((element) => element.id == message.id)] =
+          message.copyWith(status: types.Status.sent);
       messages.refresh();
     }
   }
 
-  Future<void> getListChat() async{
+  Future<void> getListChat() async {
     isLoadingList.value = true;
 
     listChat.clear();
 
     Response response = await chatRepo.getListChat();
 
-    if(response.statusCode == 200){
-      for(var i = 0 ; i < response.body["chats"].length ; i++){
-        ChatCompact chatCompact = ChatCompact.fromJson(response.body['chats'][i]);
-        listChat.add(chatCompact);
+    if (response.statusCode == 200) {
+      for (var i = 0; i < response.body["chats"].length; i++) {
+        ChatCompactModel chatCompactModel =
+            ChatCompactModel.fromJson(response.body['chats'][i]);
+        listChat.add(chatCompactModel);
       }
     }
-
-    listChat.sort((b, a) => DateTime.parse(a.lastChat!.createdAt!).compareTo(DateTime.parse(b.lastChat!.createdAt!)));
+    // listChat.sort((b, a) => DateTime.parse(a.lastChat!.createdAt!)
+    //     .compareTo(DateTime.parse(b.lastChat!.createdAt!)));
 
     isLoadingList.value = false;
   }
-
 }

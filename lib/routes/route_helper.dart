@@ -3,6 +3,7 @@ import 'package:kateringku_mobile/models/catering_display_model.dart';
 import 'package:kateringku_mobile/screens/address/add_address_detail_view.dart';
 import 'package:kateringku_mobile/screens/address/add_address_map_view.dart';
 import 'package:kateringku_mobile/screens/address/address_list_view.dart';
+import 'package:kateringku_mobile/screens/catering/catering_review_view.dart';
 import 'package:kateringku_mobile/screens/catering/catering_view.dart';
 import 'package:kateringku_mobile/screens/catering/product_option_view.dart';
 import 'package:kateringku_mobile/screens/chat/chat_list_view.dart';
@@ -18,6 +19,10 @@ import 'package:kateringku_mobile/screens/onboard/onboard_view.dart';
 import 'package:kateringku_mobile/screens/otp/otp_validation_view.dart';
 import 'package:kateringku_mobile/screens/register/register_view.dart';
 import 'package:kateringku_mobile/screens/chat/chat_view.dart';
+import 'package:kateringku_mobile/screens/subs_order/subs_confirmation_view.dart';
+import 'package:kateringku_mobile/screens/subs_order/subs_pick_product_option_view.dart';
+import 'package:kateringku_mobile/screens/subs_order/subs_pick_product_view.dart';
+import 'package:kateringku_mobile/screens/subs_order/subs_set_period_view.dart';
 
 class RouteHelper {
   static const String onboard = "/onboard";
@@ -38,7 +43,11 @@ class RouteHelper {
   static const String category = "/category";
   static const String chat = "/chat";
   static const String chatList = "/chat-list";
-
+  static const String cateringReview = "/catering-review";
+  static const String subsSetPeriod = '/subs-set-period';
+  static const String subsPickProduct = '/subs-pick-product';
+  static const String subsPickProductOption = '/subs-pick-product-option';
+  static const String subsConfirmationView = '/subs-confirmation-view';
 
   static String getIntial() => onboard;
   static String getLogin() => login;
@@ -47,20 +56,30 @@ class RouteHelper {
       "$otpValidation?email=$email&password=$password";
   static String getDashboard() => dashboard;
   static String getMainHome() => mainHome;
-  static String getCatering({ required String catering_name, required String catering_location, required String catering_image, required String catering_id, required double catering_latitude, required double catering_longitude,  String fromCart="false"}){
+  static String getCatering(
+      {required String catering_name,
+      required String catering_location,
+      required String catering_image,
+      required String catering_id,
+      required double catering_latitude,
+      required double catering_longitude,
+      String fromCart = "false"}) {
     return "$catering?cateringId=$catering_id&cateringName=$catering_name&cateringLocation=$catering_location&cateringImage=$catering_image&cateringLatitude=$catering_latitude&cateringLongitude=$catering_longitude&fromCart=$fromCart";
   }
-    static String getInstantOrderConfirmation() => instantOrderConfirmation;
-    static String getAddressList() => addressList;
-    static String getAddAddressMap() => addAddressMap;
-    static String getAddAddressDetail() => addAddressDetail;
-    static String getProductOption() => productOption;
-    static String getMidtransPayment() => midtransPayment;
-    static String getOrderDetail() => orderDetail;
-    static String getSearch() => search;
-    static String getCategory() => category;
-    static String getChat() => chat;
-    static String getChatList() => chatList;
+
+  static String getInstantOrderConfirmation() => instantOrderConfirmation;
+  static String getAddressList() => addressList;
+  static String getAddAddressMap() => addAddressMap;
+  static String getAddAddressDetail() => addAddressDetail;
+  static String getProductOption() => productOption;
+  static String getMidtransPayment() => midtransPayment;
+  static String getOrderDetail() => orderDetail;
+  static String getSearch() => search;
+  static String getCategory() => category;
+  static String getChat() => chat;
+  static String getChatList() => chatList;
+  static String getCateringReview() => cateringReview;
+  static String getSubsPickProduct() => subsSetPeriod;
 
   static List<GetPage> routes = [
     GetPage(name: onboard, page: () => const OnboardView()),
@@ -89,11 +108,11 @@ class RouteHelper {
         transition: Transition.cupertino),
     GetPage(
         name: mainHome,
-        page: () =>  HomeView(),
+        page: () => HomeView(),
         transition: Transition.cupertino),
     GetPage(
         name: catering,
-        page: (){
+        page: () {
           var catering_id = Get.parameters["cateringId"];
           var catering_name = Get.parameters["cateringName"];
           var catering_location = Get.parameters["cateringLocation"];
@@ -101,36 +120,95 @@ class RouteHelper {
           var catering_latitude = Get.parameters["cateringLatitude"];
           var catering_longitude = Get.parameters["cateringLongitude"];
           var from_cart = Get.parameters["fromCart"];
-          return CateringView(catering_name: catering_name!, catering_location: catering_location!, catering_image: catering_image!, catering_id: catering_id!, catering_latitude: double.parse( catering_latitude!), catering_longitude: double.parse(catering_longitude!), fromCart: from_cart!,);
-        }
-    ),
+          return CateringView(
+            catering_name: catering_name!,
+            catering_location: catering_location!,
+            catering_image: catering_image!,
+            catering_id: catering_id!,
+            catering_latitude: double.parse(catering_latitude!),
+            catering_longitude: double.parse(catering_longitude!),
+            fromCart: from_cart!,
+          );
+        }),
     GetPage(
       name: instantOrderConfirmation,
-      page: ()=> PreOrderConfirmationView(),
+      page: () => PreOrderConfirmationView(),
       transition: Transition.cupertino,
     ),
     GetPage(
       name: addressList,
-      page: ()=> AddressListView(),
+      page: () => AddressListView(),
       transition: Transition.cupertino,
     ),
     GetPage(
       name: addAddressMap,
-      page: ()=> AddAddressMapView(),
+      page: () => AddAddressMapView(),
       transition: Transition.cupertino,
     ),
     GetPage(
       name: addAddressDetail,
-      page: ()=> AddAddressDetailView(),
+      page: () => AddAddressDetailView(),
       transition: Transition.cupertino,
     ),
-    GetPage(name: productOption, page: ()=> ProductOptionView(),transition: Transition.cupertino,),
-    GetPage(name: midtransPayment, page: ()=> MidtransPaymentView(),transition: Transition.cupertino,),
-    GetPage(name: orderDetail, page: ()=> OrderDetailView(),transition: Transition.cupertino,),
-    GetPage(name: search, page: ()=> SearchView(),transition: Transition.cupertino,),
-    GetPage(name: category, page: ()=> CategoryView(),transition: Transition.cupertino,),
-    GetPage(name: chat, page: ()=> ChatView(),transition: Transition.cupertino,),
-    GetPage(name: chatList, page: ()=> ChatListView(),transition: Transition.cupertino,),
-
+    GetPage(
+      name: productOption,
+      page: () => ProductOptionView(),
+      transition: Transition.cupertino,
+    ),
+    GetPage(
+      name: midtransPayment,
+      page: () => MidtransPaymentView(),
+      transition: Transition.cupertino,
+    ),
+    GetPage(
+      name: orderDetail,
+      page: () => OrderDetailView(),
+      transition: Transition.cupertino,
+    ),
+    GetPage(
+      name: search,
+      page: () => SearchView(),
+      transition: Transition.cupertino,
+    ),
+    GetPage(
+      name: category,
+      page: () => CategoryView(),
+      transition: Transition.cupertino,
+    ),
+    GetPage(
+      name: chat,
+      page: () => ChatView(),
+      transition: Transition.cupertino,
+    ),
+    GetPage(
+      name: chatList,
+      page: () => ChatListView(),
+      transition: Transition.cupertino,
+    ),
+    GetPage(
+      name: cateringReview,
+      page: () => CateringReviewView(),
+      transition: Transition.cupertino,
+    ),
+    GetPage(
+      name: subsSetPeriod,
+      page: () => SubsSetPeriodView(),
+      transition: Transition.cupertino,
+    ),
+    GetPage(
+      name: subsPickProduct,
+      page: () => SubsPickProductView(),
+      transition: Transition.cupertino,
+    ),
+    GetPage(
+      name: subsPickProductOption,
+      page: () => SubsPickProductOptionView(),
+      transition: Transition.cupertino,
+    ),
+    GetPage(
+      name: subsConfirmationView,
+      page: () => SubsConfirmationView(),
+      transition: Transition.cupertino,
+    ),
   ];
 }

@@ -18,7 +18,6 @@ class MidtransPaymentView extends StatefulWidget {
 }
 
 class _MidtransPaymentViewState extends State<MidtransPaymentView> {
-
   var orderId;
   var orderRepo = Get.find<OrderRepo>();
 
@@ -33,7 +32,7 @@ class _MidtransPaymentViewState extends State<MidtransPaymentView> {
     var controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setBackgroundColor(const Color(0x00000000))
-      ..addJavaScriptChannel("MidtransBack", onMessageReceived: (message){
+      ..addJavaScriptChannel("MidtransBack", onMessageReceived: (message) {
         var homeController = Get.find<HomeController>();
         homeController.tabController.value.index = 2;
         Get.back();
@@ -58,12 +57,14 @@ class _MidtransPaymentViewState extends State<MidtransPaymentView> {
           '${AppConstant.BASE_URL_NGROK}customer/preorder/showsnaptoken/$orderId'));
 
     return WillPopScope(
-      onWillPop: () async{
+      onWillPop: () async {
         var response = await orderRepo.getOrderPaidStatus(orderId);
-        if(response.body['paid_status'] == "CREATED"){
-          showCustomSnackBar(message: "Anda harus pilih metode pembayaran sebelum kembali", title: "Pilih Metode Pembayaran");
+        if (response.body['status'] == "PENDING") {
+          showCustomSnackBar(
+              message: "Anda harus pilih metode pembayaran sebelum kembali",
+              title: "Pilih Metode Pembayaran");
           return false;
-        }else{
+        } else {
           var homeController = Get.find<HomeController>();
           homeController.tabController.value.index = 2;
           return true;

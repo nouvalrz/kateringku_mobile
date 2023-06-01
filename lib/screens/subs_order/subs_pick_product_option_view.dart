@@ -1,39 +1,42 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:kateringku_mobile/models/product_model.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 import '../../base/show_custom_snackbar.dart';
 import '../../constants/app_constant.dart';
 import '../../controllers/catering_home_controller.dart';
+import '../../controllers/subs_order_controller.dart';
 import '../../helpers/currency_format.dart';
 import '../../themes/app_theme.dart';
 
-class ProductOptionView extends StatefulWidget {
-  const ProductOptionView({Key? key}) : super(key: key);
+class SubsPickProductOptionView extends StatefulWidget {
+  const SubsPickProductOptionView({Key? key}) : super(key: key);
 
   @override
-  State<ProductOptionView> createState() => _ProductOptionViewState();
+  State<SubsPickProductOptionView> createState() =>
+      _SubsPickProductOptionView();
 }
 
-class _ProductOptionViewState extends State<ProductOptionView> {
-  var cateringProductController = Get.find<CateringHomeController>();
-  late int index;
+class _SubsPickProductOptionView extends State<SubsPickProductOptionView> {
+  var subsOrderController = Get.find<SubsOrderController>();
+  late int orderIndex;
+  late int productId;
 
   @override
   void initState() {
-    var state = Get.arguments;
-    index = state[0];
+    orderIndex = Get.arguments!["orderIndex"];
+    productId = Get.arguments!["productId"];
   }
 
   Future<bool> _onWillPop() async {
-    if (cateringProductController.products[index].isAllOptionFulfilled()) {
-      return true;
-    } else {
-      showCustomSnackBar(
-          message: "Harap isi pilihan yang wajib!", title: "BELUM TERPENUHI");
-      return false;
-    }
+    // if (cateringProductController.products[index].isAllOptionFulfilled()) {
+    //   return true;
+    // } else {
+    //   showCustomSnackBar(
+    //       message: "Harap isi pilihan yang wajib!", title: "BELUM TERPENUHI");
+    //   return false;
+    // }
+    return true;
   }
 
   @override
@@ -68,7 +71,17 @@ class _ProductOptionViewState extends State<ProductOptionView> {
             child: Container(
               child: GestureDetector(
                 onTap: () {
-                  if (cateringProductController.products[index]
+                  // if (cateringProductController.products[index]
+                  //     .isAllOptionFulfilled()) {
+                  //   Get.back();
+                  // } else {
+                  //   showCustomSnackBar(
+                  //       message: "Harap isi pilihan yang wajib!",
+                  //       title: "BELUM TERPENUHI");
+                  // }
+                  if (subsOrderController.orderList.values
+                      .elementAt(orderIndex)
+                      .getProductById(productId)
                       .isAllOptionFulfilled()) {
                     Get.back();
                   } else {
@@ -89,7 +102,11 @@ class _ProductOptionViewState extends State<ProductOptionView> {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(cateringProductController.products[index].name!,
+                        Text(
+                            subsOrderController.orderList.values
+                                .elementAt(orderIndex)
+                                .getProductById(productId)
+                                .name!,
                             style: AppTheme.textTheme.titleLarge!.copyWith(
                                 fontSize: 14, fontWeight: FontWeight.w600)),
                         SizedBox(
@@ -121,13 +138,17 @@ class _ProductOptionViewState extends State<ProductOptionView> {
               itemBuilder: (context, indexProductOption) {
                 return ProductOptionChoice(
                   indexProductOption: indexProductOption,
-                  indexProduct: index,
+                  productId: productId,
+                  orderIndex: orderIndex,
                 );
               },
               physics: NeverScrollableScrollPhysics(),
               shrinkWrap: true,
-              itemCount: cateringProductController
-                  .products[index].productOptions!.length,
+              itemCount: subsOrderController.orderList.values
+                  .elementAt(orderIndex)
+                  .getProductById(productId)
+                  .productOptions!
+                  .length!,
               padding: EdgeInsets.only(bottom: 20),
             )),
           ))
@@ -173,8 +194,9 @@ class _ProductOptionViewState extends State<ProductOptionView> {
                               Obx(() {
                                 return Text(
                                     CurrencyFormat.convertToIdr(
-                                        cateringProductController
-                                            .products[index]
+                                        subsOrderController.orderList.values
+                                            .elementAt(orderIndex)
+                                            .getProductById(productId)
                                             .fixPrice(),
                                         0),
                                     style: AppTheme.textTheme.titleLarge!
@@ -195,7 +217,9 @@ class _ProductOptionViewState extends State<ProductOptionView> {
                   // ),
                   GestureDetector(
                     onTap: () {
-                      if (cateringProductController.products[index]
+                      if (subsOrderController.orderList.values
+                          .elementAt(orderIndex)
+                          .getProductById(productId)
                           .isAllOptionFulfilled()) {
                         Get.back();
                       } else {
@@ -209,7 +233,7 @@ class _ProductOptionViewState extends State<ProductOptionView> {
                       width: 185,
                       color: AppTheme.primaryOrange,
                       child: Center(
-                        child: Text("Tambahkan ke Keranjang",
+                        child: Text("Tambahkan",
                             style: AppTheme.textTheme.titleLarge!.copyWith(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w600,
@@ -236,12 +260,13 @@ class ProductCardInOption extends StatefulWidget {
 }
 
 class _ProductCardInOptionState extends State<ProductCardInOption> {
-  var cateringProductController = Get.find<CateringHomeController>();
-  late int index;
+  var subsOrderController = Get.find<SubsOrderController>();
+  late int productId;
+  late int orderIndex;
   @override
   void initState() {
-    var state = Get.arguments;
-    index = state[0];
+    productId = Get.arguments["productId"];
+    orderIndex = Get.arguments["orderIndex"];
   }
 
   @override
@@ -261,7 +286,10 @@ class _ProductCardInOptionState extends State<ProductCardInOption> {
                   borderRadius: BorderRadius.circular(10),
                   child: Image(
                       image: NetworkImage(AppConstant.BASE_URL +
-                          cateringProductController.products[index].image!
+                          subsOrderController.orderList.values
+                              .elementAt(orderIndex)
+                              .getProductById(productId)
+                              .image!
                               .substring(1))),
                 ),
               ),
@@ -271,7 +299,11 @@ class _ProductCardInOptionState extends State<ProductCardInOption> {
               Expanded(
                 child: Column(
                   children: [
-                    Text(cateringProductController.products[index].name!,
+                    Text(
+                        subsOrderController.orderList.values
+                            .elementAt(orderIndex)
+                            .getProductById(productId)
+                            .name!,
                         style: AppTheme.textTheme.titleLarge!.copyWith(
                             fontSize: 14, fontWeight: FontWeight.w500)),
                     SizedBox(
@@ -294,8 +326,10 @@ class _ProductCardInOptionState extends State<ProductCardInOption> {
                                 children: [
                                   Text(
                                       CurrencyFormat.convertToIdr(
-                                          cateringProductController
-                                              .products[index].price,
+                                          subsOrderController.orderList.values
+                                              .elementAt(orderIndex)
+                                              .getProductById(productId)
+                                              .price,
                                           0),
                                       style: AppTheme.textTheme.titleLarge!
                                           .copyWith(
@@ -310,8 +344,10 @@ class _ProductCardInOptionState extends State<ProductCardInOption> {
                                   ),
                                   Text(
                                       "Terjual " +
-                                          cateringProductController
-                                              .products[index].totalSales
+                                          subsOrderController.orderList.values
+                                              .elementAt(orderIndex)
+                                              .getProductById(productId)
+                                              .totalSales
                                               .toString(),
                                       style: AppTheme.textTheme.titleLarge!
                                           .copyWith(
@@ -347,10 +383,14 @@ class _ProductCardInOptionState extends State<ProductCardInOption> {
 
 class ProductOptionChoice extends StatefulWidget {
   // ProductOption productOption;
-  int indexProduct;
+  int orderIndex;
+  int productId;
   int indexProductOption;
   ProductOptionChoice(
-      {Key? key, required this.indexProductOption, required this.indexProduct})
+      {Key? key,
+      required this.indexProductOption,
+      required this.productId,
+      required this.orderIndex})
       : super(key: key);
 
   @override
@@ -358,7 +398,8 @@ class ProductOptionChoice extends StatefulWidget {
 }
 
 class _ProductOptionChoiceState extends State<ProductOptionChoice> {
-  var cateringProductController = Get.find<CateringHomeController>();
+  // var cateringProductController = Get.find<CateringHomeController>();
+  var subsOrderController = Get.find<SubsOrderController>();
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -370,15 +411,20 @@ class _ProductOptionChoiceState extends State<ProductOptionChoice> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                    cateringProductController.products[widget.indexProduct]
-                        .productOptions![widget.indexProductOption].optionName!,
+                    subsOrderController.orderList.values
+                        .elementAt(widget.orderIndex)
+                        .getProductById(widget.productId)
+                        .productOptions![widget.indexProductOption]
+                        .optionName!,
                     style: AppTheme.textTheme.titleLarge!
                         .copyWith(fontSize: 14, fontWeight: FontWeight.w500)),
                 SizedBox(
                   height: 4,
                 ),
                 Text(
-                    cateringProductController.products[widget.indexProduct]
+                    subsOrderController.orderList.values
+                        .elementAt(widget.orderIndex)
+                        .getProductById(widget.productId)
                         .productOptions![widget.indexProductOption]
                         .termsWording(),
                     style: AppTheme.textTheme.titleLarge!
@@ -392,15 +438,17 @@ class _ProductOptionChoiceState extends State<ProductOptionChoice> {
           ListView.builder(
             itemBuilder: (context, indexProductOptionDetail) {
               return ProductOptionDetail(
-                indexProduct: widget.indexProduct,
+                productId: widget.productId,
                 indexProductOption: widget.indexProductOption,
                 indexProductOptionDetail: indexProductOptionDetail,
+                orderIndex: widget.orderIndex,
               );
             },
             physics: NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            itemCount: cateringProductController
-                .products[widget.indexProduct]
+            itemCount: subsOrderController.orderList.values
+                .elementAt(widget.orderIndex)
+                .getProductById(widget.productId)
                 .productOptions![widget.indexProductOption]
                 .productOptionDetails!
                 .length,
@@ -424,12 +472,14 @@ class _ProductOptionChoiceState extends State<ProductOptionChoice> {
 }
 
 class ProductOptionDetail extends StatefulWidget {
-  int indexProduct;
+  int orderIndex;
+  int productId;
   int indexProductOption;
   int indexProductOptionDetail;
   ProductOptionDetail(
       {Key? key,
-      required this.indexProduct,
+      required this.orderIndex,
+      required this.productId,
       required this.indexProductOption,
       required this.indexProductOptionDetail})
       : super(key: key);
@@ -439,7 +489,7 @@ class ProductOptionDetail extends StatefulWidget {
 }
 
 class _ProductOptionDetailState extends State<ProductOptionDetail> {
-  var cateringProductController = Get.find<CateringHomeController>();
+  var subsOrderController = Get.find<SubsOrderController>();
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -460,8 +510,9 @@ class _ProductOptionDetailState extends State<ProductOptionDetail> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                        cateringProductController
-                            .products[widget.indexProduct]
+                        subsOrderController.orderList.values
+                            .elementAt(widget.orderIndex)
+                            .getProductById(widget.productId)
                             .productOptions![widget.indexProductOption]
                             .productOptionDetails![
                                 widget.indexProductOptionDetail]
@@ -476,8 +527,9 @@ class _ProductOptionDetailState extends State<ProductOptionDetail> {
                   children: [
                     Row(
                       children: [
-                        if (cateringProductController
-                                .products[widget.indexProduct]
+                        if (subsOrderController.orderList.values
+                                .elementAt(widget.orderIndex)
+                                .getProductById(widget.productId)
                                 .productOptions![widget.indexProductOption]
                                 .productOptionDetails![
                                     widget.indexProductOptionDetail]
@@ -490,8 +542,9 @@ class _ProductOptionDetailState extends State<ProductOptionDetail> {
                           Text(
                               "+" +
                                   CurrencyFormat.convertToIdr(
-                                      cateringProductController
-                                          .products[widget.indexProduct]
+                                      subsOrderController.orderList.values
+                                          .elementAt(widget.orderIndex)
+                                          .getProductById(widget.productId)
                                           .productOptions![
                                               widget.indexProductOption]
                                           .productOptionDetails![
@@ -506,39 +559,46 @@ class _ProductOptionDetailState extends State<ProductOptionDetail> {
                         Obx(() {
                           return SizedBox(
                             child: Checkbox(
-                              value: cateringProductController
-                                  .products[widget.indexProduct]
+                              value: subsOrderController.orderList.values
+                                  .elementAt(widget.orderIndex)
+                                  .getProductById(widget.productId)
                                   .productOptions![widget.indexProductOption]
                                   .productOptionDetails![
                                       widget.indexProductOptionDetail]
                                   .isSelected,
                               onChanged: (value) {
-                                cateringProductController.products.refresh();
+                                // cateringProductController.products.refresh();
+                                subsOrderController.orderList.refresh();
                                 if (value!) {
-                                  if (cateringProductController
-                                      .products[widget.indexProduct]
+                                  if (subsOrderController.orderList.values
+                                      .elementAt(widget.orderIndex)
+                                      .getProductById(widget.productId)
                                       .productOptions![
                                           widget.indexProductOption]
                                       .isOptionMax()) {
                                     return;
                                   }
-                                  cateringProductController
-                                      .products[widget.indexProduct]
+                                  subsOrderController.orderList.values
+                                      .elementAt(widget.orderIndex)
+                                      .getProductById(widget.productId)
                                       .productOptions![
                                           widget.indexProductOption]
                                       .productOptionDetails![
                                           widget.indexProductOptionDetail]
                                       .isSelected = value!;
-                                  cateringProductController
-                                      .products[widget.indexProduct]
+                                  subsOrderController.orderList.values
+                                      .elementAt(widget.orderIndex)
+                                      .getProductById(widget.productId)
                                       .productOptions![
                                           widget.indexProductOption]
                                       .selectedOption += 1;
-                                  cateringProductController
-                                          .products[widget.indexProduct]
+                                  subsOrderController.orderList.values
+                                          .elementAt(widget.orderIndex)
+                                          .getProductById(widget.productId)
                                           .additionalPrice +=
-                                      cateringProductController
-                                          .products[widget.indexProduct]
+                                      subsOrderController.orderList.values
+                                          .elementAt(widget.orderIndex)
+                                          .getProductById(widget.productId)
                                           .productOptions![
                                               widget.indexProductOption]
                                           .productOptionDetails![
@@ -546,23 +606,27 @@ class _ProductOptionDetailState extends State<ProductOptionDetail> {
                                           .addtionalPrice!;
                                   // cateringProductController.totalPrices();
                                 } else {
-                                  cateringProductController
-                                      .products[widget.indexProduct]
+                                  subsOrderController.orderList.values
+                                      .elementAt(widget.orderIndex)
+                                      .getProductById(widget.productId)
                                       .productOptions![
                                           widget.indexProductOption]
                                       .selectedOption -= 1;
-                                  cateringProductController
-                                      .products[widget.indexProduct]
+                                  subsOrderController.orderList.values
+                                      .elementAt(widget.orderIndex)
+                                      .getProductById(widget.productId)
                                       .productOptions![
                                           widget.indexProductOption]
                                       .productOptionDetails![
                                           widget.indexProductOptionDetail]
                                       .isSelected = value!;
-                                  cateringProductController
-                                          .products[widget.indexProduct]
+                                  subsOrderController.orderList.values
+                                          .elementAt(widget.orderIndex)
+                                          .getProductById(widget.productId)
                                           .additionalPrice -=
-                                      cateringProductController
-                                          .products[widget.indexProduct]
+                                      subsOrderController.orderList.values
+                                          .elementAt(widget.orderIndex)
+                                          .getProductById(widget.productId)
                                           .productOptions![
                                               widget.indexProductOption]
                                           .productOptionDetails![
@@ -570,7 +634,8 @@ class _ProductOptionDetailState extends State<ProductOptionDetail> {
                                           .addtionalPrice!;
                                   // cateringProductController.totalPrices();
                                 }
-                                cateringProductController.products.refresh();
+                                subsOrderController.orderList.refresh();
+                                // cateringProductController.products.refresh();
                                 // print("DEBUG ${cateringProductController.products[widget.indexProduct].productOptions![widget.indexProduct].productOptionDetails![widget.indexProductOptionDetail].isSelected}");
                               },
                             ),

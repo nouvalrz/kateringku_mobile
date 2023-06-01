@@ -1,83 +1,124 @@
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
-class ChatCompact {
-  String? cateringName;
-  String? cateringImage;
+class ChatCompactModel {
+  int? id;
+  String? updatedAt;
+  int? customerId;
   int? cateringId;
-  LastChat? lastChat;
+  LatestChat? latestChat;
+  Catering? catering;
 
-  ChatCompact(
-      {this.cateringName, this.cateringImage, this.cateringId, this.lastChat});
+  ChatCompactModel(
+      {this.id,
+      this.updatedAt,
+      this.customerId,
+      this.cateringId,
+      this.latestChat,
+      this.catering});
 
-  ChatCompact.fromJson(Map<String, dynamic> json) {
-    cateringName = json['catering_name'];
-    cateringImage = json['catering_image'];
+  ChatCompactModel.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    updatedAt = json['updated_at'];
+    customerId = json['customer_id'];
     cateringId = json['catering_id'];
-    lastChat = json['last_chat'] != null
-        ? new LastChat.fromJson(json['last_chat'])
+    latestChat = json['latest_chat'] != null
+        ? new LatestChat.fromJson(json['latest_chat'])
+        : null;
+    catering = json['catering'] != null
+        ? new Catering.fromJson(json['catering'])
         : null;
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['catering_name'] = this.cateringName;
-    data['catering_image'] = this.cateringImage;
+    data['id'] = this.id;
+    data['updated_at'] = this.updatedAt;
+    data['customer_id'] = this.customerId;
     data['catering_id'] = this.cateringId;
-    if (this.lastChat != null) {
-      data['last_chat'] = this.lastChat!.toJson();
+    if (this.latestChat != null) {
+      data['latest_chat'] = this.latestChat!.toJson();
+    }
+    if (this.catering != null) {
+      data['catering'] = this.catering!.toJson();
     }
     return data;
   }
 }
 
-class LastChat {
+class LatestChat {
   int? id;
-  int? senderId;
-  int? recipientId;
-  String? message;
   String? createdAt;
   String? updatedAt;
+  int? roomchatsId;
+  String? message;
+  String? sender;
+  Null? orderId;
 
-  LastChat(
+  LatestChat(
       {this.id,
-        this.senderId,
-        this.recipientId,
-        this.message,
-        this.createdAt,
-        this.updatedAt});
+      this.createdAt,
+      this.updatedAt,
+      this.roomchatsId,
+      this.message,
+      this.sender,
+      this.orderId});
 
-  LastChat.fromJson(Map<String, dynamic> json) {
+  LatestChat.fromJson(Map<String, dynamic> json) {
     id = json['id'];
-    senderId = json['sender_id'];
-    recipientId = json['recipient_id'];
-    message = json['message'];
     createdAt = json['created_at'];
-    updatedAt = json['updated_at'] ?? null;
+    updatedAt = json['updated_at'];
+    roomchatsId = json['roomchats_id'];
+    message = json['message'];
+    sender = json['sender'];
+    orderId = json['order_id'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
-    data['sender_id'] = this.senderId;
-    data['recipient_id'] = this.recipientId;
-    data['message'] = this.message;
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
+    data['roomchats_id'] = this.roomchatsId;
+    data['message'] = this.message;
+    data['sender'] = this.sender;
+    data['order_id'] = this.orderId;
     return data;
   }
 
   String dateWording() {
     initializeDateFormatting('id');
-    var now  = DateTime.now().toUtc();
+    var now = DateTime.now().toUtc();
     var createdAt = DateTime.parse(this.createdAt!);
 
-    if(now.day >= createdAt.day &&
+    if (now.day >= createdAt.day &&
         now.month >= createdAt.month &&
-        now.year >= createdAt.year){
+        now.year >= createdAt.year) {
       return DateFormat('jm', 'id').format(createdAt.toLocal());
-    }else{
+    } else {
       return DateFormat('d MMMM', 'id').format(createdAt.toLocal());
     }
+  }
+}
+
+class Catering {
+  int? id;
+  String? name;
+  String? image;
+
+  Catering({this.id, this.name, this.image});
+
+  Catering.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    name = json['name'];
+    image = json['image'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['name'] = this.name;
+    data['image'] = this.image;
+    return data;
   }
 }

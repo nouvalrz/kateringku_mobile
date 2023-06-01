@@ -8,6 +8,7 @@ import 'package:kateringku_mobile/controllers/address_list_controller.dart';
 import 'package:kateringku_mobile/controllers/customer_address_controller.dart';
 import 'package:kateringku_mobile/controllers/customer_address_list_controller.dart';
 import 'package:kateringku_mobile/controllers/pre_order_controller.dart';
+import 'package:kateringku_mobile/controllers/subs_order_controller.dart';
 import 'package:kateringku_mobile/data/api/api_client.dart';
 import 'package:kateringku_mobile/data/repositories/customer_address_repo.dart';
 
@@ -27,18 +28,29 @@ class AddressListView extends StatefulWidget {
 class _AddressListViewState extends State<AddressListView>
     with WidgetsBindingObserver {
   var addressController = Get.find<AddressController>();
-  var preOrderController = Get.find<PreOrderController>();
+  // var preOrderController = Get.find<PreOrderController>();
+
+  late PreOrderController preOrderController;
+  late SubsOrderController subsOrderController;
+
+  bool fromSubs = false;
 
   @override
   void initState() {
     super.initState();
+    fromSubs = Get.arguments == null ? false : true;
+    if (fromSubs) {
+      subsOrderController = Get.find<SubsOrderController>();
+    } else {
+      preOrderController = Get.find<PreOrderController>();
+    }
     addressController.getAllAddress();
   }
 
   @override
   Widget build(BuildContext context) {
     return FocusDetector(
-      onFocusGained: (){
+      onFocusGained: () {
         addressController.getAllAddress();
       },
       child: Scaffold(
@@ -96,30 +108,52 @@ class _AddressListViewState extends State<AddressListView>
                     ),
                   );
                 } else {
-                  return ListView.builder(
-                    itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: (){
-                          preOrderController.setCustomAddress(addressController.addresses[index]);
-                          preOrderController.setSelectedAddress(addressController.addresses[index], false);
-                          preOrderController.recalculatePrice();
-                          Get.back();
-                        },
-                        child: AddressCard(
-                          recipientName: addressController.addresses![index].recipientName!,
-                          phone: addressController.addresses![index].phone!,
-                          address: addressController.addresses![index].address!,
-                          addressId: addressController.addresses![index].id!.toString(),
-                        ),
-                      );
-                    },
-                    itemCount: addressController.addresses!.length,
-                    padding: EdgeInsets.only(bottom: 20),
-                  );
+                  if (addressController.addresses.isEmpty) {
+                    return Center(
+                        child: Text("Anda Belum Memiliki Alamat",
+                            style: AppTheme.textTheme.titleLarge!.copyWith(
+                                fontSize: 14, fontWeight: FontWeight.w500)));
+                  } else {
+                    return ListView.builder(
+                      itemBuilder: (context, index) {
+                        return GestureDetector(
+                          onTap: () {
+                            if (!fromSubs) {
+                              preOrderController.setCustomAddress(
+                                  addressController.addresses[index]);
+                              preOrderController.setSelectedAddress(
+                                  addressController.addresses[index], false);
+                              preOrderController.recalculatePrice();
+                            } else {
+                              subsOrderController.setCustomAddress(
+                                  addressController.addresses[index]);
+                              subsOrderController.setSelectedAddress(
+                                  addressController.addresses[index], false);
+                              subsOrderController.recalculatePrice();
+                            }
+                            Get.back();
+                          },
+                          child: AddressCard(
+                            recipientName: addressController
+                                .addresses![index].recipientName!,
+                            phone: addressController.addresses![index].phone!,
+                            address:
+                                addressController.addresses![index].address!,
+                            addressId: addressController.addresses![index].id!
+                                .toString(),
+                          ),
+                        );
+                      },
+                      itemCount: addressController.addresses!.length,
+                      padding: EdgeInsets.only(bottom: 20),
+                    );
+                  }
                 }
               }),
             ),
-            SizedBox(height: 72,)
+            SizedBox(
+              height: 72,
+            )
           ]),
           Align(
             child: SizedBox(
@@ -156,14 +190,20 @@ class _AddressListViewState extends State<AddressListView>
                       SizedBox(
                         width: 12,
                       ),
-                      Expanded(
-                        child: PrimaryButton(
-                            title: 'Pilih Alamat',
-                            onTap: () {
-                              Get.back();
-                            },
-                            state: ButtonState.idle),
-                      )
+                      Obx(() {
+                        return Expanded(
+                          child: PrimaryButton(
+                              title: 'Pilih Alamat',
+                              onTap: () {
+                                Get.back();
+                              },
+                              state: addressController.isLoading.value
+                                  ? ButtonState.loading
+                                  : addressController.addresses.isEmpty
+                                      ? ButtonState.disabled
+                                      : ButtonState.idle),
+                        );
+                      })
                     ],
                   ),
                 ),

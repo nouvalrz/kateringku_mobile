@@ -6,6 +6,7 @@ import 'package:kateringku_mobile/controllers/auth_controller.dart';
 import 'package:kateringku_mobile/controllers/cart_controller.dart';
 import 'package:kateringku_mobile/controllers/category_controller.dart';
 import 'package:kateringku_mobile/controllers/catering_home_controller.dart';
+import 'package:kateringku_mobile/controllers/catering_review_controller.dart';
 import 'package:kateringku_mobile/controllers/chat_controller.dart';
 import 'package:kateringku_mobile/controllers/customer_address_controller.dart';
 import 'package:kateringku_mobile/controllers/customer_address_list_controller.dart';
@@ -20,6 +21,7 @@ import 'package:kateringku_mobile/controllers/customer_dashboard_controller.dart
 import 'package:kateringku_mobile/controllers/review_controller.dart';
 import 'package:kateringku_mobile/controllers/save_address_controller.dart';
 import 'package:kateringku_mobile/controllers/search_controller.dart';
+import 'package:kateringku_mobile/controllers/subs_order_controller.dart';
 import 'package:kateringku_mobile/data/api/api_client.dart';
 import 'package:kateringku_mobile/data/repositories/auth_repo.dart';
 import 'package:kateringku_mobile/data/repositories/cart_repo.dart';
@@ -33,6 +35,7 @@ import 'package:kateringku_mobile/data/repositories/otp_validation_repo.dart';
 import 'package:kateringku_mobile/data/repositories/order_repo.dart';
 import 'package:kateringku_mobile/data/repositories/register_repo.dart';
 import 'package:kateringku_mobile/data/repositories/relevant_catering_products_repo.dart';
+import 'package:kateringku_mobile/data/repositories/review_repo.dart';
 import 'package:kateringku_mobile/data/repositories/save_address_repo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -56,15 +59,16 @@ Future<void> init() async {
       OtpValidationRepo(apiClient: Get.find(), sharedPreferences: Get.find()));
 
   Get.lazyPut(() => RelevantCateringProductsRepo(apiClient: Get.find()));
-  Get.lazyPut(() => CateringProductRepo(apiClient: Get.find()));
+  Get.lazyPut(() => CateringProductRepo(apiClient: Get.find()), fenix: true);
   Get.lazyPut(() => CustomerAddressRepo(apiClient: Get.find()));
   Get.lazyPut(() => SaveAddressRepo(apiClient: Get.find()));
   Get.lazyPut(() => CartRepo(apiClient: Get.find()), fenix: true);
   Get.lazyPut(() => InstantConfirmationRepo(apiClient: Get.find()));
-  Get.lazyPut(() => CateringRepo(apiClient: Get.find()));
+  Get.lazyPut(() => CateringRepo(apiClient: Get.find()), fenix: true);
   Get.lazyPut(() => OrderRepo(apiClient: Get.find()), fenix: true);
   Get.lazyPut(() => ExploreRepo(apiClient: Get.find()), fenix: true);
   Get.lazyPut(() => ChatRepo(apiClient: Get.find()), fenix: true);
+  Get.lazyPut(() => ReviewRepo(apiClient: Get.find()), fenix: true);
 
   // controllers
   Get.lazyPut(() => AuthController(authRepo: Get.find()));
@@ -91,5 +95,13 @@ Future<void> init() async {
   Get.lazyPut(() => CategoryController(exploreRepo: Get.find()));
   Get.lazyPut(() => ReviewController(apiClient: Get.find()), fenix: true);
   Get.lazyPut(() => ChatController(chatRepo: Get.find()), fenix: true);
+  Get.lazyPut(
+      () => SubsOrderController(
+          cateringRepo: Get.find(),
+          cateringProductRepo: Get.find(),
+          orderRepo: Get.find()),
+      fenix: true);
+  Get.lazyPut(() => CateringReviewController(reviewRepo: Get.find()),
+      fenix: true);
   // Get.lazyPut(() => InstantConfirmationController(instantConfirmationRepo: Get.find()));
 }

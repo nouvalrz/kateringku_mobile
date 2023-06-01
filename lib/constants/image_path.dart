@@ -16,10 +16,8 @@ class ImagePath {
   static const vegetarianCategory = "assets/images/vegetarian_category.png";
   static const snackCategory = "assets/images/snack_category.png";
 
-
   // add to cart
   static const addToCart = "assets/images/add_to_cart.svg";
-
 
   // order icon
   static const preOrderIcon = "assets/images/pre_order_icon.png";
@@ -35,8 +33,9 @@ class ImagePath {
 
   static const logout = "assets/images/logout.svg";
 
-
   // Sent confirmation
   static const sentConfirmation = "assets/images/sent_confirmation.svg";
 
+//  discount
+  static const discount = "assets/images/discount.svg";
 }

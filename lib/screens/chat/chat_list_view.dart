@@ -32,7 +32,7 @@ class _ChatListViewState extends State<ChatListView> {
   @override
   Widget build(BuildContext context) {
     return FocusDetector(
-      onFocusGained: (){
+      onFocusGained: () {
         chatController.getListChat();
       },
       child: Scaffold(
@@ -85,14 +85,17 @@ class _ChatListViewState extends State<ChatListView> {
                 height: 30,
               ),
               Expanded(child: Obx(() {
-                if(chatController.isLoadingList.value){
-                  return Center(child: CircularProgressIndicator(color: AppTheme.primaryGreen,));
-                }else{
+                if (chatController.isLoadingList.value) {
+                  return Center(
+                      child: CircularProgressIndicator(
+                    color: AppTheme.primaryGreen,
+                  ));
+                } else {
                   return ScrollConfiguration(
                     behavior: NoGlow(),
                     child: ListView.builder(
                       itemBuilder: (context, index) {
-                        return ChatCard(index : index);
+                        return ChatCard(index: index);
                       },
                       itemCount: chatController.listChat.length,
                       padding: EdgeInsets.only(top: 12, bottom: 12),
@@ -117,11 +120,17 @@ class ChatCard extends StatelessWidget {
     var chatController = Get.find<ChatController>();
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTap: (){
-        Get.toNamed(RouteHelper.chat, arguments: {"cateringId" : chatController.listChat[index].cateringId.toString(), "cateringName": chatController.listChat[index].cateringName, "cateringImage": AppConstant.BASE_URL + chatController.listChat[index].cateringImage!.substring(1)});
+      onTap: () {
+        Get.toNamed(RouteHelper.chat, arguments: {
+          "cateringId": chatController.listChat[index].catering!.id!.toString(),
+          "cateringName": chatController.listChat[index].catering!.name!,
+          "cateringImage": AppConstant.BASE_URL +
+              chatController.listChat[index].catering!.image!.substring(1)
+        });
       },
       child: Padding(
-        padding: const EdgeInsets.only(left: 25, right: 25, top: 14, bottom: 14),
+        padding:
+            const EdgeInsets.only(left: 25, right: 25, top: 14, bottom: 14),
         child: Container(
           child: Column(
             children: [
@@ -132,7 +141,10 @@ class ChatCard extends StatelessWidget {
                     height: 50,
                     width: 50,
                     child: ClipOval(
-                      child: FancyShimmerImage(imageUrl: AppConstant.BASE_URL + chatController.listChat[index].cateringImage!.substring(1)),
+                      child: FancyShimmerImage(
+                          imageUrl: AppConstant.BASE_URL +
+                              chatController.listChat[index].catering!.image!
+                                  .substring(1)),
                     ),
                   ),
                   SizedBox(
@@ -145,19 +157,27 @@ class ChatCard extends StatelessWidget {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(chatController.listChat[index].cateringName!,
-                                  style: AppTheme.textTheme.titleLarge!.copyWith(
-                                      fontSize: 14, fontWeight: FontWeight.w600)),
-                              Text(chatController.listChat[index].lastChat!.dateWording(),
+                              Text(
+                                  chatController
+                                      .listChat[index].catering!.name!,
                                   style: AppTheme.textTheme.titleLarge!
-                                      .copyWith(fontSize: 12, fontWeight: FontWeight.w400)),
+                                      .copyWith(
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w600)),
+                              Text(
+                                  chatController.listChat[index].latestChat!
+                                      .dateWording(),
+                                  style: AppTheme.textTheme.titleLarge!
+                                      .copyWith(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w400)),
                             ],
                           ),
                           SizedBox(
                             height: 2,
                           ),
                           Text(
-                            chatController.listChat[index].lastChat!.message!,
+                            chatController.listChat[index].latestChat!.message!,
                             style: AppTheme.textTheme.titleLarge!.copyWith(
                                 fontSize: 13,
                                 fontWeight: FontWeight.w500,
@@ -165,7 +185,9 @@ class ChatCard extends StatelessWidget {
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                           ),
-                          SizedBox(height: 4,),
+                          SizedBox(
+                            height: 4,
+                          ),
                           Divider()
                         ],
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -174,7 +196,6 @@ class ChatCard extends StatelessWidget {
                   ),
                 ],
               ),
-
             ],
           ),
         ),

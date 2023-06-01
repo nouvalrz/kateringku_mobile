@@ -112,8 +112,8 @@ class _CategoryViewState extends State<CategoryView> {
                               .cateringResult[index].latitude!),
                           cateringLongitude: double.parse(categoryController
                               .cateringResult[index].longitude!),
-                          cateringImage: categoryController
-                              .cateringResult[index].originalPath!,
+                          cateringImage:
+                              categoryController.cateringResult[index].image!,
                           cateringName:
                               categoryController.cateringResult[index].name!,
                           cateringCategory: categoryController
@@ -147,13 +147,13 @@ class _CategoryViewState extends State<CategoryView> {
                           bestProductCateringImage1: categoryController
                               .cateringResult[index]
                               .recommendationProducts![0]
-                              .originalPath!,
+                              .image!,
                           bestProductCateringImage2: categoryController
                                   .cateringResult[index].recommendationProducts!
                                   .asMap()
                                   .containsKey(1)
                               ? categoryController.cateringResult[index]
-                                  .recommendationProducts![1].originalPath
+                                  .recommendationProducts![1].image
                               : null,
                           cateringId: categoryController
                               .cateringResult[index].id

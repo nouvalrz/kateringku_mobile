@@ -14,34 +14,35 @@ class ProductModel {
   int? isFreeDelivery;
   int? isHidden;
   int? isAvailable;
-  int? imageId;
   String? isCustomable;
   int? totalSales;
-  String? originalPath;
+  String? image;
   List<ProductOption>? productOptions;
   int orderQuantity = 0;
   int additionalPrice = 0;
+  String productOptionSummary = "";
 
   ProductModel(
       {this.id,
-        this.createdAt,
-        this.updatedAt,
-        this.cateringId,
-        this.name,
-        this.description,
-        this.weight,
-        required this.price,
-        this.minimumQuantity,
-        this.maximumQuantity,
-        this.isFreeDelivery,
-        this.isHidden,
-        this.isAvailable,
-        this.imageId,
-        this.isCustomable,
-        this.totalSales,
-        this.originalPath,
-        this.productOptions,
-      });
+      this.createdAt,
+      this.updatedAt,
+      this.cateringId,
+      this.name,
+      this.description,
+      this.weight,
+      required this.price,
+      this.minimumQuantity,
+      this.maximumQuantity,
+      this.isFreeDelivery,
+      this.isHidden,
+      this.isAvailable,
+      this.isCustomable,
+      this.totalSales,
+      this.image,
+      this.productOptions,
+      this.productOptionSummary = "",
+      this.orderQuantity = 0,
+      this.additionalPrice = 0});
 
   ProductModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -57,15 +58,26 @@ class ProductModel {
     isFreeDelivery = json['is_free_delivery'];
     isHidden = json['is_hidden'];
     isAvailable = json['is_available'];
-    imageId = json['image_id'];
     isCustomable = json['is_customable'];
     totalSales = json['total_sales'];
-    originalPath = json['original_path'];
+    image = json['image'];
     if (json['product_options'] != null) {
       productOptions = <ProductOption>[];
       json['product_options'].forEach((v) {
         productOptions!.add(new ProductOption.fromJson(v));
       });
+    }
+
+    void setProductOptionSummary() {
+      var choices = <String>[];
+      productOptions!.forEach((productOption) {
+        productOption.productOptionDetails!.forEach((productOptionDetail) {
+          if (productOptionDetail.isSelected) {
+            choices.add(productOptionDetail.optionChoiceName!);
+          }
+        });
+      });
+      productOptionSummary = choices.join(", ");
     }
   }
 
@@ -77,7 +89,7 @@ class ProductModel {
     if (this.productOptions != null) {
       List<ProductOption> productOptionsTemp = [];
       productOptions!.forEach((element) {
-        if(element.selectedOption > 0){
+        if (element.selectedOption > 0) {
           productOptionsTemp.add(element);
         }
       });
@@ -88,50 +100,65 @@ class ProductModel {
     return data;
   }
 
-  bool isProductCustomable(){
+  bool isProductCustomable() {
     return productOptions!.isNotEmpty;
   }
 
-  void addQuantity({int quantity = 0, bool fromCart = false}){
-    if(minimumQuantity! >= 1 && orderQuantity == 0 && !fromCart){
+  void addQuantity({int quantity = 0, bool fromCart = false}) {
+    if (minimumQuantity! >= 1 && orderQuantity == 0 && !fromCart) {
       orderQuantity = minimumQuantity!;
       return;
     }
-    if(quantity != 0){
+    if (quantity != 0) {
       orderQuantity += quantity!;
       return;
-    }else{
+    } else {
       orderQuantity += 1;
     }
   }
 
-  void subtractQuantity(){
-    if(orderQuantity == 0){
+  void subtractQuantity() {
+    if (orderQuantity == 0) {
       return;
     }
-    if(orderQuantity <= minimumQuantity!){
+    if (orderQuantity <= minimumQuantity!) {
       orderQuantity = 0;
       return;
     }
     orderQuantity -= 1;
   }
 
-  int fixPrice(){
+  int fixPrice() {
     return price + additionalPrice;
   }
 
-  bool isAllOptionFulfilled(){
+  bool isAllOptionFulfilled() {
     var falseTotal = 0;
     productOptions!.forEach((productOption) {
-      if(!productOption.isOptionChoiceFulfilled()){
+      if (!productOption.isOptionChoiceFulfilled()) {
         falseTotal += 1;
       }
     });
-    if(falseTotal > 0){
+    if (falseTotal > 0) {
       return false;
-    }else{
+    } else {
       return true;
     }
+  }
+
+  void setProductOptionSummary() {
+    productOptionSummary = "";
+    var productOptionChoice = <String>[];
+
+    productOptions!.forEach((productOption) {
+      productOption.productOptionDetails!.forEach((productOptionDetail) {
+        if (productOptionDetail.isSelected) {
+          productOptionChoice.add(productOptionDetail.optionChoiceName!);
+        }
+      });
+    });
+
+    productOptionSummary = productOptionChoice.join(", ");
   }
 }
 
@@ -148,14 +175,13 @@ class ProductOption {
 
   ProductOption(
       {this.id,
-        this.optionName,
-        this.optionType,
-        this.maximumSelection,
-        this.isActive,
-        this.productId,
-        this.productOptionDetails,
-        this.minimumSelection
-      });
+      this.optionName,
+      this.optionType,
+      this.maximumSelection,
+      this.isActive,
+      this.productId,
+      this.productOptionDetails,
+      this.minimumSelection});
 
   ProductOption.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -163,7 +189,7 @@ class ProductOption {
     optionType = json['option_type'];
     maximumSelection = json['maximum_selection'];
     minimumSelection = json['minimum_selection'];
-    isActive = json['is_active'];
+    isActive = json['is_active'].toString();
     productId = json['product_id'];
     if (json['product_option_details'] != null) {
       productOptionDetails = <ProductOptionDetail>[];
@@ -171,7 +197,6 @@ class ProductOption {
         productOptionDetails!.add(new ProductOptionDetail.fromJson(v));
       });
     }
-
   }
 
   Map<String, dynamic> toJson() {
@@ -184,7 +209,7 @@ class ProductOption {
     if (this.productOptionDetails != null) {
       List<ProductOptionDetail> productOptionDetailsTemp = [];
       productOptionDetails!.forEach((element) {
-        if(element.isSelected){
+        if (element.isSelected) {
           productOptionDetailsTemp.add(element);
         }
       });
@@ -195,45 +220,45 @@ class ProductOption {
     return data;
   }
 
-  String termsWording(){
+  String termsWording() {
     var termType = "";
-    if(minimumSelection == 0){
+    if (minimumSelection == 0) {
       termType = "Opsional";
-    }else{
+    } else {
       termType = "Wajib";
     }
     return "${termType} | Pilih maks. ${maximumSelection}";
   }
 
-  void clearSelection(){
+  void clearSelection() {
     productOptionDetails!.forEach((productOptionDetail) {
       productOptionDetail.isSelected = false;
     });
   }
 
-  bool isOptionMax(){
+  bool isOptionMax() {
     var totalSelected = 0;
     productOptionDetails!.forEach((productOptionDetail) {
-      if(productOptionDetail.isSelected){
+      if (productOptionDetail.isSelected) {
         totalSelected += 1;
       }
     });
     return totalSelected >= maximumSelection!;
   }
 
-  bool isOptionChoiceFulfilled(){
-    if(minimumSelection == 0 ){
+  bool isOptionChoiceFulfilled() {
+    if (minimumSelection == 0) {
       return true;
-    }else{
+    } else {
       var totalSelected = 0;
       productOptionDetails!.forEach((productOptionDetail) {
-        if(productOptionDetail.isSelected){
-          totalSelected+=1;
+        if (productOptionDetail.isSelected) {
+          totalSelected += 1;
         }
       });
-      if(totalSelected > 0 ){
+      if (totalSelected > 0) {
         return true;
-      }else{
+      } else {
         return false;
       }
     }
@@ -248,20 +273,20 @@ class ProductOptionDetail {
   String? isAvailable;
   bool isSelected = false;
 
-  ProductOptionDetail(
-      {this.id,
-        this.productOptionId,
-        this.optionChoiceName,
-        this.addtionalPrice,
-        this.isAvailable,
-      });
+  ProductOptionDetail({
+    this.id,
+    this.productOptionId,
+    this.optionChoiceName,
+    this.addtionalPrice,
+    this.isAvailable,
+  });
 
   ProductOptionDetail.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     productOptionId = json['product_option_id'];
     optionChoiceName = json['option_choice_name'];
-    addtionalPrice = json['addtional_price'];
-    isAvailable = json['is_available'];
+    addtionalPrice = json['additional_price'];
+    isAvailable = json['is_available'].toString();
   }
 
   Map<String, dynamic> toJson() {
@@ -270,11 +295,11 @@ class ProductOptionDetail {
     return data;
   }
 
-  void activateOption(){
+  void activateOption() {
     this.isSelected = true;
   }
 
-  void deactivateOption(){
+  void deactivateOption() {
     this.isSelected = false;
   }
 }

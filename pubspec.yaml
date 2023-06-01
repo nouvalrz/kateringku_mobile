@@ -59,6 +59,9 @@ dependencies:
   fancy_shimmer_image: ^2.0.2
   image_picker: ^0.8.7+3
   flutter_chat_ui: ^1.5.8
+  easy_image_viewer: ^1.2.0
+  loading_animation_widget: ^1.2.0+4
+  syncfusion_flutter_datepicker: "20.4.44"
 
 dev_dependencies:
   flutter_test:

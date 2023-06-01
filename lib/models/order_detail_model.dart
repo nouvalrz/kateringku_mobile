@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:kateringku_mobile/models/address_model.dart';
 
 class OrderDetailModel {
@@ -10,37 +12,36 @@ class OrderDetailModel {
   int? subtotal;
   int? deliveryPrice;
   int? totalPrice;
-  String? paidStatus;
   String? orderStatus;
   String? createdAt;
   String? cateringName;
   String? cateringPhone;
   String? cateringLocation;
-  String? cateringOriginalPath;
+  String? image;
   String? cateringId;
   String? paymentExpiry;
+  int? discount;
   Review? review;
 
   OrderDetailModel(
       {this.id,
-        this.orderType,
-        this.invoiceNumber,
-        this.address,
-        this.deliveryDatetime,
-        this.products,
-        this.subtotal,
-        this.deliveryPrice,
-        this.totalPrice,
-        this.paidStatus,
-        this.orderStatus,
-        this.createdAt});
+      this.orderType,
+      this.invoiceNumber,
+      this.address,
+      this.deliveryDatetime,
+      this.products,
+      this.subtotal,
+      this.deliveryPrice,
+      this.totalPrice,
+      this.orderStatus,
+      this.createdAt});
 
   OrderDetailModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     orderType = json['order_type'];
     invoiceNumber = json['invoice_number'];
     address =
-    json['address'] != null ? AddressModel.fromJson(json['address']) : null;
+        json['address'] != null ? AddressModel.fromJson(json['address']) : null;
     review = json['review'] != null ? Review.fromJson(json['review']) : null;
     deliveryDatetime = json['delivery_datetime'];
     if (json['products'] != null) {
@@ -52,15 +53,18 @@ class OrderDetailModel {
     subtotal = json['subtotal'];
     deliveryPrice = json['delivery_price'];
     totalPrice = json['total_price'];
-    paidStatus = json['paid_status'];
     orderStatus = json['order_status'];
     createdAt = json['created_at'];
     cateringName = json['catering_name'];
     cateringPhone = json['catering_phone'];
     cateringLocation = json['catering_location'];
-    cateringOriginalPath = json['catering_original_path'];
+    image = json['image'];
     cateringId = json['catering_id'].toString();
     paymentExpiry = json['payment_expiry'];
+    if (json["discount"] != null) {
+      Map<String, dynamic> discountDecode = jsonDecode(json["discount"]);
+      discount = discountDecode["jumlah"];
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -78,36 +82,34 @@ class OrderDetailModel {
     data['subtotal'] = this.subtotal;
     data['delivery_price'] = this.deliveryPrice;
     data['total_price'] = this.totalPrice;
-    data['paid_status'] = this.paidStatus;
     data['order_status'] = this.orderStatus;
     data['created_at'] = this.createdAt;
     return data;
   }
 }
 
-
 class OrderProduct {
   int? id;
   String? name;
   int? quantity;
   int? price;
-  String? originalPath;
+  String? image;
   String? productOptionSummary;
 
   OrderProduct(
       {this.id,
-        this.name,
-        this.quantity,
-        this.price,
-        this.originalPath,
-        this.productOptionSummary});
+      this.name,
+      this.quantity,
+      this.price,
+      this.image,
+      this.productOptionSummary});
 
   OrderProduct.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
     quantity = json['quantity'];
     price = json['price'];
-    originalPath = json['original_path'];
+    image = json['image'];
     productOptionSummary = json['product_option_summary'];
   }
 
@@ -117,7 +119,7 @@ class OrderProduct {
     data['name'] = this.name;
     data['quantity'] = this.quantity;
     data['price'] = this.price;
-    data['original_path'] = this.originalPath;
+    data['original_path'] = this.image;
     data['product_option_summary'] = this.productOptionSummary;
     return data;
   }
@@ -136,14 +138,14 @@ class Review {
 
   Review(
       {this.id,
-        this.orderId,
-        this.customerId,
-        this.star,
-        this.hasImage,
-        this.description,
-        this.createdAt,
-        this.updatedAt,
-        this.cateringId});
+      this.orderId,
+      this.customerId,
+      this.star,
+      this.hasImage,
+      this.description,
+      this.createdAt,
+      this.updatedAt,
+      this.cateringId});
 
   Review.fromJson(Map<String, dynamic> json) {
     id = json['id'];

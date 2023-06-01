@@ -484,20 +484,19 @@ class _OrderDetailViewState extends State<OrderDetailView> {
         });
   }
 
-  Container? getOrderStatusBadge(
-      {required String paidStatus, required String orderStatus}) {
-    if (paidStatus == "UNPAID") {
+  Container? getOrderStatusBadge({required String orderStatus}) {
+    if (orderStatus == "UNPAID") {
       return orderStatusBadge(
           text: "Belum Dibayar",
           bgColor: const Color(0xFFFFE6FD),
           textColor: const Color(0xff9d118f));
-    } else if (paidStatus == "VOID") {
+    } else if (orderStatus == "VOID") {
       return orderStatusBadge(
           text: "Pembayaran Kadaluarsa",
           bgColor: const Color(0xFFFFF1DB),
           textColor: const Color(0xffE49A2A));
     } else {
-      if (orderStatus == "WAITING_FOR_CONFIRMATION") {
+      if (orderStatus == "PAID") {
         return orderStatusBadge(
             text: "Menunggu Konfirmasi",
             bgColor: const Color(0xFFF5FFE0),
@@ -512,7 +511,7 @@ class _OrderDetailViewState extends State<OrderDetailView> {
             text: "Diproses",
             bgColor: const Color(0xFFE8EAFF),
             textColor: const Color(0xff2D3BBC));
-      } else if (orderStatus == "SENT") {
+      } else if (orderStatus == "SEND") {
         return orderStatusBadge(
             text: "Sedang Dikirim",
             bgColor: const Color(0xFFE6FFE2),
@@ -758,17 +757,16 @@ class _OrderDetailViewState extends State<OrderDetailView> {
                                 style: AppTheme.textTheme.titleLarge!.copyWith(
                                     fontSize: 13, fontWeight: FontWeight.w500)),
                             if (!orderDetailController.isLoading.value &&
-                                (orderDetailController.orderDetail.value!.paidStatus! ==
+                                (orderDetailController
+                                            .orderDetail.value!.orderStatus! ==
                                         "UNPAID" ||
                                     orderDetailController
-                                            .orderDetail.value!.paidStatus! ==
+                                            .orderDetail.value!.orderStatus! ==
                                         "VOID" ||
                                     orderDetailController
                                             .orderDetail.value!.orderStatus! ==
-                                        "WAITING_FOR_CONFIRMATION"))
+                                        "PAID"))
                               getOrderStatusBadge(
-                                  paidStatus: orderDetailController
-                                      .orderDetail.value!.paidStatus!,
                                   orderStatus: orderDetailController
                                       .orderDetail.value!.orderStatus!)!
                           ],
@@ -784,7 +782,7 @@ class _OrderDetailViewState extends State<OrderDetailView> {
                       Obx(() {
                         if (!orderDetailController.isLoading.value &&
                             orderDetailController
-                                    .orderDetail.value.paidStatus ==
+                                    .orderDetail.value.orderStatus ==
                                 "UNPAID") {
                           return Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -856,9 +854,18 @@ class _OrderDetailViewState extends State<OrderDetailView> {
                       }),
                       Obx(() {
                         if (!orderDetailController.isLoading.value &&
-                            (orderDetailController
-                                    .orderDetail!.value!.orderStatus! !=
-                                "WAITING_FOR_CONFIRMATION")) {
+                            !(orderDetailController
+                                        .orderDetail!.value!.orderStatus! ==
+                                    "PAID" ||
+                                orderDetailController
+                                        .orderDetail!.value!.orderStatus! ==
+                                    "UNPAID" ||
+                                orderDetailController
+                                        .orderDetail!.value!.orderStatus! ==
+                                    "PENDING" ||
+                                orderDetailController
+                                        .orderDetail!.value!.orderStatus! ==
+                                    "VOID")) {
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
@@ -869,8 +876,6 @@ class _OrderDetailViewState extends State<OrderDetailView> {
                                 height: 14,
                               ),
                               getOrderStatusBadge(
-                                  paidStatus: orderDetailController
-                                      .orderDetail!.value!.paidStatus!,
                                   orderStatus: orderDetailController
                                       .orderDetail!.value!.orderStatus!)!
                             ],
@@ -1013,8 +1018,8 @@ class _OrderDetailViewState extends State<OrderDetailView> {
                                 child: ClipRRect(
                                   child: Image(
                                       image: NetworkImage(AppConstant.BASE_URL +
-                                          orderDetailController.orderDetail
-                                              .value.cateringOriginalPath!
+                                          orderDetailController
+                                              .orderDetail.value.image!
                                               .substring(1))),
                                   borderRadius: BorderRadius.circular(5),
                                 ),
@@ -1160,7 +1165,10 @@ class _OrderDetailViewState extends State<OrderDetailView> {
                                   orderDetailController
                                           .orderDetail.value.totalPrice! -
                                       orderDetailController
-                                          .orderDetail.value.deliveryPrice!,
+                                          .orderDetail.value.deliveryPrice! +
+                                      (orderDetailController
+                                              .orderDetail.value.discount ??
+                                          0),
                                   0),
                           style: AppTheme.textTheme.titleLarge!.copyWith(
                               fontSize: 12, fontWeight: FontWeight.w400));
@@ -1196,6 +1204,51 @@ class _OrderDetailViewState extends State<OrderDetailView> {
                   ],
                 ),
               ),
+              Obx(() {
+                if (orderDetailController.isLoading.value) {
+                  return Container();
+                } else {
+                  if (orderDetailController.orderDetail.value.discount !=
+                      null) {
+                    return Column(
+                      children: [
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            left: 25,
+                            right: 25,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text("Diskon",
+                                  style: AppTheme.textTheme.titleLarge!
+                                      .copyWith(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w300)),
+                              Obx(() {
+                                return Text(
+                                    orderDetailController.isLoading.value
+                                        ? "..."
+                                        : "- ${CurrencyFormat.convertToIdr(orderDetailController.orderDetail.value.discount, 0)}",
+                                    style: AppTheme.textTheme.titleLarge!
+                                        .copyWith(
+                                            color: AppTheme.primaryRed,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w400));
+                              }),
+                            ],
+                          ),
+                        ),
+                      ],
+                    );
+                  } else {
+                    return Container();
+                  }
+                }
+              }),
               const SizedBox(
                 height: 4,
               ),
@@ -1263,8 +1316,7 @@ class _OrderDetailViewState extends State<OrderDetailView> {
                         "cateringName": orderDetailController
                             .orderDetail.value.cateringName,
                         "cateringImage": AppConstant.BASE_URL +
-                            orderDetailController
-                                .orderDetail.value.cateringOriginalPath!
+                            orderDetailController.orderDetail.value.image!
                                 .substring(1)
                       });
                     },
@@ -1310,20 +1362,20 @@ class _OrderDetailViewState extends State<OrderDetailView> {
                             onTap: () async {
                               if (orderDetailController
                                       .orderDetail.value.orderStatus !=
-                                  "SENT") {
+                                  "SEND") {
                                 showCustomSnackBar(
                                     message:
                                         "Pesanan belum dalam proses pengiriman",
                                     title: "Pesanan masih diproses");
                               } else if (orderDetailController
                                       .orderDetail.value.orderStatus ==
-                                  "SENT") {
+                                  "SEND") {
                                 showModalSentConfirmation();
                               }
                             },
                             state: orderDetailController
                                         .orderDetail.value.orderStatus ==
-                                    "SENT"
+                                    "SEND"
                                 ? ButtonState.idle
                                 : ButtonState.disabled);
                       }
@@ -1343,7 +1395,7 @@ class _OrderDetailViewState extends State<OrderDetailView> {
     var stateNumber = 0;
     if (state == "PROCESSED") {
       stateNumber = 0;
-    } else if (state == "SENT") {
+    } else if (state == "SEND") {
       stateNumber = 1;
     } else {
       stateNumber = 2;
@@ -1511,8 +1563,8 @@ class _ProductCardInDetailOrderState extends State<ProductCardInDetailOrder> {
                 borderRadius: BorderRadius.circular(5),
                 child: Image(
                     image: NetworkImage(AppConstant.BASE_URL +
-                        orderDetailController.orderDetail.value!
-                            .products![widget.index].originalPath!
+                        orderDetailController
+                            .orderDetail.value!.products![widget.index].image!
                             .substring(1))),
               ),
             ),

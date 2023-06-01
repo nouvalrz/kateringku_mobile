@@ -16,6 +16,7 @@ import 'package:kateringku_mobile/data/api/api_client.dart';
 import 'package:kateringku_mobile/data/repositories/instant_confirmation_repo.dart';
 import 'package:kateringku_mobile/models/add_cart_body.dart';
 import 'package:kateringku_mobile/models/cart_model.dart';
+import 'package:kateringku_mobile/models/catering_display_model.dart';
 import 'package:kateringku_mobile/models/catering_product_model.dart';
 import 'package:kateringku_mobile/models/new_cart_model.dart';
 import 'package:kateringku_mobile/models/product_model.dart';
@@ -42,6 +43,7 @@ class PreOrderConfirmationView extends StatefulWidget {
 class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
   var preOrderController = Get.find<PreOrderController>();
   late NewCartModel stateCart;
+  late List<Discount> discountList;
 
   @override
   void initState() {
@@ -53,6 +55,7 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
     var cateringLatitude = state[2];
     var cateringLongitude = state[3];
     stateCart = state[4];
+    discountList = state[5] ?? null;
 
     EasyLoading.show(
       status: 'Loading...',
@@ -62,12 +65,189 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
     preOrderController.cateringId = cateringId;
     preOrderController.cateringLatitude = cateringLatitude;
     preOrderController.cateringLongitude = cateringLongitude;
+    preOrderController.preOrderModel.value.discountId = null;
+    preOrderController.preOrderModel.value.discount = 0;
 
     preOrderController.deliveryDateTime = Rxn<DateTime>();
 
     preOrderController.onInit();
     preOrderController.getDeliveryTimeRange();
     EasyLoading.dismiss();
+  }
+
+  void showModalDiscounts() async {
+    await showModalBottomSheet(
+        // isScrollControlled: true,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(12), topRight: Radius.circular(12)),
+        ),
+        context: context,
+        isScrollControlled: true,
+        builder: (context) {
+          return SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.only(
+                  left: 25,
+                  right: 25,
+                  top: 20,
+                  bottom: MediaQuery.of(context).viewInsets.bottom + 20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        "Semua Diskon",
+                        style: AppTheme.textTheme.labelMedium!.copyWith(
+                            fontWeight: FontWeight.w600, fontSize: 14),
+                      ),
+                    ],
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  ),
+                  SizedBox(
+                    height: 22,
+                  ),
+                  SizedBox(
+                    height: 400,
+                    child: ListView.builder(
+                      padding: EdgeInsets.zero,
+                      physics: BouncingScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        return ColorFiltered(
+                          colorFilter: (() {
+                            if (preOrderController.isDiscountUsable(
+                                minimumSpend:
+                                    discountList[index].minimumSpend!)) {
+                              return ColorFilter.mode(
+                                  Colors.white, BlendMode.dst);
+                            } else {
+                              return ColorFilter.matrix(<double>[
+                                0.2126, 0.7152, 0.0722, 0, 0, //
+                                0.2126, 0.7152, 0.0722, 0, 0,
+                                0.2126, 0.7152, 0.0722, 0, 0,
+                                0, 0, 0, 1, 0,
+                              ]);
+                            }
+                          }()),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Transform.translate(
+                                    offset: const Offset(-6, 0.0),
+                                    child: Container(
+                                      child:
+                                          SvgPicture.asset(ImagePath.discount),
+                                      width: 62,
+                                      height: 62,
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Column(
+                                      children: [
+                                        Text(
+                                          discountList[index].title!,
+                                          style: AppTheme.textTheme.labelMedium!
+                                              .copyWith(
+                                                  fontWeight: FontWeight.w500,
+                                                  fontSize: 13),
+                                        ),
+                                        SizedBox(
+                                          height: 6,
+                                        ),
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              "Min. pembelian ${CurrencyFormat.convertToIdr(discountList[index].minimumSpend, 0)}\nMaks. diskon ${CurrencyFormat.convertToIdr(discountList[index].maximumDisc, 0)}",
+                                              style: AppTheme
+                                                  .textTheme.labelMedium!
+                                                  .copyWith(
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      fontSize: 12),
+                                            ),
+                                            if (preOrderController
+                                                .isDiscountUsable(
+                                                    minimumSpend:
+                                                        discountList[index]
+                                                            .minimumSpend!))
+                                              Obx(() {
+                                                return Radio<int?>(
+                                                    value:
+                                                        discountList[index].id!,
+                                                    groupValue:
+                                                        preOrderController
+                                                            .preOrderModel
+                                                            .value
+                                                            .discountId,
+                                                    toggleable: true,
+                                                    onChanged: (value) {
+                                                      preOrderController
+                                                          .preOrderModel
+                                                          .value
+                                                          .discountId = value;
+                                                      if (value != null) {
+                                                        preOrderController
+                                                            .preOrderModel.value
+                                                            .setDiscount(
+                                                                discountModel:
+                                                                    discountList[
+                                                                        index]);
+                                                      } else {
+                                                        preOrderController
+                                                            .preOrderModel.value
+                                                            .setDiscount(
+                                                                discountModel:
+                                                                    discountList[
+                                                                        index],
+                                                                reset: true);
+                                                      }
+                                                      preOrderController
+                                                          .preOrderModel
+                                                          .refresh();
+                                                    });
+                                              })
+                                          ],
+                                        ),
+                                        SizedBox(
+                                          height: 6,
+                                        ),
+                                        Text(
+                                          "Berlaku s/d ${DateFormat('d MMMM', 'id').format(DateTime.parse(discountList[index].endDate!))}",
+                                          style: AppTheme.textTheme.labelMedium!
+                                              .copyWith(
+                                                  fontWeight: FontWeight.w400,
+                                                  fontSize: 12),
+                                        ),
+                                      ],
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Divider(
+                                thickness: 0.3,
+                                color: Colors.black12,
+                              ),
+                              SizedBox(
+                                height: 8,
+                              )
+                            ],
+                          ),
+                        );
+                      },
+                      itemCount: discountList.length,
+                    ),
+                  )
+                ],
+              ),
+            ),
+          );
+        });
   }
 
   @override
@@ -335,7 +515,7 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                         ),
                         Divider(
                           color: Colors.grey[200],
-                          thickness: 10,
+                          thickness: 8,
                         ),
                         Padding(
                           padding:
@@ -501,7 +681,7 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                         ),
                         Divider(
                           color: Colors.grey[200],
-                          thickness: 10,
+                          thickness: 8,
                         ),
                         SizedBox(
                           height: 12,
@@ -550,7 +730,7 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                                           .preOrderModel
                                           .value
                                           .orderProducts![index]
-                                          .originalPath!,
+                                          .image!,
                                       productPrice: preOrderController
                                           .preOrderModel
                                           .value
@@ -578,7 +758,7 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                                 productDesc: preOrderController.preOrderModel
                                     .value.orderProducts![index].description!,
                                 productImage: preOrderController.preOrderModel
-                                    .value.orderProducts![index].originalPath!,
+                                    .value.orderProducts![index].image!,
                                 productPrice: preOrderController
                                     .preOrderModel.value.orderProducts![index]
                                     .fixPrice(),
@@ -595,9 +775,87 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                             physics: NeverScrollableScrollPhysics(),
                             padding: EdgeInsets.only(top: 4),
                           ),
+                        if (discountList.isNotEmpty)
+                          Column(
+                            children: [
+                              Divider(
+                                color: Colors.grey[200],
+                                thickness: 8,
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    left: 25, right: 25, bottom: 16, top: 14),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    showModalDiscounts();
+                                  },
+                                  child: Obx(() {
+                                    return Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          border: Border.all(
+                                              color: Colors.black12)),
+                                      height: 55,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              SizedBox(
+                                                width: 18,
+                                              ),
+                                              Icon(
+                                                Icons.discount_rounded,
+                                                color: AppTheme.primaryOrange,
+                                              ),
+                                              SizedBox(
+                                                width: 18,
+                                              ),
+                                              Text(
+                                                  (() {
+                                                    if (preOrderController
+                                                            .preOrderModel
+                                                            .value
+                                                            .discount ==
+                                                        0) {
+                                                      return 'Gunakan Diskon';
+                                                    } else {
+                                                      return 'Diskon Berhasil Digunakan';
+                                                    }
+                                                  }()),
+                                                  style: AppTheme
+                                                      .textTheme.titleLarge!
+                                                      .copyWith(
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                              FontWeight.w500)),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Icon(
+                                                Icons
+                                                    .arrow_circle_right_outlined,
+                                                color: Colors.black26,
+                                              ),
+                                              SizedBox(
+                                                width: 18,
+                                              ),
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    );
+                                  }),
+                                ),
+                              ),
+                            ],
+                          ),
                         Divider(
                           color: Colors.grey[200],
-                          thickness: 10,
+                          thickness: 8,
                         ),
                         Padding(
                           padding: EdgeInsets.only(
@@ -671,6 +929,49 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                             ],
                           ),
                         ),
+                        SizedBox(
+                          height: 8,
+                        ),
+                        Obx(() {
+                          if (preOrderController.preOrderModel.value.discount !=
+                              0) {
+                            return Padding(
+                              padding: EdgeInsets.only(
+                                left: 25,
+                                right: 25,
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text("Diskon",
+                                      style: AppTheme.textTheme.titleLarge!
+                                          .copyWith(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w300)),
+                                  Obx(() => preOrderController.isLoading.value
+                                      ? Text("...")
+                                      : preOrderController.preOrderModel.value
+                                                  .deliveryPrice ==
+                                              null
+                                          ? Text("!")
+                                          : Text(
+                                              "- ${CurrencyFormat.convertToIdr(preOrderController.preOrderModel.value.discount, 0)}",
+                                              style: AppTheme
+                                                  .textTheme.titleLarge!
+                                                  .copyWith(
+                                                      color:
+                                                          AppTheme.primaryRed,
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.w400)))
+                                ],
+                              ),
+                            );
+                          } else {
+                            return Container();
+                          }
+                        }),
                         SizedBox(
                           height: 4,
                         ),
@@ -784,7 +1085,7 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                       onTap: () {
                         if (preOrderController.isAllFilled()) {
                           preOrderController.postPreOrder();
-                          if(stateCart != null){
+                          if (stateCart != null) {
                             preOrderController.deleteCart(stateCart.id!);
                           }
                         } else {
@@ -799,11 +1100,17 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                           width: 150,
                           color: AppTheme.primaryOrange,
                           child: Center(
-                            child: preOrderController.isLoadingPostPreOrder.value ? CircularProgressIndicator(color: Colors.white,) : Text("Pilih Pembayaran",
-                                style: AppTheme.textTheme.titleLarge!.copyWith(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.white)),
+                            child:
+                                preOrderController.isLoadingPostPreOrder.value
+                                    ? CircularProgressIndicator(
+                                        color: Colors.white,
+                                      )
+                                    : Text("Pilih Pembayaran",
+                                        style: AppTheme.textTheme.titleLarge!
+                                            .copyWith(
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.white)),
                           ),
                         );
                       }),

@@ -13,12 +13,12 @@ class NewCartModel {
 
   NewCartModel(
       {this.id,
-        this.createdAt,
-        this.updatedAt,
-        this.customerId,
-        this.orderType,
-        this.cateringId,
-        this.cartDetails});
+      this.createdAt,
+      this.updatedAt,
+      this.customerId,
+      this.orderType,
+      this.cateringId,
+      this.cartDetails});
 
   NewCartModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -37,7 +37,7 @@ class NewCartModel {
     }
   }
 
-  int totalPrice(){
+  int totalPrice() {
     var totalPrice = 0;
     cartDetails!.forEach((element) {
       totalPrice += element.fixPrice();
@@ -45,7 +45,7 @@ class NewCartModel {
     return totalPrice;
   }
 
-  int totalQuantity(){
+  int totalQuantity() {
     var totalQuantity = 0;
     cartDetails!.forEach((element) {
       totalQuantity += element.quantity!;
@@ -72,29 +72,29 @@ class Catering {
   String? isVerified;
   int? userId;
   int? totalSales;
-  String? originalPath;
+  String? image;
   Village? village;
   List<Categories>? categories;
 
   Catering(
       {this.id,
-        this.updatedAt,
-        this.name,
-        this.email,
-        this.description,
-        this.phone,
-        this.address,
-        this.villageId,
-        this.zipcode,
-        this.latitude,
-        this.longitude,
-        this.deliveryStartTime,
-        this.deliveryEndTime,
-        this.imageId,
-        this.isVerified,
-        this.userId,
-        this.totalSales,
-        this.originalPath});
+      this.updatedAt,
+      this.name,
+      this.email,
+      this.description,
+      this.phone,
+      this.address,
+      this.villageId,
+      this.zipcode,
+      this.latitude,
+      this.longitude,
+      this.deliveryStartTime,
+      this.deliveryEndTime,
+      this.imageId,
+      this.isVerified,
+      this.userId,
+      this.totalSales,
+      this.image});
 
   Catering.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -114,7 +114,7 @@ class Catering {
     isVerified = json['isVerified'];
     userId = json['user_id'];
     totalSales = json['total_sales'];
-    originalPath = json['original_path'];
+    image = json['image'];
     village = new Village.fromJson(json['village']);
     if (json['categories'] != null) {
       categories = <Categories>[];
@@ -143,23 +143,21 @@ class Catering {
     data['isVerified'] = this.isVerified;
     data['user_id'] = this.userId;
     data['total_sales'] = this.totalSales;
-    data['original_path'] = this.originalPath;
+    data['original_path'] = this.image;
     if (this.categories != null) {
       data['categories'] = this.categories!.map((v) => v.toJson()).toList();
     }
     return data;
   }
 
-  String mergeCategories(){
+  String mergeCategories() {
     List merged = [];
     categories!.forEach((category) {
       merged.add(category.name);
     });
     return merged.join(", ");
   }
-
 }
-
 
 class CartDetails {
   int? id;
@@ -173,13 +171,13 @@ class CartDetails {
 
   CartDetails(
       {this.id,
-        this.createdAt,
-        this.updatedAt,
-        this.cartId,
-        this.productId,
-        this.quantity,
-        this.product,
-        this.productOptions});
+      this.createdAt,
+      this.updatedAt,
+      this.cartId,
+      this.productId,
+      this.quantity,
+      this.product,
+      this.productOptions});
 
   CartDetails.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -189,7 +187,7 @@ class CartDetails {
     productId = json['product_id'];
     quantity = json['quantity'];
     product =
-    json['product'] != null ? new Product.fromJson(json['product']) : null;
+        json['product'] != null ? new Product.fromJson(json['product']) : null;
     if (json['product_options'] != null) {
       productOptions = <ProductOptions>[];
       json['product_options'].forEach((v) {
@@ -198,10 +196,10 @@ class CartDetails {
     }
   }
 
-  String concatProductOptions(){
-    if(productOptions!.isEmpty || productOptions! == null){
+  String concatProductOptions() {
+    if (productOptions!.isEmpty || productOptions! == null) {
       return "";
-    }else{
+    } else {
       var productOptionSummary = [];
       productOptions!.forEach((element) {
         productOptionSummary.add(element.optionChoice!.optionChoiceName);
@@ -210,11 +208,11 @@ class CartDetails {
     }
   }
 
-  int fixPrice(){
+  int fixPrice() {
     var additionalPrice = 0;
-    if(productOptions!.isEmpty || productOptions! == null){
+    if (productOptions!.isEmpty || productOptions! == null) {
       return product!.price! * quantity!;
-    }else{
+    } else {
       productOptions!.forEach((element) {
         additionalPrice += element.optionChoice!.addtionalPrice!;
       });
@@ -242,24 +240,25 @@ class Product {
   // int? totalSales;
   // String? originalPath;
 
-  Product(
-      {this.id,
-        this.createdAt,
-        this.updatedAt,
-        this.cateringId,
-        this.name,
-        // this.description,
-        // this.weight,
-        this.price,});
-        // this.minimumQuantity,
-        // this.maximumQuantity,
-        // this.isFreeDelivery,
-        // this.isHidden,
-        // this.isAvailable,
-        // this.imageId,
-        // this.isCustomable,
-        // this.totalSales,
-        // this.originalPath});
+  Product({
+    this.id,
+    this.createdAt,
+    this.updatedAt,
+    this.cateringId,
+    this.name,
+    // this.description,
+    // this.weight,
+    this.price,
+  });
+  // this.minimumQuantity,
+  // this.maximumQuantity,
+  // this.isFreeDelivery,
+  // this.isHidden,
+  // this.isAvailable,
+  // this.imageId,
+  // this.isCustomable,
+  // this.totalSales,
+  // this.originalPath});
 
   Product.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -315,12 +314,12 @@ class ProductOptions {
 
   ProductOptions(
       {this.id,
-        this.createdAt,
-        this.updatedAt,
-        this.cartDetailId,
-        this.productOptionId,
-        this.productOptionDetailId,
-        this.optionChoice});
+      this.createdAt,
+      this.updatedAt,
+      this.cartDetailId,
+      this.productOptionId,
+      this.productOptionDetailId,
+      this.optionChoice});
 
   ProductOptions.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -360,12 +359,12 @@ class OptionChoice {
 
   OptionChoice(
       {this.id,
-        this.createdAt,
-        this.updatedAt,
-        this.productOptionId,
-        this.optionChoiceName,
-        this.addtionalPrice,
-        this.isAvailable});
+      this.createdAt,
+      this.updatedAt,
+      this.productOptionId,
+      this.optionChoiceName,
+      this.addtionalPrice,
+      this.isAvailable});
 
   OptionChoice.fromJson(Map<String, dynamic> json) {
     id = json['id'];

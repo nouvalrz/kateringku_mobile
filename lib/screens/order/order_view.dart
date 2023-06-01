@@ -29,7 +29,7 @@ class _OrderViewState extends State<OrderView> {
   @override
   Widget build(BuildContext context) {
     return FocusDetector(
-      onFocusGained: (){
+      onFocusGained: () {
         // orderListController.isLoading.value = true;
         orderListController.getAllOrders();
       },
@@ -111,6 +111,7 @@ class _OrderViewState extends State<OrderView> {
                       color: Colors.white,
                       backgroundColor: AppTheme.primaryGreen,
                       child: ListView.builder(
+                        physics: BouncingScrollPhysics(),
                         itemBuilder: (context, index) {
                           return OrderCard(
                             index: index,
@@ -146,8 +147,9 @@ class _OrderCardState extends State<OrderCard> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: (){
-        Get.toNamed(RouteHelper.orderDetail, arguments: orderListController.orders[widget.index].id!);
+      onTap: () {
+        Get.toNamed(RouteHelper.orderDetail,
+            arguments: orderListController.orders[widget.index].id!);
       },
       child: Padding(
         padding: EdgeInsets.only(left: 25, right: 25, bottom: 20),
@@ -168,10 +170,16 @@ class _OrderCardState extends State<OrderCard> {
                     //   width: 35,
                     //   color: Colors.grey,
                     // ),
-                    Image.asset(
-                      ImagePath.preOrderIcon,
-                      height: 35,
-                    ),
+                    if (orderListController.orders[widget.index].isPreOrder())
+                      Image.asset(
+                        ImagePath.preOrderIcon,
+                        height: 35,
+                      )
+                    else
+                      Image.asset(
+                        ImagePath.subsOrderIcon,
+                        height: 35,
+                      ),
                     SizedBox(
                       width: 8,
                     ),
@@ -220,7 +228,8 @@ class _OrderCardState extends State<OrderCard> {
                 ),
                 Text(
                     CurrencyFormat.convertToIdr(
-                        orderListController.orders[widget.index].totalPrice!, 0),
+                        orderListController.orders[widget.index].totalPrice!,
+                        0),
                     style: AppTheme.textTheme.titleLarge!
                         .copyWith(fontSize: 12, fontWeight: FontWeight.w500)),
               ],

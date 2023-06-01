@@ -87,10 +87,10 @@ class _DashboardViewState extends State<DashboardView> {
                                       () => Text(
                                         customerDashboardController
                                                     .location.value.length >
-                                                30
+                                                35
                                             ? customerDashboardController
                                                     .location.value
-                                                    .substring(0, 30) +
+                                                    .substring(0, 35) +
                                                 "..."
                                             : customerDashboardController
                                                 .location.value,
@@ -255,7 +255,7 @@ class _DashboardViewState extends State<DashboardView> {
                                             cateringImage:
                                                 customerDashboardController
                                                     .relevantCaterings[index]
-                                                    .originalPath!,
+                                                    .image!,
                                             cateringName:
                                                 customerDashboardController
                                                     .relevantCaterings[index]
@@ -295,12 +295,12 @@ class _DashboardViewState extends State<DashboardView> {
                                                 customerDashboardController
                                                     .relevantCaterings[index]
                                                     .recommendationProducts![0]
-                                                    .originalPath!,
+                                                    .image!,
                                             bestProductCateringImage2:
                                                 customerDashboardController
                                                     .relevantCaterings[index]
                                                     .recommendationProducts![1]
-                                                    .originalPath!,
+                                                    .image!,
                                             cateringId:
                                                 customerDashboardController
                                                     .relevantCaterings[index].id
@@ -518,9 +518,10 @@ class _DashboardProductCardState extends State<DashboardProductCard> {
                             height: 30,
                             child: ClipOval(
                               // borderRadius: BorderRadius.circular(6),
-                              child: Image(
-                                  image: NetworkImage(AppConstant.BASE_URL +
-                                      widget.cateringImage.substring(1))),
+                              child: FancyShimmerImage(
+                                imageUrl: AppConstant.BASE_URL +
+                                    widget.cateringImage.substring(1),
+                              ),
                             ),
                           ),
                           SizedBox(
