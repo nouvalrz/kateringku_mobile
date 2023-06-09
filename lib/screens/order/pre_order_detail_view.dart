@@ -11,9 +11,11 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:group_button/group_button.dart';
 import 'package:intl/intl.dart';
 import 'package:kateringku_mobile/base/show_custom_snackbar.dart';
-import 'package:kateringku_mobile/controllers/order_detail_controller.dart';
+import 'package:kateringku_mobile/controllers/complaint_controller.dart';
+import 'package:kateringku_mobile/controllers/pre_order_detail_controller.dart';
 import 'package:kateringku_mobile/controllers/review_controller.dart';
 import 'package:kateringku_mobile/routes/route_helper.dart';
 
@@ -26,16 +28,17 @@ import '../../themes/app_theme.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'dart:io';
 
-class OrderDetailView extends StatefulWidget {
-  const OrderDetailView({Key? key}) : super(key: key);
+class PreOrderDetailView extends StatefulWidget {
+  const PreOrderDetailView({Key? key}) : super(key: key);
 
   @override
-  State<OrderDetailView> createState() => _OrderDetailViewState();
+  State<PreOrderDetailView> createState() => _PreOrderDetailViewState();
 }
 
-class _OrderDetailViewState extends State<OrderDetailView> {
+class _PreOrderDetailViewState extends State<PreOrderDetailView> {
   late ReviewController reviewController;
-  var orderDetailController = Get.find<OrderDetailController>();
+  late ComplaintController complaintController;
+  var orderDetailController = Get.find<PreOrderDetailController>();
   int? id;
 
   @override
@@ -98,6 +101,8 @@ class _OrderDetailViewState extends State<OrderDetailView> {
                       GestureDetector(
                         onTap: () {
                           Get.back();
+                          complaintController = Get.find<ComplaintController>();
+                          showModalComplaint();
                         },
                         child: Container(
                           child: Center(
@@ -107,7 +112,7 @@ class _OrderDetailViewState extends State<OrderDetailView> {
                               style: AppTheme.textTheme.labelMedium!.copyWith(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 14,
-                                  color: AppTheme.primaryBlack),
+                                  color: AppTheme.primaryRed),
                             ),
                           ),
                           width: 120,
@@ -145,7 +150,7 @@ class _OrderDetailViewState extends State<OrderDetailView> {
         });
   }
 
-  void showModalSetReview() async {
+  void showModalDisplayComplaint() async {
     await showModalBottomSheet(
         // isScrollControlled: true,
         shape: const RoundedRectangleBorder(
@@ -156,6 +161,7 @@ class _OrderDetailViewState extends State<OrderDetailView> {
         isScrollControlled: true,
         builder: (context) {
           return SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
             child: Padding(
               padding: EdgeInsets.only(
                   left: 25,
@@ -168,7 +174,534 @@ class _OrderDetailViewState extends State<OrderDetailView> {
                   Row(
                     children: [
                       Text(
-                        "Beri Ulasan",
+                        "Status Komplain",
+                        style: AppTheme.textTheme.labelMedium!.copyWith(
+                            fontWeight: FontWeight.w600, fontSize: 14),
+                      ),
+                      Text(
+                        orderDetailController.orderDetail.value.invoiceNumber!,
+                        style: AppTheme.textTheme.labelMedium!.copyWith(
+                            fontWeight: FontWeight.w400, fontSize: 12),
+                      ),
+                    ],
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Status Pengajuan Komplain",
+                              style: AppTheme.textTheme.labelMedium!.copyWith(
+                                  fontWeight: FontWeight.w500, fontSize: 13),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(8),
+                              child: Text(
+                                orderDetailController
+                                    .orderDetail.value.complaint!
+                                    .statusWording()!,
+                                style: AppTheme.textTheme.labelMedium!.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 13,
+                                    color: Colors.white),
+                              ),
+                              decoration:
+                                  BoxDecoration(color: AppTheme.primaryOrange),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              "Tipe Masalah",
+                              style: AppTheme.textTheme.labelMedium!.copyWith(
+                                  fontWeight: FontWeight.w500, fontSize: 13),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(8),
+                              child: Text(
+                                orderDetailController
+                                    .orderDetail.value.complaint!
+                                    .problemWording()!,
+                                style: AppTheme.textTheme.labelMedium!.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 13,
+                                    color: Colors.white),
+                              ),
+                              decoration:
+                                  BoxDecoration(color: AppTheme.primaryGreen),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              "Gambar Bukti",
+                              style: AppTheme.textTheme.labelMedium!.copyWith(
+                                  fontWeight: FontWeight.w500, fontSize: 13),
+                            ),
+                            const SizedBox(
+                              height: 12,
+                            ),
+                            // RatingBar.builder(
+                            //   initialRating: 0,
+                            //   minRating: 1,
+                            //   direction: Axis.horizontal,
+                            //   allowHalfRating: false,
+                            //   itemCount: 5,
+                            //   itemPadding:
+                            //       const EdgeInsets.symmetric(horizontal: 4.0),
+                            //   itemBuilder: (context, _) => const Icon(
+                            //     Icons.star,
+                            //     color: Colors.amber,
+                            //   ),
+                            //   onRatingUpdate: (rating) {
+                            //     // reviewController.ratingStar.value = rating;
+                            //   },
+                            // ),
+                            // const SizedBox(
+                            //   height: 12,
+                            // ),
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics: NeverScrollableScrollPhysics(),
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 8),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                          child: Container(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  ClipRRect(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            5),
+                                                    child: SizedBox(
+                                                      width: 80,
+                                                      height: 80,
+                                                      child: FancyShimmerImage(
+                                                        imageUrl: AppConstant
+                                                                .BASE_URL +
+                                                            orderDetailController
+                                                                .orderDetail
+                                                                .value
+                                                                .complaint!
+                                                                .images![index]
+                                                                .image!
+                                                                .substring(1),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: 12,
+                                                  ),
+                                                  Text(
+                                                    "Gambar ${index + 1}",
+                                                    style: AppTheme
+                                                        .textTheme.labelMedium!
+                                                        .copyWith(
+                                                            fontWeight:
+                                                                FontWeight.w400,
+                                                            fontSize: 12),
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        // height: 200,
+                                        decoration: BoxDecoration(
+                                            color: Colors.grey[50],
+                                            borderRadius:
+                                                BorderRadius.circular(6),
+                                            border: Border.all(
+                                                color: AppTheme.greyOutline,
+                                                width: 0.6)),
+                                      )),
+                                    ],
+                                  ),
+                                );
+                              },
+                              itemCount: orderDetailController
+                                  .orderDetail.value.complaint!.images!.length,
+                            ),
+                            const SizedBox(
+                              height: 24,
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  void showModalComplaint() async {
+    await showModalBottomSheet(
+        // isScrollControlled: true,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(12), topRight: Radius.circular(12)),
+        ),
+        context: context,
+        isScrollControlled: true,
+        builder: (context) {
+          return SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Padding(
+              padding: EdgeInsets.only(
+                  left: 25,
+                  right: 25,
+                  top: 20,
+                  bottom: MediaQuery.of(context).viewInsets.bottom + 20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        "Ajukan Komplain",
+                        style: AppTheme.textTheme.labelMedium!.copyWith(
+                            fontWeight: FontWeight.w600, fontSize: 14),
+                      ),
+                      Text(
+                        orderDetailController.orderDetail.value.invoiceNumber!,
+                        style: AppTheme.textTheme.labelMedium!.copyWith(
+                            fontWeight: FontWeight.w400, fontSize: 12),
+                      ),
+                    ],
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Pilih Masalah",
+                              style: AppTheme.textTheme.labelMedium!.copyWith(
+                                  fontWeight: FontWeight.w500, fontSize: 13),
+                            ),
+                            SizedBox(
+                              height: 4,
+                            ),
+                            Text(
+                              "Sesuaikan dengan kendalamu ya",
+                              style: AppTheme.textTheme.labelMedium!.copyWith(
+                                  fontWeight: FontWeight.w400, fontSize: 11),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            GroupButton(
+                              options: GroupButtonOptions(
+                                  mainGroupAlignment: MainGroupAlignment.start,
+                                  borderRadius: BorderRadius.circular(5),
+                                  selectedColor: AppTheme.primaryGreen,
+                                  runSpacing: 2,
+                                  unselectedTextStyle:
+                                      AppTheme.textTheme.labelMedium!.copyWith(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 13),
+                                  selectedTextStyle:
+                                      AppTheme.textTheme.labelMedium!.copyWith(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 13,
+                                          color: Colors.white)),
+                              isRadio: true,
+                              onSelected: (value, index, isSelected) {
+                                complaintController.problem = value.toString();
+                                print(value);
+                              },
+                              // onSelected: (index, isSelected) => print('$index button is selected'),
+                              buttons: [
+                                "Makanan Rusak",
+                                "Belum Sampai",
+                                "Ada yang Kurang",
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              "Gambar Bukti",
+                              style: AppTheme.textTheme.labelMedium!.copyWith(
+                                  fontWeight: FontWeight.w500, fontSize: 13),
+                            ),
+                            SizedBox(
+                              height: 4,
+                            ),
+                            Text(
+                              "Unggah maksimal 3 foto",
+                              style: AppTheme.textTheme.labelMedium!.copyWith(
+                                  fontWeight: FontWeight.w400, fontSize: 11),
+                            ),
+                            const SizedBox(
+                              height: 12,
+                            ),
+                            // RatingBar.builder(
+                            //   initialRating: 0,
+                            //   minRating: 1,
+                            //   direction: Axis.horizontal,
+                            //   allowHalfRating: false,
+                            //   itemCount: 5,
+                            //   itemPadding:
+                            //       const EdgeInsets.symmetric(horizontal: 4.0),
+                            //   itemBuilder: (context, _) => const Icon(
+                            //     Icons.star,
+                            //     color: Colors.amber,
+                            //   ),
+                            //   onRatingUpdate: (rating) {
+                            //     // reviewController.ratingStar.value = rating;
+                            //   },
+                            // ),
+                            // const SizedBox(
+                            //   height: 12,
+                            // ),
+                            Obx(() {
+                              if (complaintController.images.value.isNotEmpty) {
+                                return ListView.builder(
+                                  itemCount:
+                                      complaintController.images.value.length,
+                                  itemBuilder: (context, index) {
+                                    var imageCount = index + 1;
+                                    return Padding(
+                                      padding: const EdgeInsets.only(bottom: 8),
+                                      child: Row(
+                                        children: [
+                                          Expanded(
+                                              child: Container(
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.all(8.0),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Row(
+                                                    children: [
+                                                      ClipRRect(
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(5),
+                                                        child: SizedBox(
+                                                          width: 80,
+                                                          height: 80,
+                                                          child: Image.file(
+                                                            File(
+                                                                complaintController
+                                                                    .images
+                                                                    .value[
+                                                                        index]!
+                                                                    .path!),
+                                                            fit:
+                                                                BoxFit.fitWidth,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        width: 12,
+                                                      ),
+                                                      Text(
+                                                        "Gambar ${imageCount}",
+                                                        style: AppTheme
+                                                            .textTheme
+                                                            .labelMedium!
+                                                            .copyWith(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                                fontSize: 12),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  GestureDetector(
+                                                    onTap: () {
+                                                      complaintController
+                                                          .deleteImage(index);
+                                                    },
+                                                    child: Padding(
+                                                      padding:
+                                                          const EdgeInsets.only(
+                                                              right: 10),
+                                                      child: Icon(
+                                                        Icons
+                                                            .delete_outline_outlined,
+                                                        color:
+                                                            AppTheme.primaryRed,
+                                                        size: 24,
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                            ),
+                                            // height: 200,
+                                            decoration: BoxDecoration(
+                                                color: Colors.grey[50],
+                                                borderRadius:
+                                                    BorderRadius.circular(6),
+                                                border: Border.all(
+                                                    color: AppTheme.greyOutline,
+                                                    width: 0.6)),
+                                          )),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                  shrinkWrap: true,
+                                  physics: NeverScrollableScrollPhysics(),
+                                );
+                              } else {
+                                return Container();
+                              }
+                            }),
+                            GestureDetector(
+                              onTap: () async {
+                                // await reviewController.pickImageFromCamera();
+                                if (complaintController.images.value.length ==
+                                    3) {
+                                  showCustomSnackBar(
+                                      message:
+                                          "Anda tidak dapat menambah gambar lagi!",
+                                      title: "Gambar Maksimal");
+                                } else {
+                                  await complaintController
+                                      .pickImageFromCamera();
+                                }
+                              },
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                      child: Container(
+                                    height: 46,
+                                    decoration: BoxDecoration(
+                                        color: Colors.grey[100],
+                                        borderRadius: BorderRadius.circular(6),
+                                        border: Border.all(
+                                            color: AppTheme.greyOutline,
+                                            width: 0.6)),
+                                    child: Center(
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          const Icon(
+                                            Icons.camera_alt_outlined,
+                                            color: Colors.grey,
+                                            size: 21,
+                                          ),
+                                          const SizedBox(
+                                            width: 4,
+                                          ),
+                                          Text(
+                                            "Unggah Gambar",
+                                            style: AppTheme
+                                                .textTheme.labelMedium!
+                                                .copyWith(
+                                                    fontWeight: FontWeight.w400,
+                                                    fontSize: 12),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ))
+                                ],
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 24,
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Expanded(child: Obx(() {
+                        return PrimaryButton(
+                            title: 'Ajukan',
+                            onTap: () async {
+                              await complaintController.postComplain(
+                                  order_id: orderDetailController
+                                      .orderDetail!.value!.id!
+                                      .toString());
+                              // await reviewController.postReview(
+                              //     cateringId: orderDetailController
+                              //         .orderDetail.value.cateringId!,
+                              //     orderId: orderDetailController
+                              //         .orderDetail.value.id
+                              //         .toString());
+                              Get.back();
+                              orderDetailController.getOrderDetail(id!);
+                            },
+                            state: complaintController.isLoading.value
+                                ? ButtonState.loading
+                                : ButtonState.idle);
+                      }))
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  void showModalSetReview() async {
+    await showModalBottomSheet(
+        // isScrollControlled: true,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(12), topRight: Radius.circular(12)),
+        ),
+        context: context,
+        isScrollControlled: true,
+        builder: (context) {
+          return SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Padding(
+              padding: EdgeInsets.only(
+                  left: 25,
+                  right: 25,
+                  top: 20,
+                  bottom: MediaQuery.of(context).viewInsets.bottom + 20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        "Ajukan Komplain",
                         style: AppTheme.textTheme.labelMedium!.copyWith(
                             fontWeight: FontWeight.w600, fontSize: 14),
                       ),
@@ -607,6 +1140,7 @@ class _OrderDetailViewState extends State<OrderDetailView> {
         ),
         Expanded(
             child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -651,8 +1185,8 @@ class _OrderDetailViewState extends State<OrderDetailView> {
                             return Text(
                                 orderDetailController.isLoading.value
                                     ? "..."
-                                    : orderDetailController
-                                        .orderDetail.value.orderType!,
+                                    : orderDetailController.orderDetail.value
+                                        .orderTypeWording(),
                                 style: AppTheme.textTheme.titleLarge!.copyWith(
                                     fontSize: 12, fontWeight: FontWeight.w400));
                           })
@@ -756,19 +1290,48 @@ class _OrderDetailViewState extends State<OrderDetailView> {
                             Text("Status Pesanan",
                                 style: AppTheme.textTheme.titleLarge!.copyWith(
                                     fontSize: 13, fontWeight: FontWeight.w500)),
-                            if (!orderDetailController.isLoading.value &&
-                                (orderDetailController
-                                            .orderDetail.value!.orderStatus! ==
-                                        "UNPAID" ||
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                if (!orderDetailController.isLoading.value &&
+                                    (orderDetailController.orderDetail.value!
+                                                .orderStatus! ==
+                                            "UNPAID" ||
+                                        orderDetailController.orderDetail.value!
+                                                .orderStatus! ==
+                                            "VOID" ||
+                                        orderDetailController.orderDetail.value!
+                                                .orderStatus! ==
+                                            "PAID" ||
+                                        orderDetailController.orderDetail.value!
+                                                .orderStatus! ==
+                                            "COMPLAINT"))
+                                  getOrderStatusBadge(
+                                      orderStatus: orderDetailController
+                                          .orderDetail.value!.orderStatus!)!,
+                                if (!orderDetailController.isLoading.value &&
                                     orderDetailController
                                             .orderDetail.value!.orderStatus! ==
-                                        "VOID" ||
-                                    orderDetailController
-                                            .orderDetail.value!.orderStatus! ==
-                                        "PAID"))
-                              getOrderStatusBadge(
-                                  orderStatus: orderDetailController
-                                      .orderDetail.value!.orderStatus!)!
+                                        "COMPLAINT")
+                                  GestureDetector(
+                                    onTap: () {
+                                      showModalDisplayComplaint();
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(top: 5),
+                                      child: Text(
+                                        "Lihat Status Komplain",
+                                        style: AppTheme.textTheme.titleLarge!
+                                            .copyWith(
+                                                fontSize: 12,
+                                                fontWeight: FontWeight.w400,
+                                                decoration:
+                                                    TextDecoration.underline),
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
                           ],
                         );
                       }),
@@ -865,7 +1428,10 @@ class _OrderDetailViewState extends State<OrderDetailView> {
                                     "PENDING" ||
                                 orderDetailController
                                         .orderDetail!.value!.orderStatus! ==
-                                    "VOID")) {
+                                    "VOID" ||
+                                orderDetailController
+                                        .orderDetail.value!.orderStatus! ==
+                                    "COMPLAINT")) {
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
@@ -1011,17 +1577,16 @@ class _OrderDetailViewState extends State<OrderDetailView> {
                               return Container(
                                   width: 48, height: 48, color: Colors.black38);
                             } else {
-                              return Container(
-                                width: 48,
-                                height: 48,
-                                color: Colors.black38,
-                                child: ClipRRect(
-                                  child: Image(
-                                      image: NetworkImage(AppConstant.BASE_URL +
-                                          orderDetailController
-                                              .orderDetail.value.image!
-                                              .substring(1))),
-                                  borderRadius: BorderRadius.circular(5),
+                              return ClipRRect(
+                                borderRadius: BorderRadius.circular(5),
+                                child: Container(
+                                  width: 48,
+                                  height: 48,
+                                  color: Colors.black38,
+                                  child: FancyShimmerImage(
+                                    imageUrl: orderDetailController
+                                        .orderDetail.value.image!,
+                                  ),
                                 ),
                               );
                             }
@@ -1249,6 +1814,50 @@ class _OrderDetailViewState extends State<OrderDetailView> {
                   }
                 }
               }),
+              Obx(() {
+                if (orderDetailController.isLoading.value) {
+                  return Container();
+                } else {
+                  if (orderDetailController.orderDetail.value.useBalance != 0) {
+                    return Column(
+                      children: [
+                        const SizedBox(
+                          height: 8,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                            left: 25,
+                            right: 25,
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text("Pakai Saldo",
+                                  style: AppTheme.textTheme.titleLarge!
+                                      .copyWith(
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w300)),
+                              Obx(() {
+                                return Text(
+                                    orderDetailController.isLoading.value
+                                        ? "..."
+                                        : "- ${CurrencyFormat.convertToIdr(orderDetailController.orderDetail.value.useBalance, 0)}",
+                                    style: AppTheme.textTheme.titleLarge!
+                                        .copyWith(
+                                            color: AppTheme.primaryRed,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w400));
+                              }),
+                            ],
+                          ),
+                        ),
+                      ],
+                    );
+                  } else {
+                    return Container();
+                  }
+                }
+              }),
               const SizedBox(
                 height: 4,
               ),
@@ -1276,7 +1885,9 @@ class _OrderDetailViewState extends State<OrderDetailView> {
                               ? "..."
                               : CurrencyFormat.convertToIdr(
                                   orderDetailController
-                                      .orderDetail.value.totalPrice!,
+                                          .orderDetail.value.totalPrice! -
+                                      orderDetailController
+                                          .orderDetail.value.useBalance,
                                   0),
                           style: AppTheme.textTheme.titleLarge!.copyWith(
                               fontSize: 12, fontWeight: FontWeight.w400));
@@ -1315,9 +1926,8 @@ class _OrderDetailViewState extends State<OrderDetailView> {
                             orderDetailController.orderDetail.value.cateringId,
                         "cateringName": orderDetailController
                             .orderDetail.value.cateringName,
-                        "cateringImage": AppConstant.BASE_URL +
+                        "cateringImage":
                             orderDetailController.orderDetail.value.image!
-                                .substring(1)
                       });
                     },
                     child: Container(
@@ -1547,7 +2157,7 @@ class ProductCardInDetailOrder extends StatefulWidget {
 }
 
 class _ProductCardInDetailOrderState extends State<ProductCardInDetailOrder> {
-  var orderDetailController = Get.find<OrderDetailController>();
+  var orderDetailController = Get.find<PreOrderDetailController>();
 
   @override
   Widget build(BuildContext context) {
@@ -1561,11 +2171,10 @@ class _ProductCardInDetailOrderState extends State<ProductCardInDetailOrder> {
               height: 38,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(5),
-                child: Image(
-                    image: NetworkImage(AppConstant.BASE_URL +
-                        orderDetailController
-                            .orderDetail.value!.products![widget.index].image!
-                            .substring(1))),
+                child: FancyShimmerImage(
+                  imageUrl: orderDetailController
+                      .orderDetail.value!.products![widget.index].image!,
+                ),
               ),
             ),
             const SizedBox(

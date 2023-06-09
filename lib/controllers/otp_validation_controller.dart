@@ -16,9 +16,11 @@ class OtpValidationController extends GetxController implements GetxService {
     late ResponseModel responseModel;
     if (response.statusCode == 200) {
       otpValidationRepo.saveUserToken(response.body["token"]);
-      responseModel = ResponseModel(true, response.body["token"]);
+      responseModel =
+          ResponseModel(true, response.body["token"], response.body['type']);
     } else {
-      responseModel = ResponseModel(false, response.body["message"]);
+      responseModel =
+          ResponseModel(false, response.body["message"], response.body['type']);
     }
     _isLoading = true;
     update();

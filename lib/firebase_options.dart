@@ -47,30 +47,30 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBTFMVU-UmjLvN1RWKW8jwDZ74unwfUXKg',
-    appId: '1:874299753823:web:dad8f55ab96254079762ea',
-    messagingSenderId: '874299753823',
-    projectId: 'kateringku-765be',
-    authDomain: 'kateringku-765be.firebaseapp.com',
-    storageBucket: 'kateringku-765be.appspot.com',
-    measurementId: 'G-HSS2V0G3NP',
+    apiKey: 'AIzaSyB0cN6o4biFmVKYUHpMOYLABj0XTWMZVRE',
+    appId: '1:364873093278:web:8aeb049ab24cb4234cab8f',
+    messagingSenderId: '364873093278',
+    projectId: 'kateringku-fe3c4',
+    authDomain: 'kateringku-fe3c4.firebaseapp.com',
+    storageBucket: 'kateringku-fe3c4.appspot.com',
+    measurementId: 'G-23GP25QZ28',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyBzzcCBUbVwUcZvKESIhSE_pulDDFxw9AM',
-    appId: '1:874299753823:android:f3eb4db9fbffd6d99762ea',
-    messagingSenderId: '874299753823',
-    projectId: 'kateringku-765be',
-    storageBucket: 'kateringku-765be.appspot.com',
+    apiKey: 'AIzaSyAlayIrEYBUc4WU01XkolPzX0bKdPr3FfA',
+    appId: '1:364873093278:android:7ed9663bd21a88c04cab8f',
+    messagingSenderId: '364873093278',
+    projectId: 'kateringku-fe3c4',
+    storageBucket: 'kateringku-fe3c4.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBRcEQVM-AWwiedYhPCS91VHXNnidmCqjE',
-    appId: '1:874299753823:ios:91386c89a775179c9762ea',
-    messagingSenderId: '874299753823',
-    projectId: 'kateringku-765be',
-    storageBucket: 'kateringku-765be.appspot.com',
-    iosClientId: '874299753823-06utor5ubi0i01b7sdk8u6r8obgf2cul.apps.googleusercontent.com',
+    apiKey: 'AIzaSyA_l1QIM-p_NRkWLB4HXOKVfq2hhSYEXt8',
+    appId: '1:364873093278:ios:179aba0b538584864cab8f',
+    messagingSenderId: '364873093278',
+    projectId: 'kateringku-fe3c4',
+    storageBucket: 'kateringku-fe3c4.appspot.com',
+    iosClientId: '364873093278-lshfk980bpusik27e72jfab2cv862vq5.apps.googleusercontent.com',
     iosBundleId: 'com.example.kateringkuMobile',
   );
 }

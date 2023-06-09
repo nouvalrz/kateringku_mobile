@@ -1,3 +1,4 @@
+import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,6 +13,7 @@ import 'package:kateringku_mobile/controllers/cart_controller.dart';
 import 'package:kateringku_mobile/controllers/customer_address_controller.dart';
 import 'package:kateringku_mobile/controllers/instant_confirmation_controller.dart';
 import 'package:kateringku_mobile/controllers/pre_order_controller.dart';
+import 'package:kateringku_mobile/controllers/profile_controller.dart';
 import 'package:kateringku_mobile/data/api/api_client.dart';
 import 'package:kateringku_mobile/data/repositories/instant_confirmation_repo.dart';
 import 'package:kateringku_mobile/models/add_cart_body.dart';
@@ -42,6 +44,7 @@ class PreOrderConfirmationView extends StatefulWidget {
 
 class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
   var preOrderController = Get.find<PreOrderController>();
+  var profileContreoller = Get.find<ProfileController>();
   late NewCartModel stateCart;
   late List<Discount> discountList;
 
@@ -57,22 +60,23 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
     stateCart = state[4];
     discountList = state[5] ?? null;
 
-    EasyLoading.show(
-      status: 'Loading...',
-      maskType: EasyLoadingMaskType.black,
-    );
+    // EasyLoading.show(
+    //   status: 'Loading...',
+    //   maskType: EasyLoadingMaskType.black,
+    // );
+
     preOrderController.preOrderModel.value.orderProducts = allOrderList;
     preOrderController.cateringId = cateringId;
     preOrderController.cateringLatitude = cateringLatitude;
     preOrderController.cateringLongitude = cateringLongitude;
     preOrderController.preOrderModel.value.discountId = null;
     preOrderController.preOrderModel.value.discount = 0;
+    preOrderController.preOrderModel.value.useBalance = 0;
 
     preOrderController.deliveryDateTime = Rxn<DateTime>();
 
     preOrderController.onInit();
     preOrderController.getDeliveryTimeRange();
-    EasyLoading.dismiss();
   }
 
   void showModalDiscounts() async {
@@ -86,6 +90,7 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
         isScrollControlled: true,
         builder: (context) {
           return SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
             child: Padding(
               padding: EdgeInsets.only(
                   left: 25,
@@ -105,24 +110,24 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                     ],
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 22,
                   ),
                   SizedBox(
                     height: 400,
                     child: ListView.builder(
                       padding: EdgeInsets.zero,
-                      physics: BouncingScrollPhysics(),
+                      physics: const BouncingScrollPhysics(),
                       itemBuilder: (context, index) {
                         return ColorFiltered(
                           colorFilter: (() {
                             if (preOrderController.isDiscountUsable(
                                 minimumSpend:
                                     discountList[index].minimumSpend!)) {
-                              return ColorFilter.mode(
+                              return const ColorFilter.mode(
                                   Colors.white, BlendMode.dst);
                             } else {
-                              return ColorFilter.matrix(<double>[
+                              return const ColorFilter.matrix(<double>[
                                 0.2126, 0.7152, 0.0722, 0, 0, //
                                 0.2126, 0.7152, 0.0722, 0, 0,
                                 0.2126, 0.7152, 0.0722, 0, 0,
@@ -153,7 +158,7 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                                                   fontWeight: FontWeight.w500,
                                                   fontSize: 13),
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           height: 6,
                                         ),
                                         Row(
@@ -212,7 +217,7 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                                               })
                                           ],
                                         ),
-                                        SizedBox(
+                                        const SizedBox(
                                           height: 6,
                                         ),
                                         Text(
@@ -229,11 +234,11 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                                   ),
                                 ],
                               ),
-                              Divider(
+                              const Divider(
                                 thickness: 0.3,
                                 color: Colors.black12,
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 8,
                               )
                             ],
@@ -285,11 +290,11 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                     },
                     child: Row(
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.arrow_back,
                           color: Colors.grey,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 12,
                         ),
                         Text("Konfirmasi Pesanan Pre Order",
@@ -300,11 +305,12 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 29,
               ),
               Expanded(
                 child: SingleChildScrollView(
+                  physics: const BouncingScrollPhysics(),
                   child: Padding(
                     padding: const EdgeInsets.only(top: 16),
                     child: Column(
@@ -320,7 +326,7 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                                       .copyWith(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w500)),
-                              SizedBox(
+                              const SizedBox(
                                 height: 12,
                               ),
                               GestureDetector(
@@ -335,7 +341,7 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                                       return Container(
                                         child: Row(
                                           children: [
-                                            SizedBox(
+                                            const SizedBox(
                                               width: 25,
                                             ),
                                             Icon(Icons.location_on_outlined,
@@ -349,7 +355,7 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                                                     return Colors.grey;
                                                   }
                                                 }())),
-                                            SizedBox(
+                                            const SizedBox(
                                               width: 8,
                                             ),
                                             Column(
@@ -365,10 +371,9 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                                                 Obx(() {
                                                   if (preOrderController
                                                       .isLoading.value) {
-                                                    return Padding(
-                                                      padding:
-                                                          const EdgeInsets.only(
-                                                              top: 2),
+                                                    return const Padding(
+                                                      padding: EdgeInsets.only(
+                                                          top: 2),
                                                       child: SizedBox(
                                                         child:
                                                             CircularProgressIndicator(
@@ -424,7 +429,7 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                                   ],
                                 ),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 12,
                               ),
                               GestureDetector(
@@ -437,7 +442,7 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                                       return Container(
                                         child: Row(
                                           children: [
-                                            SizedBox(
+                                            const SizedBox(
                                               width: 25,
                                             ),
                                             Icon(Icons.map_outlined,
@@ -451,7 +456,7 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                                                     return Colors.grey;
                                                   }
                                                 }())),
-                                            SizedBox(
+                                            const SizedBox(
                                               width: 8,
                                             ),
                                             Column(
@@ -510,7 +515,7 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                             ],
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 14,
                         ),
                         Divider(
@@ -518,8 +523,8 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                           thickness: 8,
                         ),
                         Padding(
-                          padding:
-                              EdgeInsets.only(left: 25, right: 25, top: 12),
+                          padding: const EdgeInsets.only(
+                              left: 25, right: 25, top: 12),
                           child: Column(
                             children: [
                               Text("Jadwal Pengantaran",
@@ -527,7 +532,7 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                                       .copyWith(
                                           fontSize: 14,
                                           fontWeight: FontWeight.w500)),
-                              SizedBox(
+                              const SizedBox(
                                 height: 15,
                               ),
                               Row(
@@ -549,10 +554,10 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                                               BorderRadius.circular(8)),
                                       child: Row(
                                         children: [
-                                          SizedBox(
+                                          const SizedBox(
                                             width: 10,
                                           ),
-                                          Icon(
+                                          const Icon(
                                             Icons.calendar_today_outlined,
                                             color: Colors.grey,
                                             size: 20,
@@ -618,10 +623,10 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                                               BorderRadius.circular(8)),
                                       child: Row(
                                         children: [
-                                          SizedBox(
+                                          const SizedBox(
                                             width: 10,
                                           ),
-                                          Icon(
+                                          const Icon(
                                             Icons.access_time,
                                             color: Colors.grey,
                                             size: 20,
@@ -676,19 +681,19 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 14,
                         ),
                         Divider(
                           color: Colors.grey[200],
                           thickness: 8,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 12,
                         ),
                         Padding(
-                          padding:
-                              EdgeInsets.only(left: 25, right: 25, bottom: 16),
+                          padding: const EdgeInsets.only(
+                              left: 25, right: 25, bottom: 16),
                           child: Row(
                             children: [
                               Text("Pesanan Anda",
@@ -712,7 +717,7 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                         ),
                         if (widget.fromCart!)
                           Obx(() => false
-                              ? Center(child: CircularProgressIndicator())
+                              ? const Center(child: CircularProgressIndicator())
                               : ListView.builder(
                                   itemBuilder: (context, index) {
                                     return ProductCard(
@@ -746,8 +751,8 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                                   itemCount: preOrderController.preOrderModel
                                       .value.orderProducts!.length,
                                   shrinkWrap: true,
-                                  physics: NeverScrollableScrollPhysics(),
-                                  padding: EdgeInsets.only(top: 4),
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  padding: const EdgeInsets.only(top: 4),
                                 ))
                         else
                           ListView.builder(
@@ -772,9 +777,128 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                             itemCount: preOrderController
                                 .preOrderModel.value.orderProducts!.length,
                             shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            padding: EdgeInsets.only(top: 4),
+                            physics: const NeverScrollableScrollPhysics(),
+                            padding: const EdgeInsets.only(top: 4),
                           ),
+                        Obx(() {
+                          if (!profileContreoller.isLoading.value &&
+                              profileContreoller.profileModel!.balance != 0) {
+                            return Column(
+                              children: [
+                                Divider(
+                                  color: Colors.grey[200],
+                                  thickness: 8,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(
+                                      left: 25, right: 25, bottom: 16, top: 14),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      preOrderController.useBalanceForPayment();
+                                    },
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          border: Border.all(
+                                              color: Colors.black12)),
+                                      height: 55,
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: [
+                                          Row(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              const SizedBox(
+                                                width: 18,
+                                              ),
+                                              const Icon(
+                                                Icons.wallet_rounded,
+                                                color: AppTheme.primaryGreen,
+                                              ),
+                                              const SizedBox(
+                                                width: 18,
+                                              ),
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Obx(() {
+                                                    return Text(
+                                                        (() {
+                                                          if (preOrderController
+                                                                  .preOrderModel
+                                                                  .value
+                                                                  .useBalance >
+                                                              0) {
+                                                            return "Saldo Digunakan";
+                                                          } else {
+                                                            return "Bayar dengan Saldo";
+                                                          }
+                                                        }()),
+                                                        style: AppTheme
+                                                            .textTheme
+                                                            .titleLarge!
+                                                            .copyWith(
+                                                                fontSize: 12,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w500));
+                                                  }),
+                                                  Text(
+                                                      "Saldo anda " +
+                                                          CurrencyFormat.convertToIdr(
+                                                              profileContreoller
+                                                                  .profileModel!
+                                                                  .balance,
+                                                              0),
+                                                      style: AppTheme
+                                                          .textTheme.titleLarge!
+                                                          .copyWith(
+                                                              fontSize: 11,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w400)),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              Obx(() {
+                                                return Icon(
+                                                  Icons
+                                                      .check_circle_outline_rounded,
+                                                  color: preOrderController
+                                                              .preOrderModel
+                                                              .value
+                                                              .useBalance !=
+                                                          0
+                                                      ? AppTheme.primaryGreen
+                                                      : Colors.black26,
+                                                );
+                                              }),
+                                              const SizedBox(
+                                                width: 18,
+                                              ),
+                                            ],
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          } else
+                            return Container();
+                        }),
                         if (discountList.isNotEmpty)
                           Column(
                             children: [
@@ -783,7 +907,7 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                                 thickness: 8,
                               ),
                               Padding(
-                                padding: EdgeInsets.only(
+                                padding: const EdgeInsets.only(
                                     left: 25, right: 25, bottom: 16, top: 14),
                                 child: GestureDetector(
                                   onTap: () {
@@ -803,44 +927,71 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                                         children: [
                                           Row(
                                             children: [
-                                              SizedBox(
+                                              const SizedBox(
                                                 width: 18,
                                               ),
-                                              Icon(
+                                              const Icon(
                                                 Icons.discount_rounded,
                                                 color: AppTheme.primaryOrange,
                                               ),
-                                              SizedBox(
+                                              const SizedBox(
                                                 width: 18,
                                               ),
-                                              Text(
-                                                  (() {
-                                                    if (preOrderController
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Text(
+                                                      (() {
+                                                        if (preOrderController
+                                                                .preOrderModel
+                                                                .value
+                                                                .discount ==
+                                                            0) {
+                                                          return 'Gunakan Diskon';
+                                                        } else {
+                                                          return 'Diskon Berhasil Digunakan';
+                                                        }
+                                                      }()),
+                                                      style: AppTheme
+                                                          .textTheme.titleLarge!
+                                                          .copyWith(
+                                                              fontSize: 12,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500)),
+                                                  if (preOrderController
+                                                          .preOrderModel
+                                                          .value
+                                                          .discount >
+                                                      0)
+                                                    Text(
+                                                        preOrderController
                                                             .preOrderModel
                                                             .value
-                                                            .discount ==
-                                                        0) {
-                                                      return 'Gunakan Diskon';
-                                                    } else {
-                                                      return 'Diskon Berhasil Digunakan';
-                                                    }
-                                                  }()),
-                                                  style: AppTheme
-                                                      .textTheme.titleLarge!
-                                                      .copyWith(
-                                                          fontSize: 12,
-                                                          fontWeight:
-                                                              FontWeight.w500)),
+                                                            .discountName!,
+                                                        style: AppTheme
+                                                            .textTheme
+                                                            .titleLarge!
+                                                            .copyWith(
+                                                                fontSize: 11,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400)),
+                                                ],
+                                              ),
                                             ],
                                           ),
                                           Row(
                                             children: [
-                                              Icon(
+                                              const Icon(
                                                 Icons
                                                     .arrow_circle_right_outlined,
                                                 color: Colors.black26,
                                               ),
-                                              SizedBox(
+                                              const SizedBox(
                                                 width: 18,
                                               ),
                                             ],
@@ -858,14 +1009,14 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                           thickness: 8,
                         ),
                         Padding(
-                          padding: EdgeInsets.only(
+                          padding: const EdgeInsets.only(
                               left: 25, right: 25, bottom: 16, top: 14),
                           child: Text("Ringkasan Pembayaran",
                               style: AppTheme.textTheme.titleLarge!.copyWith(
                                   fontSize: 14, fontWeight: FontWeight.w500)),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(
+                          padding: const EdgeInsets.only(
                             left: 25,
                             right: 25,
                           ),
@@ -879,7 +1030,7 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                                           fontWeight: FontWeight.w300)),
                               Obx(() {
                                 if (preOrderController.isLoading.value) {
-                                  return Text("...");
+                                  return const Text("...");
                                 } else {
                                   return Text(
                                       CurrencyFormat.convertToIdr(
@@ -895,11 +1046,11 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                             ],
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 8,
                         ),
                         Padding(
-                          padding: EdgeInsets.only(
+                          padding: const EdgeInsets.only(
                             left: 25,
                             right: 25,
                           ),
@@ -912,11 +1063,11 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                                           fontSize: 12,
                                           fontWeight: FontWeight.w300)),
                               Obx(() => preOrderController.isLoading.value
-                                  ? Text("...")
+                                  ? const Text("...")
                                   : preOrderController.preOrderModel.value
                                               .deliveryPrice ==
                                           null
-                                      ? Text("!")
+                                      ? const Text("!")
                                       : Text(
                                           CurrencyFormat.convertToIdr(
                                               preOrderController.preOrderModel
@@ -929,16 +1080,17 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                             ],
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 8,
                         ),
                         Obx(() {
                           if (preOrderController.preOrderModel.value.discount !=
                               0) {
                             return Padding(
-                              padding: EdgeInsets.only(
+                              padding: const EdgeInsets.only(
                                 left: 25,
                                 right: 25,
+                                bottom: 8,
                               ),
                               child: Row(
                                 mainAxisAlignment:
@@ -950,11 +1102,11 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                                               fontSize: 12,
                                               fontWeight: FontWeight.w300)),
                                   Obx(() => preOrderController.isLoading.value
-                                      ? Text("...")
+                                      ? const Text("...")
                                       : preOrderController.preOrderModel.value
                                                   .deliveryPrice ==
                                               null
-                                          ? Text("!")
+                                          ? const Text("!")
                                           : Text(
                                               "- ${CurrencyFormat.convertToIdr(preOrderController.preOrderModel.value.discount, 0)}",
                                               style: AppTheme
@@ -972,7 +1124,48 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                             return Container();
                           }
                         }),
-                        SizedBox(
+                        Obx(() {
+                          if (preOrderController
+                                  .preOrderModel.value.useBalance !=
+                              0) {
+                            return Padding(
+                              padding: const EdgeInsets.only(
+                                left: 25,
+                                right: 25,
+                              ),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text("Pakai Saldo",
+                                      style: AppTheme.textTheme.titleLarge!
+                                          .copyWith(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w300)),
+                                  Obx(() => preOrderController.isLoading.value
+                                      ? const Text("...")
+                                      : preOrderController.preOrderModel.value
+                                                  .deliveryPrice ==
+                                              null
+                                          ? const Text("!")
+                                          : Text(
+                                              "- ${CurrencyFormat.convertToIdr(preOrderController.preOrderModel.value.useBalance, 0)}",
+                                              style: AppTheme
+                                                  .textTheme.titleLarge!
+                                                  .copyWith(
+                                                      color:
+                                                          AppTheme.primaryRed,
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.w400)))
+                                ],
+                              ),
+                            );
+                          } else {
+                            return Container();
+                          }
+                        }),
+                        const SizedBox(
                           height: 4,
                         ),
                         Padding(
@@ -983,7 +1176,7 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(
+                          padding: const EdgeInsets.only(
                             left: 25,
                             right: 25,
                           ),
@@ -996,11 +1189,11 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                                           fontSize: 13,
                                           fontWeight: FontWeight.w500)),
                               Obx(() => preOrderController.isLoading.value
-                                  ? Text("...")
+                                  ? const Text("...")
                                   : preOrderController
                                               .preOrderModel.value.totalPrice ==
                                           null
-                                      ? Text("!")
+                                      ? const Text("!")
                                       : Text(
                                           CurrencyFormat.convertToIdr(
                                               preOrderController.preOrderModel
@@ -1014,7 +1207,7 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                             ],
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: 36,
                         )
                       ],
@@ -1022,7 +1215,7 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 72,
               )
             ],
@@ -1046,11 +1239,11 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                                       .copyWith(
                                           fontSize: 11,
                                           fontWeight: FontWeight.w400)),
-                              SizedBox(
+                              const SizedBox(
                                 height: 1,
                               ),
                               Obx(() => preOrderController.isLoading.value
-                                  ? Text("...")
+                                  ? const Text("...")
                                   : preOrderController
                                               .preOrderModel.value.totalPrice ==
                                           null
@@ -1078,7 +1271,7 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       width: 18,
                     ),
                     GestureDetector(
@@ -1102,7 +1295,7 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                           child: Center(
                             child:
                                 preOrderController.isLoadingPostPreOrder.value
-                                    ? CircularProgressIndicator(
+                                    ? const CircularProgressIndicator(
                                         color: Colors.white,
                                       )
                                     : Text("Pilih Pembayaran",
@@ -1160,12 +1353,12 @@ class ProductCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(10)),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
-                    child: Image(
-                        image: NetworkImage(
-                            AppConstant.BASE_URL + productImage.substring(1))),
+                    child: FancyShimmerImage(
+                      imageUrl: productImage,
+                    ),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 14,
                 ),
                 Expanded(
@@ -1177,7 +1370,7 @@ class ProductCard extends StatelessWidget {
                       Text(productDesc,
                           style: AppTheme.textTheme.titleLarge!.copyWith(
                               fontSize: 11, fontWeight: FontWeight.w300)),
-                      SizedBox(
+                      const SizedBox(
                         height: 8,
                       ),
                       Row(
@@ -1217,10 +1410,9 @@ class ProductCard extends StatelessWidget {
                                               .copyWith(
                                                   fontSize: 12,
                                                   fontWeight: FontWeight.w400),
-                                          decoration: InputDecoration(
+                                          decoration: const InputDecoration(
                                             contentPadding:
-                                                const EdgeInsets.fromLTRB(
-                                                    0, 0, 0, 0),
+                                                EdgeInsets.fromLTRB(0, 0, 0, 0),
                                           )),
                                     ),
                                   ],
@@ -1236,13 +1428,13 @@ class ProductCard extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 8,
             ),
             Divider(
               color: Colors.grey[300],
             ),
-            SizedBox(
+            const SizedBox(
               height: 8,
             )
           ],

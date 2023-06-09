@@ -219,10 +219,8 @@ class _ProductCardForSubsState extends State<ProductCardForSubs> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: FancyShimmerImage(
-                      imageUrl: AppConstant.BASE_URL +
-                          subsOrderController
-                              .cateringProducts[widget.productIndex].image!
-                              .substring(1)),
+                      imageUrl: subsOrderController
+                          .cateringProducts[widget.productIndex].image!),
                 ),
               ),
               const SizedBox(

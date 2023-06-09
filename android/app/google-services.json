@@ -1,37 +1,37 @@
 {
   "project_info": {
-    "project_number": "874299753823",
-    "project_id": "kateringku-765be",
-    "storage_bucket": "kateringku-765be.appspot.com"
+    "project_number": "364873093278",
+    "project_id": "kateringku-fe3c4",
+    "storage_bucket": "kateringku-fe3c4.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:874299753823:android:f3eb4db9fbffd6d99762ea",
+        "mobilesdk_app_id": "1:364873093278:android:7ed9663bd21a88c04cab8f",
         "android_client_info": {
           "package_name": "com.example.kateringku_mobile"
         }
       },
       "oauth_client": [
         {
-          "client_id": "874299753823-2jop3v6c4npodrqgf4gkmddhjrkr8l8j.apps.googleusercontent.com",
+          "client_id": "364873093278-1upigt1i4p0va4uc73a5rdmoshs2bu1b.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBzzcCBUbVwUcZvKESIhSE_pulDDFxw9AM"
+          "current_key": "AIzaSyAlayIrEYBUc4WU01XkolPzX0bKdPr3FfA"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "874299753823-2jop3v6c4npodrqgf4gkmddhjrkr8l8j.apps.googleusercontent.com",
+              "client_id": "364873093278-1upigt1i4p0va4uc73a5rdmoshs2bu1b.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "874299753823-06utor5ubi0i01b7sdk8u6r8obgf2cul.apps.googleusercontent.com",
+              "client_id": "364873093278-lshfk980bpusik27e72jfab2cv862vq5.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
                 "bundle_id": "com.example.kateringkuMobile"

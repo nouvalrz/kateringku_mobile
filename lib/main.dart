@@ -15,10 +15,11 @@ import 'package:kateringku_mobile/screens/address/address_list_view.dart';
 import 'package:kateringku_mobile/screens/catering/catering_review_view.dart';
 import 'package:kateringku_mobile/screens/catering/catering_view.dart';
 import 'package:kateringku_mobile/screens/catering/product_option_view.dart';
+import 'package:kateringku_mobile/screens/catering_client/catering_dashboard_view.dart';
 import 'package:kateringku_mobile/screens/chat/chat_list_view.dart';
 import 'package:kateringku_mobile/screens/explore/search_view.dart';
 import 'package:kateringku_mobile/screens/home/home_view.dart';
-import 'package:kateringku_mobile/screens/order/order_detail_view.dart';
+import 'package:kateringku_mobile/screens/order/pre_order_detail_view.dart';
 import 'package:kateringku_mobile/screens/payment/midtrans_payment_view.dart';
 import 'package:kateringku_mobile/screens/pre_order/pre_order_confirmation_view.dart';
 import 'package:kateringku_mobile/screens/maps_test/google_maps_view.dart';
@@ -30,10 +31,11 @@ import 'package:kateringku_mobile/themes/app_theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'controllers/order_list_controller.dart';
 import 'helpers/dependencies.dart' as dep;
-import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:uuid/uuid.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -56,6 +58,13 @@ Future<void> main() async {
     sound: true,
   );
 
+  if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+    print('User granted permission');
+    // TODO: handle the received notifications
+  } else {
+    print('User declined or has not accepted permission');
+  }
+
   print('User granted permission: ${settings.authorizationStatus}');
 
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
@@ -77,10 +86,9 @@ Future<void> main() async {
         var currentRoute = Get.currentRoute;
         if (currentRoute == "/chat") {
           var chatController = Get.find<ChatController>();
-          if (message.data["sender_id"] == chatController.cateringUser.id ||
-              message.data["recipient_id"] == chatController.cateringUser.id) {
+          if (message.data["catering_id"] == chatController.cateringUser.id) {
             var chat = types.TextMessage(
-              author: message.data["sender_id"].toString() ==
+              author: message.data["catering_id"].toString() ==
                       chatController.cateringUser.id
                   ? chatController.cateringUser
                   : chatController.customerUser,
@@ -108,12 +116,26 @@ Future<void> main() async {
 
   SharedPreferences preferences = await SharedPreferences.getInstance();
   var token = preferences.getString(AppConstant.TOKEN);
+  var type = preferences.getString(AppConstant.TYPE);
 
   if (token != null) {
     print(token);
-    runApp(KateringKuHomeApp());
+    if (type == "customer") {
+      SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+          .then((_) {
+        runApp(KateringKuHomeApp());
+      });
+    } else if (type == "catering") {
+      SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+          .then((_) {
+        runApp(KateringKuCateringHomeApp());
+      });
+    }
   } else {
-    runApp(const KateringKuOnboardApp());
+    SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
+        .then((_) {
+      runApp(KateringKuOnboardApp());
+    });
   }
 }
 
@@ -127,6 +149,23 @@ class KateringKuHomeApp extends StatelessWidget {
       theme: AppTheme.theme,
       home: HomeView(),
       initialRoute: RouteHelper.mainHome,
+      getPages: RouteHelper.routes,
+      navigatorObservers: [routeObserver],
+      builder: EasyLoading.init(),
+    );
+  }
+}
+
+class KateringKuCateringHomeApp extends StatelessWidget {
+  KateringKuCateringHomeApp({Key? key}) : super(key: key);
+  final routeObserver = MyRouteObserver();
+  @override
+  Widget build(BuildContext context) {
+    return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: AppTheme.theme,
+      home: CateringDashboardView(),
+      initialRoute: RouteHelper.cateringClientDashboard,
       getPages: RouteHelper.routes,
       navigatorObservers: [routeObserver],
       builder: EasyLoading.init(),

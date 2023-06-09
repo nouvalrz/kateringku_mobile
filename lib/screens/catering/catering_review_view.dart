@@ -293,9 +293,7 @@ class _CateringReviewViewState extends State<CateringReviewView> {
                     ),
                     GestureDetector(
                       onTap: () {
-                        final imageProvider = Image.network(
-                                AppConstant.BASE_URL + image!.substring(1))
-                            .image;
+                        final imageProvider = Image.network(image!).image;
                         showImageViewer(context, imageProvider,
                             immersive: false,
                             useSafeArea: true,
@@ -307,8 +305,7 @@ class _CateringReviewViewState extends State<CateringReviewView> {
                           width: 100,
                           height: 100,
                           child: FancyShimmerImage(
-                            imageUrl:
-                                AppConstant.BASE_URL + image!.substring(1),
+                            imageUrl: image!,
                           ),
                         ),
                       ),

@@ -6,6 +6,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:kateringku_mobile/controllers/profile_controller.dart';
 import 'package:kateringku_mobile/data/repositories/catering_repo.dart';
 import 'package:kateringku_mobile/models/subs_order_model.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
@@ -82,6 +83,7 @@ class SubsOrderController extends GetxController implements GetxService {
   Rx<int> subtotalPrice = 0.obs;
   Rx<int> deliveryPrice = 0.obs;
   Rx<int> fixOrderPrice = 0.obs;
+  Rx<int> useBalance = 0.obs;
 
   // Pricing State
   var allTotalPrice = 0.obs;
@@ -114,6 +116,7 @@ class SubsOrderController extends GetxController implements GetxService {
     );
     isLoading.value = true;
 
+    await Get.find<ProfileController>().getProfile();
     currentAddress = await setCurrentAddress();
     setSelectedAddress(currentAddress!, true);
     await setDeliveryPrice();
@@ -124,8 +127,9 @@ class SubsOrderController extends GetxController implements GetxService {
   }
 
   void setTotalPrice() {
-    fixOrderPrice.value =
-        (deliveryPrice.value + allTotalPrice.value) - discount.value;
+    fixOrderPrice.value = (deliveryPrice.value + allTotalPrice.value) -
+        discount.value -
+        useBalance.value;
   }
 
   void setCustomAddress(AddressModel customAddress) {
@@ -599,6 +603,7 @@ class SubsOrderController extends GetxController implements GetxService {
     data['address'] = selectedAddress!.toJson();
     data['delivery_cost'] = deliveryPrice.value;
     data['total_price'] = fixOrderPrice.value;
+    data['use_balance'] = useBalance.value;
     data['start_date'] = orderList.values.first.deliveryDateTime.toString();
     data['end_date'] = orderList.values.last.deliveryDateTime.toString();
     data['catering_id'] = cateringId!;
@@ -643,5 +648,22 @@ class SubsOrderController extends GetxController implements GetxService {
       Get.until((route) => Get.currentRoute == RouteHelper.mainHome);
       Get.toNamed(RouteHelper.midtransPayment, arguments: [orderId]);
     }
+  }
+
+  void useBalanceForPayment() {
+    var profileController = Get.find<ProfileController>();
+
+    if (useBalance.value > 0) {
+      useBalance.value = 0;
+      recalculatePrice();
+      return;
+    }
+
+    if (profileController.profileModel!.balance! >= fixOrderPrice.value) {
+      useBalance.value = fixOrderPrice.value;
+    } else {
+      useBalance.value = profileController.profileModel!.balance!;
+    }
+    recalculatePrice();
   }
 }

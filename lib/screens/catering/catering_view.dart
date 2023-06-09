@@ -294,8 +294,7 @@ class _CateringViewState extends State<CateringView> {
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(10),
                             child: FancyShimmerImage(
-                                imageUrl: AppConstant.BASE_URL +
-                                    cateringModel!.image!.substring(1)),
+                                imageUrl: cateringModel!.image!),
                           ),
                         ),
                         Padding(
@@ -408,8 +407,7 @@ class _CateringViewState extends State<CateringView> {
                                 Get.toNamed(RouteHelper.chat, arguments: {
                                   "cateringId": cateringModel.id.toString(),
                                   "cateringName": cateringModel.name,
-                                  "cateringImage": AppConstant.BASE_URL +
-                                      cateringModel.image!.substring(1)
+                                  "cateringImage": cateringModel.image!
                                 });
                               },
                               child: Container(
@@ -976,9 +974,7 @@ class ProductCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10)),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
-                  child: FancyShimmerImage(
-                      imageUrl:
-                          AppConstant.BASE_URL + product_image!.substring(1)),
+                  child: FancyShimmerImage(imageUrl: product_image!),
                 ),
               ),
               const SizedBox(

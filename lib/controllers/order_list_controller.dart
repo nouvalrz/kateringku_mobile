@@ -2,9 +2,9 @@ import 'package:get/get.dart';
 import 'package:kateringku_mobile/models/order_compact.dart';
 
 import '../data/repositories/order_repo.dart';
-import '../models/order_detail_model.dart';
+import '../models/pre_order_detail_model.dart';
 
-class OrderListController extends GetxController{
+class OrderListController extends GetxController {
   final OrderRepo orderRepo;
 
   OrderListController({required this.orderRepo});
@@ -13,9 +13,9 @@ class OrderListController extends GetxController{
 
   var orders = <OrderCompact>[];
 
-  var orderDetail = OrderDetailModel().obs;
+  var orderDetail = PreOrderDetailModel().obs;
 
-  Future<void> getAllOrders() async{
+  Future<void> getAllOrders() async {
     isLoading.value = true;
 
     orders = [];
@@ -24,7 +24,7 @@ class OrderListController extends GetxController{
 
     print("lenght " + response.body['orders'].length.toString());
 
-    for(var j = 0 ; j < response.body['orders'].length ; j++){
+    for (var j = 0; j < response.body['orders'].length; j++) {
       // if(response.body['orders'].length == orders.length){
       //   break;
       // }
@@ -36,14 +36,14 @@ class OrderListController extends GetxController{
     isLoading.value = false;
   }
 
-  Future<void> getOrderDetail(int id) async{
+  Future<void> getOrderDetail(int id) async {
     isLoading.value = true;
 
-    Response response = await orderRepo.getOrderDetail(id);
+    Response response = await orderRepo.getPreOrderDetail(id);
     print("response" + response.toString());
 
-    if(response.statusCode == 200){
-      orderDetail.value = OrderDetailModel.fromJson(response.body['order']);
+    if (response.statusCode == 200) {
+      orderDetail.value = PreOrderDetailModel.fromJson(response.body['order']);
     }
 
     isLoading.value = false;

@@ -1,3 +1,4 @@
+import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
@@ -673,13 +674,11 @@ class _SelectedProductComponentState extends State<SelectedProductComponent> {
                       height: 38,
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(5),
-                        child: Image(
-                            image: NetworkImage(AppConstant.BASE_URL +
-                                subsOrderController.orderList.values
-                                    .elementAt(widget.orderIndex)
-                                    .orderProducts[index]
-                                    .image!
-                                    .substring(1))),
+                        child: FancyShimmerImage(
+                            imageUrl: subsOrderController.orderList.values
+                                .elementAt(widget.orderIndex)
+                                .orderProducts[index]
+                                .image!),
                       ),
                     ),
                     const SizedBox(

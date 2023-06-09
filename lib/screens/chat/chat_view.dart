@@ -8,7 +8,7 @@ import 'package:kateringku_mobile/themes/app_theme.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../constants/app_constant.dart';
-import '../../controllers/order_detail_controller.dart';
+import '../../controllers/pre_order_detail_controller.dart';
 
 class ChatView extends StatefulWidget {
   const ChatView({Key? key}) : super(key: key);
@@ -25,10 +25,11 @@ class _ChatViewState extends State<ChatView> {
   @override
   void initState() {
     super.initState();
-    cateringId = Get.arguments!["cateringId"];
+    cateringId = Get.arguments!["cateringId"].toString();
     cateringName = Get.arguments!["cateringName"];
     cateringImage = Get.arguments!["cateringImage"];
-    chatController.setUsers(cateringId: cateringId, cateringImage: cateringImage);
+    chatController.setUsers(
+        cateringId: cateringId, cateringImage: cateringImage);
     chatController.loadMessage(cateringId: cateringId);
   }
 
@@ -54,7 +55,6 @@ class _ChatViewState extends State<ChatView> {
                 child: GestureDetector(
                   onTap: () {
                     Get.back();
-
                   },
                   child: Row(
                     children: [
@@ -68,8 +68,9 @@ class _ChatViewState extends State<ChatView> {
                       SizedBox(
                         height: 30,
                         width: 30,
-                        child: ClipOval(child: Image(
-                            image: NetworkImage(cateringImage)),),
+                        child: ClipOval(
+                          child: Image(image: NetworkImage(cateringImage)),
+                        ),
                       ),
                       SizedBox(
                         width: 10,
@@ -100,31 +101,46 @@ class _ChatViewState extends State<ChatView> {
               child: Obx(() {
                 if (chatController.isLoading.value) {
                   return const Center(
-                    child: CircularProgressIndicator(color: AppTheme.primaryGreen,),
+                    child: CircularProgressIndicator(
+                      color: AppTheme.primaryGreen,
+                    ),
                   );
                 } else {
                   return Chat(
+                    scrollPhysics: BouncingScrollPhysics(),
                     messages: chatController.messages.value,
                     dateHeaderThreshold: 60000,
                     onSendPressed: chatController.handleSendPressed,
                     user: chatController.customerUser,
-                    theme:  DefaultChatTheme(
+                    theme: DefaultChatTheme(
                         inputTextStyle: AppTheme.textTheme.titleLarge!.copyWith(
                             fontSize: 13, fontWeight: FontWeight.w500),
-                        dateDividerTextStyle: AppTheme.textTheme.titleLarge!.copyWith(
-                            fontSize: 13, fontWeight: FontWeight.w500),
-                        receivedMessageBodyTextStyle: AppTheme.textTheme.titleLarge!.copyWith(
-                            fontSize: 13, fontWeight: FontWeight.w500),
-                        sentMessageBodyTextStyle: AppTheme.textTheme.titleLarge!.copyWith(
-                            fontSize: 13, fontWeight: FontWeight.w500, color: Colors.white),
+                        dateDividerTextStyle: AppTheme.textTheme.titleLarge!
+                            .copyWith(
+                                fontSize: 13, fontWeight: FontWeight.w500),
+                        receivedMessageBodyTextStyle:
+                            AppTheme.textTheme.titleLarge!.copyWith(
+                                fontSize: 13, fontWeight: FontWeight.w500),
+                        sentMessageBodyTextStyle: AppTheme.textTheme.titleLarge!
+                            .copyWith(
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500,
+                                color: Colors.white),
                         primaryColor: AppTheme.primaryGreen,
                         inputBorderRadius: BorderRadius.zero,
                         inputTextColor: Colors.black,
                         inputPadding: EdgeInsets.all(20),
-                        inputTextDecoration: InputDecoration(contentPadding: EdgeInsets.all(18)),
-                        inputContainerDecoration: BoxDecoration(color: AppTheme.primaryWhite, border: Border.all(color: AppTheme.greyOutline, width: 0.6),),
-                        sendButtonIcon: Icon(Icons.send_rounded, color: AppTheme.primaryGreen,)
+                        inputTextDecoration:
+                            InputDecoration(contentPadding: EdgeInsets.all(18)),
+                        inputContainerDecoration: BoxDecoration(
+                          color: AppTheme.primaryWhite,
+                          border: Border.all(
+                              color: AppTheme.greyOutline, width: 0.6),
                         ),
+                        sendButtonIcon: Icon(
+                          Icons.send_rounded,
+                          color: AppTheme.primaryGreen,
+                        )),
                     showUserAvatars: true,
                     showUserNames: true,
                   );
@@ -142,7 +158,6 @@ class _ChatViewState extends State<ChatView> {
   //     _messages.insert(0, message);
   //   });
   // }
-
 
 // void _loadMessages() async {
 //   final response = await rootBundle.loadString('assets/messages.json');

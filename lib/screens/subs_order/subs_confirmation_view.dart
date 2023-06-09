@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:kateringku_mobile/screens/subs_order/subs_set_period_view.dart';
 
 import '../../constants/image_path.dart';
+import '../../controllers/profile_controller.dart';
 import '../../controllers/subs_order_controller.dart';
 import '../../helpers/currency_format.dart';
 import '../../models/catering_display_model.dart';
@@ -21,6 +22,7 @@ class SubsConfirmationView extends StatefulWidget {
 
 class _SubsConfirmationViewState extends State<SubsConfirmationView> {
   var subsOrderController = Get.find<SubsOrderController>();
+  var profileContreoller = Get.find<ProfileController>();
   late List<Discount> discountList;
   @override
   void initState() {
@@ -546,6 +548,114 @@ class _SubsConfirmationViewState extends State<SubsConfirmationView> {
                       ),
                     );
                   }),
+                  Obx(() {
+                    if (!profileContreoller.isLoading.value &&
+                        profileContreoller.profileModel!.balance != 0) {
+                      return Column(
+                        children: [
+                          Divider(
+                            color: Colors.grey[200],
+                            thickness: 8,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(
+                                left: 25, right: 25, bottom: 16, top: 14),
+                            child: GestureDetector(
+                              onTap: () {
+                                subsOrderController.useBalanceForPayment();
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(color: Colors.black12)),
+                                height: 55,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        const SizedBox(
+                                          width: 18,
+                                        ),
+                                        const Icon(
+                                          Icons.wallet_rounded,
+                                          color: AppTheme.primaryGreen,
+                                        ),
+                                        const SizedBox(
+                                          width: 18,
+                                        ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Obx(() {
+                                              return Text(
+                                                  (() {
+                                                    if (subsOrderController
+                                                            .useBalance.value >
+                                                        0) {
+                                                      return "Saldo Digunakan";
+                                                    } else {
+                                                      return "Bayar dengan Saldo";
+                                                    }
+                                                  }()),
+                                                  style: AppTheme
+                                                      .textTheme.titleLarge!
+                                                      .copyWith(
+                                                          fontSize: 12,
+                                                          fontWeight:
+                                                              FontWeight.w500));
+                                            }),
+                                            Text(
+                                                "Saldo anda " +
+                                                    CurrencyFormat.convertToIdr(
+                                                        profileContreoller
+                                                            .profileModel!
+                                                            .balance,
+                                                        0),
+                                                style: AppTheme
+                                                    .textTheme.titleLarge!
+                                                    .copyWith(
+                                                        fontSize: 11,
+                                                        fontWeight:
+                                                            FontWeight.w400)),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      children: [
+                                        Obx(() {
+                                          return Icon(
+                                            Icons.check_circle_outline_rounded,
+                                            color: subsOrderController
+                                                        .useBalance.value !=
+                                                    0
+                                                ? AppTheme.primaryGreen
+                                                : Colors.black26,
+                                          );
+                                        }),
+                                        const SizedBox(
+                                          width: 18,
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    } else
+                      return Container();
+                  }),
                   if (discountList.isNotEmpty)
                     Column(
                       children: [
@@ -715,10 +825,8 @@ class _SubsConfirmationViewState extends State<SubsConfirmationView> {
                   Obx(() {
                     if (subsOrderController.discount != 0) {
                       return Padding(
-                        padding: EdgeInsets.only(
-                          left: 25,
-                          right: 25,
-                        ),
+                        padding:
+                            EdgeInsets.only(left: 25, right: 25, bottom: 8),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -736,6 +844,35 @@ class _SubsConfirmationViewState extends State<SubsConfirmationView> {
                                                 color: AppTheme.primaryRed,
                                                 fontSize: 12,
                                                 fontWeight: FontWeight.w400)))
+                          ],
+                        ),
+                      );
+                    } else {
+                      return Container();
+                    }
+                  }),
+                  Obx(() {
+                    if (subsOrderController.useBalance.value != 0) {
+                      return Padding(
+                        padding: const EdgeInsets.only(
+                          left: 25,
+                          right: 25,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text("Pakai Saldo",
+                                style: AppTheme.textTheme.titleLarge!.copyWith(
+                                    fontSize: 12, fontWeight: FontWeight.w300)),
+                            Obx(() => subsOrderController.isLoading.value
+                                ? const Text("...")
+                                : Text(
+                                    "- ${CurrencyFormat.convertToIdr(subsOrderController.useBalance.value, 0)}",
+                                    style: AppTheme.textTheme.titleLarge!
+                                        .copyWith(
+                                            color: AppTheme.primaryRed,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w400)))
                           ],
                         ),
                       );

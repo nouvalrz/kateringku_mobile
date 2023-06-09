@@ -12,6 +12,7 @@ class PreOrderModel {
   int subTotalPrice = 0;
   int totalPrice = 0;
   int discount = 0;
+  int useBalance = 0;
   int? discountId;
   String? discountName;
   int? discountPercentage;
@@ -31,7 +32,7 @@ class PreOrderModel {
   }
 
   void setTotalPrice() {
-    totalPrice = (subTotalPrice + deliveryPrice!) - discount;
+    totalPrice = (subTotalPrice + deliveryPrice!) - discount - useBalance;
   }
 
   Map<String, dynamic> toJson() {
@@ -45,14 +46,16 @@ class PreOrderModel {
         "persenan": discountPercentage!,
         "jumlah": discount
       };
-
       data["discount"] = json.encode(discountData);
     } else {
       data["discount"] = null;
     }
+    if (this.useBalance != 0) {
+      data["use_balance"] = this.useBalance;
+    }
     data['catering_id'] = cateringId;
     data['delivery_price'] = this.deliveryPrice;
-    data['total_price'] = this.totalPrice;
+    data['total_price'] = this.totalPrice + this.useBalance;
     data['delivery_date'] = this.deliveryDateTime!.toIso8601String();
     if (this.orderProducts != null) {
       data['products'] = this.orderProducts!.map((v) => v.toJson()).toList();

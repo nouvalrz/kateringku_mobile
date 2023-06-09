@@ -111,7 +111,8 @@ class _OrderViewState extends State<OrderView> {
                       color: Colors.white,
                       backgroundColor: AppTheme.primaryGreen,
                       child: ListView.builder(
-                        physics: BouncingScrollPhysics(),
+                        physics: AlwaysScrollableScrollPhysics(
+                            parent: BouncingScrollPhysics()),
                         itemBuilder: (context, index) {
                           return OrderCard(
                             index: index,
@@ -148,8 +149,13 @@ class _OrderCardState extends State<OrderCard> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Get.toNamed(RouteHelper.orderDetail,
-            arguments: orderListController.orders[widget.index].id!);
+        if (orderListController.orders[widget.index].isPreOrder()) {
+          Get.toNamed(RouteHelper.orderDetail,
+              arguments: orderListController.orders[widget.index].id!);
+        } else {
+          Get.toNamed(RouteHelper.subsOrderDetail,
+              arguments: orderListController.orders[widget.index].id!);
+        }
       },
       child: Padding(
         padding: EdgeInsets.only(left: 25, right: 25, bottom: 20),
@@ -228,7 +234,8 @@ class _OrderCardState extends State<OrderCard> {
                 ),
                 Text(
                     CurrencyFormat.convertToIdr(
-                        orderListController.orders[widget.index].totalPrice!,
+                        orderListController.orders[widget.index].totalPrice! -
+                            orderListController.orders[widget.index].useBalance,
                         0),
                     style: AppTheme.textTheme.titleLarge!
                         .copyWith(fontSize: 12, fontWeight: FontWeight.w500)),

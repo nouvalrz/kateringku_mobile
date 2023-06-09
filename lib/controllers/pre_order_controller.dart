@@ -7,6 +7,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:kateringku_mobile/controllers/customer_dashboard_controller.dart';
+import 'package:kateringku_mobile/controllers/profile_controller.dart';
 import 'package:kateringku_mobile/data/repositories/catering_repo.dart';
 import 'package:kateringku_mobile/models/address_model.dart';
 import 'package:kateringku_mobile/models/pre_order_model.dart';
@@ -54,6 +55,7 @@ class PreOrderController extends GetxController implements GetxService {
       status: 'Loading...',
       maskType: EasyLoadingMaskType.black,
     );
+    await Get.find<ProfileController>().getProfile();
     currentAddress = await setCurrentAddress();
     setSelectedAddress(currentAddress!, true);
     preOrderModel.value.setSubTotalPrices();
@@ -227,5 +229,25 @@ class PreOrderController extends GetxController implements GetxService {
 
   bool isDiscountUsable({required int minimumSpend}) {
     return preOrderModel.value.subTotalPrice >= minimumSpend;
+  }
+
+  void useBalanceForPayment() {
+    var profileController = Get.find<ProfileController>();
+
+    if (preOrderModel.value.useBalance > 0) {
+      preOrderModel.value.useBalance = 0;
+      preOrderModel.value.setTotalPrice();
+      preOrderModel.refresh();
+      return;
+    }
+
+    if (profileController.profileModel!.balance! >=
+        preOrderModel.value.totalPrice) {
+      preOrderModel.value.useBalance = preOrderModel.value.totalPrice;
+    } else {
+      preOrderModel.value.useBalance = profileController.profileModel!.balance!;
+    }
+    preOrderModel.value.setTotalPrice();
+    preOrderModel.refresh();
   }
 }

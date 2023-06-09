@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:kateringku_mobile/base/show_custom_snackbar.dart';
 import 'package:kateringku_mobile/components/primary_button.dart';
 import 'package:kateringku_mobile/constants/vector_path.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -37,8 +38,14 @@ class _LoginViewState extends State<LoginView> {
     // print(customerLoginBody.password.toString());
     authController.login(customerLoginBody).then((status) {
       if (status.isSuccess) {
-        Get.offNamed(RouteHelper.mainHome);
+        if (status.type == "customer") {
+          Get.offNamed(RouteHelper.mainHome);
+        } else {
+          Get.offNamed(RouteHelper.cateringClientDashboard);
+        }
       } else {
+        showCustomSnackBar(
+            message: "Pastikan akun anda benar", title: "Login Gagal!");
         print("Failed Login ${status.isSuccess}");
       }
     });

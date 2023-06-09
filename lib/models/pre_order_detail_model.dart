@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:kateringku_mobile/models/address_model.dart';
 
-class OrderDetailModel {
+class PreOrderDetailModel {
   int? id;
   String? orderType;
   String? invoiceNumber;
@@ -22,8 +22,10 @@ class OrderDetailModel {
   String? paymentExpiry;
   int? discount;
   Review? review;
+  Complaint? complaint;
+  int useBalance = 0;
 
-  OrderDetailModel(
+  PreOrderDetailModel(
       {this.id,
       this.orderType,
       this.invoiceNumber,
@@ -36,13 +38,16 @@ class OrderDetailModel {
       this.orderStatus,
       this.createdAt});
 
-  OrderDetailModel.fromJson(Map<String, dynamic> json) {
+  PreOrderDetailModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     orderType = json['order_type'];
     invoiceNumber = json['invoice_number'];
     address =
         json['address'] != null ? AddressModel.fromJson(json['address']) : null;
     review = json['review'] != null ? Review.fromJson(json['review']) : null;
+    complaint = json['complaint'] != null
+        ? Complaint.fromJson(json['complaint'])
+        : null;
     deliveryDatetime = json['delivery_datetime'];
     if (json['products'] != null) {
       products = <OrderProduct>[];
@@ -58,6 +63,7 @@ class OrderDetailModel {
     cateringName = json['catering_name'];
     cateringPhone = json['catering_phone'];
     cateringLocation = json['catering_location'];
+    useBalance = json["use_balance"] ?? 0;
     image = json['image'];
     cateringId = json['catering_id'].toString();
     paymentExpiry = json['payment_expiry'];
@@ -85,6 +91,10 @@ class OrderDetailModel {
     data['order_status'] = this.orderStatus;
     data['created_at'] = this.createdAt;
     return data;
+  }
+
+  String orderTypeWording() {
+    return orderType! == "preorder" ? "Pre Order" : "Berlangganan";
   }
 }
 
@@ -170,6 +180,103 @@ class Review {
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
     data['catering_id'] = this.cateringId;
+    return data;
+  }
+}
+
+class Complaint {
+  int? id;
+  String? createdAt;
+  String? updatedAt;
+  int? ordersId;
+  String? status;
+  String? problem;
+  List<Images>? images;
+
+  Complaint(
+      {this.id,
+      this.createdAt,
+      this.updatedAt,
+      this.ordersId,
+      this.status,
+      this.problem,
+      this.images});
+
+  Complaint.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+    ordersId = json['orders_id'];
+    status = json['status'];
+    problem = json['problem'];
+    if (json['images'] != null) {
+      images = <Images>[];
+      json['images'].forEach((v) {
+        images!.add(new Images.fromJson(v));
+      });
+    }
+  }
+
+  String? problemWording() {
+    if (problem == "damaged") {
+      return "Makanan Rusak";
+    } else if (problem == "not_received") {
+      return "Tidak Sampai";
+    } else if (problem == "incomplete") {
+      return "Ada yang Kurang";
+    }
+  }
+
+  String? statusWording() {
+    if (status == "pending") {
+      return "Sedang Ditinjau";
+    } else if (status == "approve") {
+      return "Komplain Diterima";
+    } else if (problem == "reject") {
+      return "Komplain Ditolak";
+    }
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['created_at'] = this.createdAt;
+    data['updated_at'] = this.updatedAt;
+    data['orders_id'] = this.ordersId;
+    data['status'] = this.status;
+    data['problem'] = this.problem;
+    if (this.images != null) {
+      data['images'] = this.images!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+}
+
+class Images {
+  int? id;
+  String? createdAt;
+  String? updatedAt;
+  int? complaintId;
+  String? image;
+
+  Images(
+      {this.id, this.createdAt, this.updatedAt, this.complaintId, this.image});
+
+  Images.fromJson(Map<String, dynamic> json) {
+    id = json['id'];
+    createdAt = json['created_at'];
+    updatedAt = json['updated_at'];
+    complaintId = json['complaint_id'];
+    image = json['image'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['id'] = this.id;
+    data['created_at'] = this.createdAt;
+    data['updated_at'] = this.updatedAt;
+    data['complaint_id'] = this.complaintId;
+    data['image'] = this.image;
     return data;
   }
 }

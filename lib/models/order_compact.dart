@@ -14,6 +14,7 @@ class OrderCompact {
   int? orderQuantity;
   String? itemSummary;
   int? totalPrice;
+  int useBalance = 0;
 
   OrderCompact(
       {this.id,
@@ -35,6 +36,7 @@ class OrderCompact {
     itemSummary = json['item_summary'];
     totalPrice = json['total_price'];
     orderStatus = json['order_status'];
+    useBalance = json["use_balance"] ?? 0;
   }
 
   Map<String, dynamic> toJson() {
@@ -65,11 +67,9 @@ class OrderCompact {
   String deliveryDateWording() {
     initializeDateFormatting('id');
     if (isPreOrder()) {
-      return "Diantar " +
-          DateFormat('d MMMM', 'id').format(DateTime.parse(startDate!));
+      return DateFormat('d MMMM', 'id').format(DateTime.parse(startDate!));
     } else {
-      return "Diantar " +
-          DateFormat('d MMMM', 'id').format(DateTime.parse(startDate!)) +
+      return DateFormat('d MMMM', 'id').format(DateTime.parse(startDate!)) +
           " - " +
           DateFormat('d MMMM', 'id').format(DateTime.parse(endDate!));
     }

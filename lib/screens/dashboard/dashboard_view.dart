@@ -396,8 +396,7 @@ class _DashboardProductCardState extends State<DashboardProductCard> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
                 child: FancyShimmerImage(
-                    imageUrl: AppConstant.BASE_URL +
-                        widget.bestProductCateringImage1.substring(1)),
+                    imageUrl: widget.bestProductCateringImage1),
               ),
             ),
             const SizedBox(
@@ -444,8 +443,7 @@ class _DashboardProductCardState extends State<DashboardProductCard> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: FancyShimmerImage(
-                      imageUrl: AppConstant.BASE_URL +
-                          widget.bestProductCateringImage2!.substring(1)),
+                      imageUrl: widget.bestProductCateringImage2!),
                 ),
               ),
               const SizedBox(
@@ -519,8 +517,7 @@ class _DashboardProductCardState extends State<DashboardProductCard> {
                             child: ClipOval(
                               // borderRadius: BorderRadius.circular(6),
                               child: FancyShimmerImage(
-                                imageUrl: AppConstant.BASE_URL +
-                                    widget.cateringImage.substring(1),
+                                imageUrl: widget.cateringImage,
                               ),
                             ),
                           ),

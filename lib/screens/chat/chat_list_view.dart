@@ -124,8 +124,7 @@ class ChatCard extends StatelessWidget {
         Get.toNamed(RouteHelper.chat, arguments: {
           "cateringId": chatController.listChat[index].catering!.id!.toString(),
           "cateringName": chatController.listChat[index].catering!.name!,
-          "cateringImage": AppConstant.BASE_URL +
-              chatController.listChat[index].catering!.image!.substring(1)
+          "cateringImage": chatController.listChat[index].catering!.image!
         });
       },
       child: Padding(
@@ -142,9 +141,8 @@ class ChatCard extends StatelessWidget {
                     width: 50,
                     child: ClipOval(
                       child: FancyShimmerImage(
-                          imageUrl: AppConstant.BASE_URL +
-                              chatController.listChat[index].catering!.image!
-                                  .substring(1)),
+                          imageUrl:
+                              chatController.listChat[index].catering!.image!),
                     ),
                   ),
                   SizedBox(

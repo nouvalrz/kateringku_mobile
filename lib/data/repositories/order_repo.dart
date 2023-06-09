@@ -49,8 +49,17 @@ class OrderRepo {
     return await apiClient.getDataWithToken(AppConstant.GET_ALL_ORDER, token!);
   }
 
-  Future<Response> getOrderDetail(int id) async {
-    return await apiClient.getData(AppConstant.GET_ORDER_DETAIL(id));
+  Future<Response> getPreOrderDetail(int id) async {
+    return await apiClient.getData(AppConstant.GET_PREORDER_DETAIL(id));
+  }
+
+  Future<Response> getCateringPreOrderDetail(int id) async {
+    return await apiClient
+        .getData(AppConstant.GET_CATERING_PREORDER_DETAIL(id));
+  }
+
+  Future<Response> getSubsOrderDetail(int id) async {
+    return await apiClient.getData(AppConstant.GET_SUBSORDER_DETAIL(id));
   }
 
   Future<Response> getOrderPaidStatus(int id) async {
@@ -59,5 +68,10 @@ class OrderRepo {
 
   Future<Response> setOrderToAccepted(int id) async {
     return await apiClient.getData(AppConstant.SET_ORDER_TO_ACCEPTED(id));
+  }
+
+  Future<Response> setSubsOrderToAccepted(Map<String, dynamic> data) async {
+    return await apiClient.postData(
+        AppConstant.SET_SUBSORDER_TO_ACCEPTED, data);
   }
 }

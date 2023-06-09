@@ -6,12 +6,15 @@ import 'package:kateringku_mobile/screens/address/address_list_view.dart';
 import 'package:kateringku_mobile/screens/catering/catering_review_view.dart';
 import 'package:kateringku_mobile/screens/catering/catering_view.dart';
 import 'package:kateringku_mobile/screens/catering/product_option_view.dart';
+import 'package:kateringku_mobile/screens/catering_client/catering_dashboard_view.dart';
+import 'package:kateringku_mobile/screens/catering_client/catering_pre_order_detail_view.dart';
 import 'package:kateringku_mobile/screens/chat/chat_list_view.dart';
 import 'package:kateringku_mobile/screens/dashboard/dashboard_view.dart';
 import 'package:kateringku_mobile/screens/explore/category_view.dart';
 import 'package:kateringku_mobile/screens/explore/search_view.dart';
 import 'package:kateringku_mobile/screens/home/home_view.dart';
-import 'package:kateringku_mobile/screens/order/order_detail_view.dart';
+import 'package:kateringku_mobile/screens/order/pre_order_detail_view.dart';
+import 'package:kateringku_mobile/screens/order/subs_order_detail_view.dart';
 import 'package:kateringku_mobile/screens/payment/midtrans_payment_view.dart';
 import 'package:kateringku_mobile/screens/pre_order/pre_order_confirmation_view.dart';
 import 'package:kateringku_mobile/screens/login/login_view.dart';
@@ -39,6 +42,8 @@ class RouteHelper {
   static const String productOption = '/product-option';
   static const String midtransPayment = '/midtrans-payment';
   static const String orderDetail = '/order-detail';
+  static const String subsOrderDetail = '/subs-order-detail';
+
   static const String search = "/search";
   static const String category = "/category";
   static const String chat = "/chat";
@@ -48,6 +53,9 @@ class RouteHelper {
   static const String subsPickProduct = '/subs-pick-product';
   static const String subsPickProductOption = '/subs-pick-product-option';
   static const String subsConfirmationView = '/subs-confirmation-view';
+  static const String cateringClientDashboard = '/catering-client-dashboard';
+  static const String cateringPreOrderDetail = '/catering-pre-order-detail';
+  static const String cateringSubsOrderDetail = '/catering-subs-order-detail';
 
   static String getIntial() => onboard;
   static String getLogin() => login;
@@ -162,7 +170,7 @@ class RouteHelper {
     ),
     GetPage(
       name: orderDetail,
-      page: () => OrderDetailView(),
+      page: () => PreOrderDetailView(),
       transition: Transition.cupertino,
     ),
     GetPage(
@@ -208,6 +216,21 @@ class RouteHelper {
     GetPage(
       name: subsConfirmationView,
       page: () => SubsConfirmationView(),
+      transition: Transition.cupertino,
+    ),
+    GetPage(
+      name: subsOrderDetail,
+      page: () => SubsOrderDetailView(),
+      transition: Transition.cupertino,
+    ),
+    GetPage(
+      name: cateringClientDashboard,
+      page: () => CateringDashboardView(),
+      transition: Transition.cupertino,
+    ),
+    GetPage(
+      name: cateringPreOrderDetail,
+      page: () => CateringPreOrderDetailView(),
       transition: Transition.cupertino,
     ),
   ];

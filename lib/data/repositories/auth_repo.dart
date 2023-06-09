@@ -20,11 +20,19 @@ class AuthRepo {
     return await sharedPreferences.setString(AppConstant.TOKEN, token);
   }
 
-  deleteUserToken() async{
-    await sharedPreferences.remove(AppConstant.TOKEN);
+  saveUserType(String type) async {
+    return await sharedPreferences.setString(
+      AppConstant.TYPE,
+      type,
+    );
   }
 
-  void setToken() async{
+  deleteUserToken() async {
+    await sharedPreferences.remove(AppConstant.TOKEN);
+    await sharedPreferences.remove(AppConstant.TYPE);
+  }
+
+  void setToken() async {
     SharedPreferences preferences = await SharedPreferences.getInstance();
     var token = preferences.getString(AppConstant.TOKEN);
     print("TOKEN FROM REPO " + token!);
@@ -34,23 +42,20 @@ class AuthRepo {
     print(apiClient.mainHeaders);
   }
 
-  Future<Response> profile() async{
+  Future<Response> profile() async {
     setToken();
     // print("HEADER");
     // print(apiClient.mainHeaders);
     SharedPreferences preferences = await SharedPreferences.getInstance();
     var token = preferences.getString(AppConstant.TOKEN);
-    return await apiClient.getDataWithToken(
-        AppConstant.GET_PROFILE, token!);
+    return await apiClient.getDataWithToken(AppConstant.GET_PROFILE, token!);
   }
 
-
-  Future<Response> logout() async{
+  Future<Response> logout() async {
     setToken();
     SharedPreferences preferences = await SharedPreferences.getInstance();
     var token = preferences.getString(AppConstant.TOKEN);
 
-    return await apiClient.getDataWithToken(
-        AppConstant.LOGOUT_URI, token!);
+    return await apiClient.getDataWithToken(AppConstant.LOGOUT_URI, token!);
   }
 }

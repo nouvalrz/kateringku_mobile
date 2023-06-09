@@ -117,9 +117,11 @@ class RegisterController extends GetxController implements GetxService {
     late ResponseModel responseModel;
 
     if (response.statusCode == 200) {
-      responseModel = ResponseModel(true, response.body["status"].toString());
+      responseModel = ResponseModel(true, response.body["status"].toString(),
+          response.body["status"].toString());
     } else {
-      responseModel = ResponseModel(false, response.body["status"].toString());
+      responseModel = ResponseModel(false, response.body["status"].toString(),
+          response.body["status"].toString());
     }
     isLoading.value = false;
     update();

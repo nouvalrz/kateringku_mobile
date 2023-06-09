@@ -5,13 +5,16 @@ import 'package:kateringku_mobile/controllers/address_controller.dart';
 import 'package:kateringku_mobile/controllers/auth_controller.dart';
 import 'package:kateringku_mobile/controllers/cart_controller.dart';
 import 'package:kateringku_mobile/controllers/category_controller.dart';
+import 'package:kateringku_mobile/controllers/catering_dashboard_controller.dart';
 import 'package:kateringku_mobile/controllers/catering_home_controller.dart';
+import 'package:kateringku_mobile/controllers/catering_pre_order_detail_controller.dart';
 import 'package:kateringku_mobile/controllers/catering_review_controller.dart';
 import 'package:kateringku_mobile/controllers/chat_controller.dart';
+import 'package:kateringku_mobile/controllers/complaint_controller.dart';
 import 'package:kateringku_mobile/controllers/customer_address_controller.dart';
 import 'package:kateringku_mobile/controllers/customer_address_list_controller.dart';
 import 'package:kateringku_mobile/controllers/instant_confirmation_controller.dart';
-import 'package:kateringku_mobile/controllers/order_detail_controller.dart';
+import 'package:kateringku_mobile/controllers/pre_order_detail_controller.dart';
 import 'package:kateringku_mobile/controllers/order_list_controller.dart';
 import 'package:kateringku_mobile/controllers/otp_validation_controller.dart';
 import 'package:kateringku_mobile/controllers/pre_order_controller.dart';
@@ -22,9 +25,11 @@ import 'package:kateringku_mobile/controllers/review_controller.dart';
 import 'package:kateringku_mobile/controllers/save_address_controller.dart';
 import 'package:kateringku_mobile/controllers/search_controller.dart';
 import 'package:kateringku_mobile/controllers/subs_order_controller.dart';
+import 'package:kateringku_mobile/controllers/subs_order_detail_controller.dart';
 import 'package:kateringku_mobile/data/api/api_client.dart';
 import 'package:kateringku_mobile/data/repositories/auth_repo.dart';
 import 'package:kateringku_mobile/data/repositories/cart_repo.dart';
+import 'package:kateringku_mobile/data/repositories/catering_client_repo.dart';
 import 'package:kateringku_mobile/data/repositories/catering_product_repo.dart';
 import 'package:kateringku_mobile/data/repositories/catering_repo.dart';
 import 'package:kateringku_mobile/data/repositories/chat_repo.dart';
@@ -69,6 +74,7 @@ Future<void> init() async {
   Get.lazyPut(() => ExploreRepo(apiClient: Get.find()), fenix: true);
   Get.lazyPut(() => ChatRepo(apiClient: Get.find()), fenix: true);
   Get.lazyPut(() => ReviewRepo(apiClient: Get.find()), fenix: true);
+  Get.lazyPut(() => CateringClientRepo(apiClient: Get.find()), fenix: true);
 
   // controllers
   Get.lazyPut(() => AuthController(authRepo: Get.find()));
@@ -90,10 +96,20 @@ Future<void> init() async {
   Get.lazyPut(() => AddressController(customerAddressRepo: Get.find()));
   Get.lazyPut(() => HomeController(), fenix: true);
   Get.lazyPut(() => OrderListController(orderRepo: Get.find()), fenix: true);
-  Get.lazyPut(() => OrderDetailController(orderRepo: Get.find()), fenix: true);
+  Get.lazyPut(() => PreOrderDetailController(orderRepo: Get.find()),
+      fenix: true);
+  Get.lazyPut(() => SubsOrderDetailController(orderRepo: Get.find()),
+      fenix: true);
   Get.lazyPut(() => SearchController(exploreRepo: Get.find()));
   Get.lazyPut(() => CategoryController(exploreRepo: Get.find()));
   Get.lazyPut(() => ReviewController(apiClient: Get.find()), fenix: true);
+  Get.lazyPut(() => CateringPreOrderDetailController(orderRepo: Get.find()),
+      fenix: true);
+  Get.lazyPut(() => ComplaintController(apiClient: Get.find()), fenix: true);
+  Get.lazyPut(
+      () => CateringDashboardController(
+          cateringClientRepo: Get.find(), authRepo: Get.find()),
+      fenix: true);
   Get.lazyPut(() => ChatController(chatRepo: Get.find()), fenix: true);
   Get.lazyPut(
       () => SubsOrderController(

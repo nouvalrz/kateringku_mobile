@@ -10,8 +10,7 @@ import '../data/repositories/save_address_repo.dart';
 import '../models/response_model.dart';
 import 'customer_address_list_controller.dart';
 
-class SaveAddressController extends GetxController implements GetxService{
-
+class SaveAddressController extends GetxController implements GetxService {
   final SaveAddressRepo saveAddressRepo;
 
   SaveAddressController({
@@ -35,7 +34,8 @@ class SaveAddressController extends GetxController implements GetxService{
   var addressRepo = Get.put(CustomerAddressRepo(apiClient: Get.find()));
   // var addressRepo = Get.find<CustomerAddressRepo>();
 
-  var addressListController = Get.put(CustomerAddressListController(customerAddressRepo: Get.find()));
+  var addressListController =
+      Get.put(CustomerAddressListController(customerAddressRepo: Get.find()));
 
   @override
   void onInit() {
@@ -79,14 +79,15 @@ class SaveAddressController extends GetxController implements GetxService{
   Future<ResponseModel> saveAddress(
       AddCustomerAddressBody addCustomerAddressBody) async {
     isLoading.value = true;
-    Response response = await saveAddressRepo.saveAddress(addCustomerAddressBody);
+    Response response =
+        await saveAddressRepo.saveAddress(addCustomerAddressBody);
     print(response.body);
     late ResponseModel responseModel;
 
     if (response.statusCode == 200) {
-      responseModel = ResponseModel(true, "OK");
+      responseModel = ResponseModel(true, "OK", "address");
     } else {
-      responseModel = ResponseModel(false, "ERROR");
+      responseModel = ResponseModel(false, "ERROR", "address");
       print(response.statusCode);
     }
     isLoading.value = false;
@@ -105,7 +106,13 @@ class SaveAddressController extends GetxController implements GetxService{
     } else {
       isLoading.value = true;
       addressFormKey.currentState!.save();
-      AddCustomerAddressBody addCustomerAddressBody = AddCustomerAddressBody(longitude: addressCoordinate!.longitude.toDouble(), latitude: addressCoordinate!.latitude.toDouble(), address: address, phone: phone, recipientName: recipientName, villageName: villageName);
+      AddCustomerAddressBody addCustomerAddressBody = AddCustomerAddressBody(
+          longitude: addressCoordinate!.longitude.toDouble(),
+          latitude: addressCoordinate!.latitude.toDouble(),
+          address: address,
+          phone: phone,
+          recipientName: recipientName,
+          villageName: villageName);
 
       print(addCustomerAddressBody.longitude);
       await saveAddress(addCustomerAddressBody).then((status) {
@@ -123,14 +130,11 @@ class SaveAddressController extends GetxController implements GetxService{
           addressListController.getAllAddress();
           Get.back();
           return;
-        }else{
+        } else {
           print("NOT SUCCESS");
         }
       });
     }
     isLoading.value = false;
-
   }
-
-
 }

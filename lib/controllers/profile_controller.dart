@@ -25,7 +25,11 @@ class ProfileController extends GetxController implements GetxService {
     isLoading.value = true;
     Response response = await authRepo.profile();
 
-    profileModel = ProfileModel(name: response.body["name"], email: response.body["email"], phone: response.body["phone"]);
+    profileModel = ProfileModel(
+        name: response.body["name"],
+        email: response.body["email"],
+        phone: response.body["phone"],
+        balance: response.body["balance"]);
 
     // late ResponseModel responseModel;
     // if (response.statusCode == 200) {
@@ -38,14 +42,16 @@ class ProfileController extends GetxController implements GetxService {
     // update();
   }
 
-  Future<void> logout() async{
+  Future<void> logout() async {
     isLoading.value = true;
 
     Response response = await authRepo.logout();
 
-    if(response.statusCode == 200){
+    if (response.statusCode == 200) {
       authRepo.deleteUserToken();
-      showCustomSnackBar(message: "Anda telah keluar dari akun", title: "Keluar Akun Berhasil");
+      showCustomSnackBar(
+          message: "Anda telah keluar dari akun",
+          title: "Keluar Akun Berhasil");
       Get.offAllNamed(RouteHelper.onboard);
     }
 
