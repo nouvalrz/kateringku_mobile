@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Replace "343254889799245" with your Facebook App ID here. -->
+    <string name="notification_channel_id" translatable="false">kateringku</string>
+    <string name="notification_channel_name">KateringKu Notification</string>
+    <string name="notification_channel_desc">for notification</string>
+</resources>

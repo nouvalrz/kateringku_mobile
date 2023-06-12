@@ -42,6 +42,27 @@ class ProfileController extends GetxController implements GetxService {
     // update();
   }
 
+  Future<void> getProfileForOrder() async {
+    // isLoading.value = true;
+    Response response = await authRepo.profile();
+
+    profileModel = ProfileModel(
+        name: response.body["name"],
+        email: response.body["email"],
+        phone: response.body["phone"],
+        balance: response.body["balance"]);
+
+    // late ResponseModel responseModel;
+    // if (response.statusCode == 200) {
+    //   // response.body
+    //   responseModel = ResponseModel(true, response.body["token"]);
+    // } else {
+    //   responseModel = ResponseModel(false, response.body["message"]);
+    // }
+    // isLoading.value = false;
+    // update();
+  }
+
   Future<void> logout() async {
     isLoading.value = true;
 

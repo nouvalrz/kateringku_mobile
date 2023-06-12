@@ -71,13 +71,13 @@ class SubsOrderDetailModel {
       Map<String, dynamic> discountDecode = jsonDecode(json["discount"]);
       discount = discountDecode["jumlah"];
     }
+    review = json['review'] != null ? Review.fromJson(json['review']) : null;
     if (json['orders'] != null) {
       orders = <Orders>[];
       json['orders'].forEach((v) {
         orders!.add(new Orders.fromJson(v));
       });
     }
-    review = json['review'] != null ? Review.fromJson(json['review']) : null;
   }
 
   Map<String, dynamic> toJson() {

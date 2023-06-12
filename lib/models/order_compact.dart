@@ -76,52 +76,77 @@ class OrderCompact {
   }
 
   Container? getOrderStatusBadge() {
-    if (orderStatus == "UNPAID" || orderStatus == "PENDING") {
+    if (orderStatus == "UNPAID") {
       return orderStatusBadge(
           text: "Belum Dibayar",
-          bgColor: Color(0xFFFFE6FD),
-          textColor: Color(0xff9d118f));
+          bgColor: const Color(0xFFFFE6FD),
+          textColor: const Color(0xff9d118f));
     } else if (orderStatus == "VOID") {
       return orderStatusBadge(
           text: "Pembayaran Kadaluarsa",
-          bgColor: Color(0xFFFFF1DB),
-          textColor: Color(0xffE49A2A));
+          bgColor: const Color(0xFFFFF1DB),
+          textColor: const Color(0xffE49A2A));
     } else {
       if (orderStatus == "PAID") {
         return orderStatusBadge(
             text: "Menunggu Konfirmasi",
-            bgColor: Color(0xFFF5FFE0),
-            textColor: Color(0xff6a9316));
+            bgColor: const Color(0xFFF5FFE0),
+            textColor: const Color(0xff6a9316));
       } else if (orderStatus == "NOT_APPROVED") {
         return orderStatusBadge(
             text: "Dibatalkan Katering",
-            bgColor: Color(0xFFFFEBEB),
-            textColor: Color(0xffD72E2E));
+            bgColor: const Color(0xFFFFEBEB),
+            textColor: const Color(0xffD72E2E));
       } else if (orderStatus == "PROCESSED") {
         return orderStatusBadge(
             text: "Diproses",
-            bgColor: Color(0xFFE8EAFF),
-            textColor: Color(0xff2D3BBC));
+            bgColor: const Color(0xFFE8EAFF),
+            textColor: const Color(0xff2D3BBC));
       } else if (orderStatus == "SEND") {
         return orderStatusBadge(
             text: "Sedang Dikirim",
-            bgColor: Color(0xFFE6FFE2),
-            textColor: Color(0xff34A023));
+            bgColor: const Color(0xFFE6FFE2),
+            textColor: const Color(0xff34A023));
       } else if (orderStatus == "ONGOING") {
         return orderStatusBadge(
             text: "Sedang Berlangsung",
-            bgColor: Color(0xFFE6FFE2),
-            textColor: Color(0xff34A023));
+            bgColor: const Color(0xFFE6FFE2),
+            textColor: const Color(0xff34A023));
       } else if (orderStatus == "ACCEPTED") {
         return orderStatusBadge(
             text: "Diterima",
-            bgColor: Color(0xFFE5F3FF),
-            textColor: Color(0xff2569A8));
+            bgColor: const Color(0xFFE5F3FF),
+            textColor: const Color(0xff2569A8));
       } else if (orderStatus == "COMPLAINT") {
         return orderStatusBadge(
             text: "Komplain",
-            bgColor: Color(0xFFFFEEEE),
-            textColor: Color(0xffC63939));
+            bgColor: const Color(0xFFFFEEEE),
+            textColor: const Color(0xffC63939));
+      } else if (orderStatus == "CANCEL_BY_SISTEM") {
+        return orderStatusBadge(
+            text: "Dibatalkan Otomatis",
+            bgColor: const Color(0xFFFFEBEB),
+            textColor: const Color(0xffD72E2E));
+      } else if (orderStatus == "REQUEST_CANCEL") {
+        return orderStatusBadge(
+            text: "Pengajuan Cancel",
+            bgColor: const Color(0xFFFFEBEB),
+            textColor: const Color(0xffD72E2E));
+      } else if (orderStatus == "APPROVED_CANCEL") {
+        return orderStatusBadge(
+            text: "Pembatalan Disetujui",
+            bgColor: const Color(0xFFFFEBEB),
+            textColor: const Color(0xffD72E2E));
+      } else if (orderStatus == "CANCEL_REJECTED") {
+        return orderStatusBadge(
+            text: "Pembatalan Gagal",
+            bgColor: const Color(0xFFFFEBEB),
+            textColor: const Color(0xffD72E2E));
+      } else if (orderStatus == "PENDING") {
+        return orderStatusBadge(
+            text: "Pending",
+            bgColor: const Color(0xFFFFEBEB),
+            textColor: const Color(0xffD72E2E));
       }
     }
   }

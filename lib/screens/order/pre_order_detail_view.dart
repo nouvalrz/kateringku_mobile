@@ -299,15 +299,13 @@ class _PreOrderDetailViewState extends State<PreOrderDetailView> {
                                                       width: 80,
                                                       height: 80,
                                                       child: FancyShimmerImage(
-                                                        imageUrl: AppConstant
-                                                                .BASE_URL +
+                                                        imageUrl:
                                                             orderDetailController
                                                                 .orderDetail
                                                                 .value
                                                                 .complaint!
                                                                 .images![index]
-                                                                .image!
-                                                                .substring(1),
+                                                                .image!,
                                                       ),
                                                     ),
                                                   ),
@@ -985,10 +983,11 @@ class _PreOrderDetailViewState extends State<PreOrderDetailView> {
                                     Expanded(
                                         child: Container(
                                       child: FancyShimmerImage(
-                                        imageUrl: AppConstant.BASE_URL +
-                                            orderDetailController.orderDetail
-                                                .value.review!.hasImage!
-                                                .substring(1),
+                                        imageUrl: orderDetailController
+                                            .orderDetail
+                                            .value
+                                            .review!
+                                            .hasImage!,
                                       ),
                                       height: 200,
                                       decoration: BoxDecoration(
@@ -1064,6 +1063,31 @@ class _PreOrderDetailViewState extends State<PreOrderDetailView> {
             text: "Komplain",
             bgColor: const Color(0xFFFFEEEE),
             textColor: const Color(0xffC63939));
+      } else if (orderStatus == "CANCEL_BY_SISTEM") {
+        return orderStatusBadge(
+            text: "Dibatalkan Otomatis",
+            bgColor: const Color(0xFFFFEBEB),
+            textColor: const Color(0xffD72E2E));
+      } else if (orderStatus == "REQUEST_CANCEL") {
+        return orderStatusBadge(
+            text: "Pengajuan Cancel",
+            bgColor: const Color(0xFFFFEBEB),
+            textColor: const Color(0xffD72E2E));
+      } else if (orderStatus == "APPROVED_CANCEL") {
+        return orderStatusBadge(
+            text: "Pembatalan Disetujui",
+            bgColor: const Color(0xFFFFEBEB),
+            textColor: const Color(0xffD72E2E));
+      } else if (orderStatus == "CANCEL_REJECTED") {
+        return orderStatusBadge(
+            text: "Pembatalan Gagal",
+            bgColor: const Color(0xFFFFEBEB),
+            textColor: const Color(0xffD72E2E));
+      } else if (orderStatus == "PENDING") {
+        return orderStatusBadge(
+            text: "Pending",
+            bgColor: const Color(0xFFFFEBEB),
+            textColor: const Color(0xffD72E2E));
       }
     }
   }
@@ -1120,6 +1144,25 @@ class _PreOrderDetailViewState extends State<PreOrderDetailView> {
                     child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
+                    GestureDetector(
+                      onTap: () {
+                        Get.toNamed(RouteHelper.chat, arguments: {
+                          "cateringId": orderDetailController
+                              .orderDetail.value.cateringId,
+                          "cateringName": orderDetailController
+                              .orderDetail.value.cateringName,
+                          "cateringImage":
+                              orderDetailController.orderDetail.value.image!
+                        });
+                      },
+                      child: Icon(
+                        Icons.chat_outlined,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 15,
+                    ),
                     GestureDetector(
                       onTap: () {
                         orderDetailController.getOrderDetail(id!);
@@ -1294,18 +1337,28 @@ class _PreOrderDetailViewState extends State<PreOrderDetailView> {
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 if (!orderDetailController.isLoading.value &&
-                                    (orderDetailController.orderDetail.value!
-                                                .orderStatus! ==
-                                            "UNPAID" ||
-                                        orderDetailController.orderDetail.value!
-                                                .orderStatus! ==
+                                    (orderDetailController.orderDetail.value!.orderStatus! == "UNPAID" ||
+                                        orderDetailController
+                                                .orderDetail.value!.orderStatus! ==
                                             "VOID" ||
-                                        orderDetailController.orderDetail.value!
-                                                .orderStatus! ==
+                                        orderDetailController
+                                                .orderDetail.value!.orderStatus! ==
                                             "PAID" ||
                                         orderDetailController.orderDetail.value!
                                                 .orderStatus! ==
-                                            "COMPLAINT"))
+                                            "COMPLAINT" ||
+                                        orderDetailController.orderDetail.value!
+                                                .orderStatus! ==
+                                            "REQUEST_CANCEL" ||
+                                        orderDetailController.orderDetail.value!
+                                                .orderStatus! ==
+                                            "CANCEL_BY_SYSTEM" ||
+                                        orderDetailController.orderDetail.value!
+                                                .orderStatus! ==
+                                            "APPROVED_CANCEL" ||
+                                        orderDetailController.orderDetail.value!
+                                                .orderStatus! ==
+                                            "CANCEL_REJECTED"))
                                   getOrderStatusBadge(
                                       orderStatus: orderDetailController
                                           .orderDetail.value!.orderStatus!)!,
@@ -1431,7 +1484,19 @@ class _PreOrderDetailViewState extends State<PreOrderDetailView> {
                                     "VOID" ||
                                 orderDetailController
                                         .orderDetail.value!.orderStatus! ==
-                                    "COMPLAINT")) {
+                                    "COMPLAINT" ||
+                                orderDetailController
+                                        .orderDetail.value!.orderStatus! ==
+                                    "REQUEST_CANCEL" ||
+                                orderDetailController
+                                        .orderDetail.value!.orderStatus! ==
+                                    "CANCEL_BY_SYSTEM" ||
+                                orderDetailController
+                                        .orderDetail.value!.orderStatus! ==
+                                    "APPROVED_CANCEL" ||
+                                orderDetailController
+                                        .orderDetail.value!.orderStatus! ==
+                                    "CANCEL_REJECTED")) {
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
@@ -1917,37 +1982,6 @@ class _PreOrderDetailViewState extends State<PreOrderDetailView> {
                   left: 25, right: 25, top: 10, bottom: 10),
               child: Row(
                 children: [
-                  GestureDetector(
-                    onTap: () {
-                      // await Get.toNamed(RouteHelper.getAddAddressMap());
-                      // addressListController.getAllAddress();
-                      Get.toNamed(RouteHelper.chat, arguments: {
-                        "cateringId":
-                            orderDetailController.orderDetail.value.cateringId,
-                        "cateringName": orderDetailController
-                            .orderDetail.value.cateringName,
-                        "cateringImage":
-                            orderDetailController.orderDetail.value.image!
-                      });
-                    },
-                    child: Container(
-                      child: const Center(
-                        child: Icon(
-                          Icons.chat_rounded,
-                          color: AppTheme.primaryGreen,
-                        ),
-                      ),
-                      width: 62,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(color: AppTheme.primaryGreen),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(
-                    width: 12,
-                  ),
                   Expanded(
                     child: Obx(() {
                       if (orderDetailController.orderDetail.value.review !=
@@ -1990,7 +2024,39 @@ class _PreOrderDetailViewState extends State<PreOrderDetailView> {
                                 : ButtonState.disabled);
                       }
                     }),
-                  )
+                  ),
+                  const SizedBox(
+                    width: 12,
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      // await Get.toNamed(RouteHelper.getAddAddressMap());
+                      // addressListController.getAllAddress();
+                      // Get.toNamed(RouteHelper.chat, arguments: {
+                      //   "cateringId":
+                      //       orderDetailController.orderDetail.value.cateringId,
+                      //   "cateringName": orderDetailController
+                      //       .orderDetail.value.cateringName,
+                      //   "cateringImage":
+                      //       orderDetailController.orderDetail.value.image!
+                      // });
+                      showModalMoreOptions();
+                    },
+                    child: Container(
+                      child: const Center(
+                        child: Icon(
+                          Icons.more_vert_rounded,
+                          color: Colors.grey,
+                        ),
+                      ),
+                      width: 62,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        border: Border.all(color: Colors.grey),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -1999,6 +2065,89 @@ class _PreOrderDetailViewState extends State<PreOrderDetailView> {
         alignment: Alignment.bottomCenter,
       ),
     ]));
+  }
+
+  void showModalMoreOptions() async {
+    await showModalBottomSheet(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topRight: Radius.circular(12), topLeft: Radius.circular(12)),
+        ),
+        context: context,
+        builder: (context) {
+          return Container(
+            padding: EdgeInsets.only(left: 25, right: 25, top: 30, bottom: 30),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("Opsi Lainnya",
+                    style: AppTheme.textTheme.titleLarge!
+                        .copyWith(fontSize: 14, fontWeight: FontWeight.w500)),
+                SizedBox(
+                  height: 12,
+                ),
+                ListTile(
+                  onTap: () {
+                    final today = DateTime.now();
+                    final deliveryDay = DateTime.parse(orderDetailController
+                        .orderDetail!.value.deliveryDatetime!);
+                    Duration difference = deliveryDay.difference(today);
+                    if (orderDetailController.orderDetail.value.orderStatus ==
+                        "ACCEPTED") {
+                      showCustomSnackBar(
+                          message: "Pesanan telah diterima!",
+                          title: "Tidak bisa cancel");
+                    } else if (difference.inDays < 3) {
+                      showCustomSnackBar(
+                          message:
+                              "Proses pesanan sudah melewati batas maksimal pengajuan cancel!",
+                          title: "Tidak bisa cancel");
+                    } else {
+                      Get.defaultDialog(
+                          contentPadding: EdgeInsets.all(12),
+                          title: "Konfirmasi",
+                          textConfirm: "Hapus",
+                          textCancel: "Batal",
+                          middleTextStyle: AppTheme.textTheme.titleLarge!
+                              .copyWith(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.grey[700]),
+                          middleText: "Yakin mengajukan pembatalan?",
+                          radius: 8,
+                          onConfirm: () {
+                            // await cartController.deleteCart(cartController.carts[index].id!);
+                            // cartController.getAllCart();
+                            // Get.back();
+                            orderDetailController.setOrderToRequestCancel();
+                            Get.back();
+                            Get.back();
+                          });
+                    }
+                  },
+                  leading:
+                      Icon(Icons.cancel_outlined, color: AppTheme.primaryRed),
+                  title: Text("Batalkan Pesanan",
+                      style: AppTheme.textTheme.titleLarge!
+                          .copyWith(fontSize: 13, fontWeight: FontWeight.w500)),
+                  trailing: GestureDetector(
+                    child: Icon(
+                      Icons.info_outline,
+                      color: Colors.grey,
+                    ),
+                    onTap: () {
+                      Get.defaultDialog(
+                          title: "Aturan Pembatalan",
+                          middleText:
+                              "Pesanan hanya boleh dibatalkan maks. H-3 sebelum pengantaran, dan pembatalan harus disetujui oleh katering. Uang akan dikembalkan sebesar 50%.");
+                    },
+                  ),
+                ),
+                Divider()
+              ],
+            ),
+          );
+        });
   }
 
   Column orderStatusFlowWidget({required String state}) {

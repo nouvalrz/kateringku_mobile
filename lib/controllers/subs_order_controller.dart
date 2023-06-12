@@ -116,7 +116,7 @@ class SubsOrderController extends GetxController implements GetxService {
     );
     isLoading.value = true;
 
-    await Get.find<ProfileController>().getProfile();
+    await Get.find<ProfileController>().getProfileForOrder();
     currentAddress = await setCurrentAddress();
     setSelectedAddress(currentAddress!, true);
     await setDeliveryPrice();
@@ -262,8 +262,8 @@ class SubsOrderController extends GetxController implements GetxService {
   }
 
   void generateBlackoutDateForCalendar() {
-    var startDate = DateTime.now().add(Duration(days: 1));
-    var endDate = DateTime.now().add(Duration(days: 30));
+    var startDate = DateTime.now().add(Duration(days: 3));
+    var endDate = DateTime.now().add(Duration(days: 33));
     for (int i = 0; i <= endDate.difference(startDate).inDays; i++) {
       if (blackOutDayList.contains(startDate.add(Duration(days: i)).weekday)) {
         blackoutDateForCalendar.add(startDate.add(Duration(days: i)));
@@ -602,7 +602,7 @@ class SubsOrderController extends GetxController implements GetxService {
     Map<String, dynamic> data = {};
     data['address'] = selectedAddress!.toJson();
     data['delivery_cost'] = deliveryPrice.value;
-    data['total_price'] = fixOrderPrice.value;
+    data['total_price'] = fixOrderPrice.value + useBalance.value;
     data['use_balance'] = useBalance.value;
     data['start_date'] = orderList.values.first.deliveryDateTime.toString();
     data['end_date'] = orderList.values.last.deliveryDateTime.toString();

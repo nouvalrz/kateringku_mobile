@@ -1,12 +1,12 @@
 import 'dart:convert';
 
-class PreOrderDetailForCateringModel {
+class SubsOrderDetailForCateringModel {
   int? id;
   String? orderType;
   String? invoiceNumber;
   Address? address;
   String? deliveryDatetime;
-  List<Products>? products;
+  List<Orders>? orders;
   int? subtotal;
   int? deliveryPrice;
   int? totalPrice;
@@ -14,18 +14,17 @@ class PreOrderDetailForCateringModel {
   int useBalance = 0;
   String? orderStatus;
   String? createdAt;
-  Customer? customer;
   int? discount;
+  Customer? customer;
   Review? review;
-  Complaint? complaint;
 
-  PreOrderDetailForCateringModel(
+  SubsOrderDetailForCateringModel(
       {this.id,
       this.orderType,
       this.invoiceNumber,
       this.address,
       this.deliveryDatetime,
-      this.products,
+      this.orders,
       this.subtotal,
       this.deliveryPrice,
       this.totalPrice,
@@ -35,21 +34,17 @@ class PreOrderDetailForCateringModel {
       this.discount,
       this.customer});
 
-  String orderTypeWording() {
-    return orderType! == "preorder" ? "Pre Order" : "Berlangganan";
-  }
-
-  PreOrderDetailForCateringModel.fromJson(Map<String, dynamic> json) {
+  SubsOrderDetailForCateringModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     orderType = json['order_type'];
     invoiceNumber = json['invoice_number'];
     address =
         json['address'] != null ? new Address.fromJson(json['address']) : null;
     deliveryDatetime = json['delivery_datetime'];
-    if (json['products'] != null) {
-      products = <Products>[];
-      json['products'].forEach((v) {
-        products!.add(new Products.fromJson(v));
+    if (json['orders'] != null) {
+      orders = <Orders>[];
+      json['orders'].forEach((v) {
+        orders!.add(new Orders.fromJson(v));
       });
     }
     subtotal = json['subtotal'];
@@ -62,16 +57,15 @@ class PreOrderDetailForCateringModel {
     customer = json['customer'] != null
         ? new Customer.fromJson(json['customer'])
         : null;
-    review =
-        json['review'] != null ? new Review.fromJson(json['review']) : null;
-    complaint = json['complaint'] != null
-        ? new Complaint.fromJson(json['complaint'])
-        : null;
-
     if (json["discount"] != null) {
       Map<String, dynamic> discountDecode = jsonDecode(json["discount"]);
       discount = discountDecode["jumlah"];
     }
+    review = json['review'] != null ? Review.fromJson(json['review']) : null;
+  }
+
+  String orderTypeWording() {
+    return orderType! == "preorder" ? "Pre Order" : "Berlangganan";
   }
 
   Map<String, dynamic> toJson() {
@@ -83,8 +77,8 @@ class PreOrderDetailForCateringModel {
       data['address'] = this.address!.toJson();
     }
     data['delivery_datetime'] = this.deliveryDatetime;
-    if (this.products != null) {
-      data['products'] = this.products!.map((v) => v.toJson()).toList();
+    if (this.orders != null) {
+      data['orders'] = this.orders!.map((v) => v.toJson()).toList();
     }
     data['subtotal'] = this.subtotal;
     data['delivery_price'] = this.deliveryPrice;
@@ -150,29 +144,80 @@ class Address {
   }
 }
 
+class Orders {
+  String? deliveryDatetime;
+  int? subtotalPrice;
+  String? status;
+  List<Products>? products;
+  Complaint? complaint;
+
+  Orders(
+      {this.deliveryDatetime, this.subtotalPrice, this.status, this.products});
+
+  Orders.fromJson(Map<String, dynamic> json) {
+    deliveryDatetime = json['delivery_datetime'];
+    subtotalPrice = json['subtotal_price'];
+    status = json['status'];
+    if (json['products'] != null) {
+      products = <Products>[];
+      json['products'].forEach((v) {
+        products!.add(new Products.fromJson(v));
+      });
+    }
+    complaint = json['complaint'] != null
+        ? Complaint.fromJson(json['complaint'])
+        : null;
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['delivery_datetime'] = this.deliveryDatetime;
+    data['subtotal_price'] = this.subtotalPrice;
+    data['status'] = this.status;
+    if (this.products != null) {
+      data['products'] = this.products!.map((v) => v.toJson()).toList();
+    }
+    return data;
+  }
+
+  String statusWording() {
+    if (status! == "pending") {
+      return "Diproses";
+    } else if (status! == "sending") {
+      return "Sedang Diantar";
+    } else if (status! == "delivered") {
+      return "Telah Diterima";
+    } else if (status! == "complaint") {
+      return "Komplain";
+    } else {
+      return "";
+    }
+  }
+}
+
 class Products {
   int? id;
   String? name;
   int? quantity;
   int? price;
+  String? customDesc;
   String? image;
-  String? productOptionSummary;
 
   Products(
       {this.id,
       this.name,
       this.quantity,
       this.price,
-      this.image,
-      this.productOptionSummary});
+      this.customDesc,
+      this.image});
 
   Products.fromJson(Map<String, dynamic> json) {
     id = json['id'];
     name = json['name'];
     quantity = json['quantity'];
     price = json['price'];
+    customDesc = json['custom_desc'];
     image = json['image'];
-    productOptionSummary = json['product_option_summary'];
   }
 
   Map<String, dynamic> toJson() {
@@ -181,8 +226,8 @@ class Products {
     data['name'] = this.name;
     data['quantity'] = this.quantity;
     data['price'] = this.price;
+    data['custom_desc'] = this.customDesc;
     data['image'] = this.image;
-    data['product_option_summary'] = this.productOptionSummary;
     return data;
   }
 }

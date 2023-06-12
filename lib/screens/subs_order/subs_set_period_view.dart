@@ -82,11 +82,11 @@ class _SubsSetPeriodViewState extends State<SubsSetPeriodView> {
                     todayHighlightColor: AppTheme.primaryOrange,
                     showActionButtons: true,
                     view: DateRangePickerView.month,
-                    minDate: DateTime.now().add(Duration(days: 1)),
+                    minDate: DateTime.now().add(Duration(days: 3)),
                     onCancel: () {
                       Get.back();
                     },
-                    maxDate: DateTime.now().add(Duration(days: 30)),
+                    maxDate: DateTime.now().add(Duration(days: 33)),
                     selectionMode: DateRangePickerSelectionMode.extendableRange,
                     monthViewSettings: DateRangePickerMonthViewSettings(
                         blackoutDates:

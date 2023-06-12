@@ -26,6 +26,7 @@ class _SubsConfirmationViewState extends State<SubsConfirmationView> {
   late List<Discount> discountList;
   @override
   void initState() {
+    super.initState();
     subsOrderController.initConfirmation();
     discountList = Get.arguments["cateringDiscount"] ?? null;
   }
@@ -549,7 +550,7 @@ class _SubsConfirmationViewState extends State<SubsConfirmationView> {
                     );
                   }),
                   Obx(() {
-                    if (!profileContreoller.isLoading.value &&
+                    if (!subsOrderController.isLoading.value &&
                         profileContreoller.profileModel!.balance != 0) {
                       return Column(
                         children: [

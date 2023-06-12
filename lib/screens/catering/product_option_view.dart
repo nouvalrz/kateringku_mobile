@@ -1,3 +1,4 @@
+import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -259,10 +260,9 @@ class _ProductCardInOptionState extends State<ProductCardInOption> {
                     borderRadius: BorderRadius.circular(10)),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
-                  child: Image(
-                      image: NetworkImage(AppConstant.BASE_URL +
-                          cateringProductController.products[index].image!
-                              .substring(1))),
+                  child: FancyShimmerImage(
+                    imageUrl: cateringProductController.products[index].image!,
+                  ),
                 ),
               ),
               SizedBox(

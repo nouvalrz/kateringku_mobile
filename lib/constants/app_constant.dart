@@ -51,6 +51,19 @@ class AppConstant {
     return "api/catering-mobile/preorder/$id/show";
   }
 
+  static String GET_CATERING_SUBSORDER_DETAIL(int id) {
+    return "api/catering-mobile/subs/$id/show";
+  }
+
+  static String CHANGE_ORDER_STATUS_FOR_CATERING =
+      "api/catering-mobile/preorder/changeStatusOrder";
+
+  static String CHANGE_SUBSORDER_STATUS_FOR_CATERING =
+      "api/catering-mobile/subs/changeStatusOrder";
+
+  static String CHANGE_SUBSORDER_STATUS_ONE_DAY_FOR_CATERING =
+      "api/catering-mobile/subs/changeStatusOrder/oneDay";
+
   static String GET_SUBSORDER_DETAIL(int id) {
     return "api/customer/subsorder/$id/show";
   }
@@ -61,6 +74,10 @@ class AppConstant {
 
   static String SET_ORDER_TO_ACCEPTED(int id) {
     return "api/customer/order/$id/set-to-accepted";
+  }
+
+  static String SET_ORDER_TO_REQUEST_CANCEL(int id) {
+    return "api/customer/order/$id/set-to-request-cancel";
   }
 
   static String SET_SUBSORDER_TO_ACCEPTED =

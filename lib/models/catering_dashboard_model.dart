@@ -62,7 +62,7 @@ class Catering {
   int? deliveryCost;
   int? minDistanceDelivery;
   int? rate;
-  Null? isOpen;
+  int? isOpen;
 
   Catering(
       {this.id,

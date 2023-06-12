@@ -41,4 +41,19 @@ class PreOrderDetailController extends GetxController {
     isSetOrderToAcceptedLoading.value = false;
     isLoading.value = false;
   }
+
+  Future<void> setOrderToRequestCancel() async {
+    isLoading.value = true;
+    EasyLoading.show(
+      status: 'Loading...',
+      maskType: EasyLoadingMaskType.black,
+    );
+
+    Response response =
+        await orderRepo.setOrderToRequestCancel(orderDetail.value.id!);
+    await getOrderDetail(orderDetail.value.id!);
+
+    EasyLoading.dismiss();
+    isLoading.value = false;
+  }
 }

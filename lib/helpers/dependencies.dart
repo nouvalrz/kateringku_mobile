@@ -44,6 +44,7 @@ import 'package:kateringku_mobile/data/repositories/review_repo.dart';
 import 'package:kateringku_mobile/data/repositories/save_address_repo.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../controllers/catering_subs_order_detail_controller.dart';
 import '../screens/home/home_view.dart';
 
 Future<void> init() async {
@@ -104,6 +105,8 @@ Future<void> init() async {
   Get.lazyPut(() => CategoryController(exploreRepo: Get.find()));
   Get.lazyPut(() => ReviewController(apiClient: Get.find()), fenix: true);
   Get.lazyPut(() => CateringPreOrderDetailController(orderRepo: Get.find()),
+      fenix: true);
+  Get.lazyPut(() => CateringSubsOrderDetailController(orderRepo: Get.find()),
       fenix: true);
   Get.lazyPut(() => ComplaintController(apiClient: Get.find()), fenix: true);
   Get.lazyPut(

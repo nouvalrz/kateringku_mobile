@@ -781,7 +781,7 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                             padding: const EdgeInsets.only(top: 4),
                           ),
                         Obx(() {
-                          if (!profileContreoller.isLoading.value &&
+                          if (!preOrderController.isLoading.value &&
                               profileContreoller.profileModel!.balance != 0) {
                             return Column(
                               children: [

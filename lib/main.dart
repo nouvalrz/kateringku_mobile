@@ -36,9 +36,11 @@ import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:uuid/uuid.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await initializeNotifications();
   await dep.init();
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent, // transparent status bar
@@ -53,7 +55,7 @@ Future<void> main() async {
     announcement: true,
     badge: true,
     carPlay: false,
-    criticalAlert: false,
+    criticalAlert: true,
     provisional: false,
     sound: true,
   );
@@ -67,9 +69,34 @@ Future<void> main() async {
 
   print('User granted permission: ${settings.authorizationStatus}');
 
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  Future<void> showNotification(RemoteMessage message) async {
+    const AndroidNotificationDetails androidPlatformChannelSpecifics =
+        AndroidNotificationDetails(
+      'kateringku',
+      'kateringku',
+      importance: Importance.max,
+      priority: Priority.high,
+    );
+
+    const NotificationDetails platformChannelSpecifics =
+        NotificationDetails(android: androidPlatformChannelSpecifics);
+
+    await flutterLocalNotificationsPlugin.show(
+      0,
+      message.notification!.title,
+      message.notification!.body,
+      platformChannelSpecifics,
+      payload: 'your_payload',
+    );
+  }
+
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
     print('Got a message whilst in the foreground!');
     print('Message data: ${message.data}');
+    // showNotification(message);
 
     if (message.data != null) {
       print(message.data);
@@ -137,6 +164,18 @@ Future<void> main() async {
       runApp(KateringKuOnboardApp());
     });
   }
+}
+
+Future<void> initializeNotifications() async {
+  const AndroidInitializationSettings initializationSettingsAndroid =
+      AndroidInitializationSettings('@mipmap/ic_launcher');
+  final InitializationSettings initializationSettings = InitializationSettings(
+    android: initializationSettingsAndroid,
+  );
+
+  await FlutterLocalNotificationsPlugin().initialize(
+    initializationSettings,
+  );
 }
 
 class KateringKuHomeApp extends StatelessWidget {

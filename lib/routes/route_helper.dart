@@ -8,6 +8,7 @@ import 'package:kateringku_mobile/screens/catering/catering_view.dart';
 import 'package:kateringku_mobile/screens/catering/product_option_view.dart';
 import 'package:kateringku_mobile/screens/catering_client/catering_dashboard_view.dart';
 import 'package:kateringku_mobile/screens/catering_client/catering_pre_order_detail_view.dart';
+import 'package:kateringku_mobile/screens/catering_client/catering_subs_order_detail_view.dart';
 import 'package:kateringku_mobile/screens/chat/chat_list_view.dart';
 import 'package:kateringku_mobile/screens/dashboard/dashboard_view.dart';
 import 'package:kateringku_mobile/screens/explore/category_view.dart';
@@ -231,6 +232,11 @@ class RouteHelper {
     GetPage(
       name: cateringPreOrderDetail,
       page: () => CateringPreOrderDetailView(),
+      transition: Transition.cupertino,
+    ),
+    GetPage(
+      name: cateringSubsOrderDetail,
+      page: () => CateringSubsOrderDetailView(),
       transition: Transition.cupertino,
     ),
   ];

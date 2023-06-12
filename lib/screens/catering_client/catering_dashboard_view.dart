@@ -1,6 +1,7 @@
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:focus_detector/focus_detector.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:kateringku_mobile/controllers/catering_dashboard_controller.dart';
@@ -31,65 +32,81 @@ class _CateringDashboardViewState extends State<CateringDashboardView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppTheme.primaryGreen,
-      body: Stack(
-        children: [
-          Align(
-            child: Transform.scale(
-              child: SvgPicture.asset(
-                VectorPath.orangeRadial,
-              ),
-              scaleY: -1,
-              scaleX: -1,
-            ),
-            alignment: Alignment.topRight,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 40),
-            child: Column(
-              children: [
-                CateringProfileHeader(),
-                SizedBox(
-                  height: 16,
+    return FocusDetector(
+      onFocusGained: () {
+        cateringDashboardController.getCateringDashboard();
+      },
+      child: Scaffold(
+        backgroundColor: AppTheme.primaryGreen,
+        body: Stack(
+          children: [
+            Align(
+              child: Transform.scale(
+                child: SvgPicture.asset(
+                  VectorPath.orangeRadial,
                 ),
-                Expanded(
-                    child: Container(
-                  child: Obx(() {
-                    if (cateringDashboardController.isLoading.value) {
-                      return Center(
-                        child: CircularProgressIndicator(
-                          color: AppTheme.primaryGreen,
-                        ),
-                      );
-                    } else {
-                      return RefreshIndicator(
-                        color: AppTheme.primaryGreen,
-                        onRefresh: () async {
-                          cateringDashboardController.getCateringDashboard();
-                        },
-                        child: ListView.builder(
-                          // shrinkWrap: true,
-                          physics: BouncingScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            return OrderCardForCatering(index: index);
-                          },
-                          itemCount: cateringDashboardController
-                              .cateringDashboardModel!.orders!.length,
-                        ),
-                      );
-                    }
-                  }),
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(8),
-                          topRight: Radius.circular(8))),
-                ))
-              ],
+                scaleY: -1,
+                scaleX: -1,
+              ),
+              alignment: Alignment.topRight,
             ),
-          )
-        ],
+            Padding(
+              padding: const EdgeInsets.only(top: 40),
+              child: Column(
+                children: [
+                  CateringProfileHeader(),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  Expanded(
+                      child: Container(
+                    child: Obx(() {
+                      if (cateringDashboardController.isLoading.value) {
+                        return Center(
+                          child: CircularProgressIndicator(
+                            color: AppTheme.primaryGreen,
+                          ),
+                        );
+                      } else {
+                        if (cateringDashboardController
+                                .cateringDashboardModel!.orders!.length ==
+                            0) {
+                          return Center(
+                            child: Text("Anda belum memiliki pesanan",
+                                style: AppTheme.textTheme.titleLarge!.copyWith(
+                                    fontSize: 13, fontWeight: FontWeight.w500)),
+                          );
+                        } else {
+                          return RefreshIndicator(
+                            color: AppTheme.primaryGreen,
+                            onRefresh: () async {
+                              cateringDashboardController
+                                  .getCateringDashboard();
+                            },
+                            child: ListView.builder(
+                              // shrinkWrap: true,
+                              physics: BouncingScrollPhysics(),
+                              itemBuilder: (context, index) {
+                                return OrderCardForCatering(index: index);
+                              },
+                              itemCount: cateringDashboardController
+                                  .cateringDashboardModel!.orders!.length,
+                            ),
+                          );
+                        }
+                      }
+                    }),
+                    decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(8),
+                            topRight: Radius.circular(8))),
+                  ))
+                ],
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -295,6 +312,7 @@ class _OrderCardForCateringState extends State<OrderCardForCatering> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        print(widget.index);
         if (cateringDashboardController
             .cateringDashboardModel!.orders![widget.index]
             .isPreOrder()) {
@@ -302,9 +320,9 @@ class _OrderCardForCateringState extends State<OrderCardForCatering> {
               arguments: cateringDashboardController
                   .cateringDashboardModel!.orders![widget.index].id!);
         } else {
-          // Get.toNamed(RouteHelper.subsOrderDetail,
-          //     arguments: cateringDashboardController
-          //         .cateringDashboardModel!.orders![widget.index].id!);
+          Get.toNamed(RouteHelper.cateringSubsOrderDetail,
+              arguments: cateringDashboardController
+                  .cateringDashboardModel!.orders![widget.index].id!);
         }
       },
       child: Padding(
@@ -392,9 +410,7 @@ class _OrderCardForCateringState extends State<OrderCardForCatering> {
                 Text(
                     CurrencyFormat.convertToIdr(
                         cateringDashboardController.cateringDashboardModel!
-                                .orders![widget.index].totalPrice! -
-                            cateringDashboardController.cateringDashboardModel!
-                                .orders![widget.index].useBalance,
+                            .orders![widget.index].totalPrice!,
                         0),
                     style: AppTheme.textTheme.titleLarge!
                         .copyWith(fontSize: 12, fontWeight: FontWeight.w500)),

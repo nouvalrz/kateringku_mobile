@@ -58,6 +58,11 @@ class OrderRepo {
         .getData(AppConstant.GET_CATERING_PREORDER_DETAIL(id));
   }
 
+  Future<Response> getCateringSubsOrderDetail(int id) async {
+    return await apiClient
+        .getData(AppConstant.GET_CATERING_SUBSORDER_DETAIL(id));
+  }
+
   Future<Response> getSubsOrderDetail(int id) async {
     return await apiClient.getData(AppConstant.GET_SUBSORDER_DETAIL(id));
   }
@@ -70,8 +75,24 @@ class OrderRepo {
     return await apiClient.getData(AppConstant.SET_ORDER_TO_ACCEPTED(id));
   }
 
+  Future<Response> setOrderToRequestCancel(int id) async {
+    return await apiClient.getData(AppConstant.SET_ORDER_TO_REQUEST_CANCEL(id));
+  }
+
   Future<Response> setSubsOrderToAccepted(Map<String, dynamic> data) async {
     return await apiClient.postData(
         AppConstant.SET_SUBSORDER_TO_ACCEPTED, data);
+  }
+
+  Future<Response> changeOrderStatusForCatering(
+      Map<String, dynamic> data) async {
+    return await apiClient.postData(
+        AppConstant.CHANGE_ORDER_STATUS_FOR_CATERING, data);
+  }
+
+  Future<Response> changeOrderStatusOneDayForCatering(
+      Map<String, dynamic> data) async {
+    return await apiClient.postData(
+        AppConstant.CHANGE_SUBSORDER_STATUS_ONE_DAY_FOR_CATERING, data);
   }
 }

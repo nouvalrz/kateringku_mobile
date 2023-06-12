@@ -55,7 +55,7 @@ class PreOrderController extends GetxController implements GetxService {
       status: 'Loading...',
       maskType: EasyLoadingMaskType.black,
     );
-    await Get.find<ProfileController>().getProfile();
+    await Get.find<ProfileController>().getProfileForOrder();
     currentAddress = await setCurrentAddress();
     setSelectedAddress(currentAddress!, true);
     preOrderModel.value.setSubTotalPrices();
@@ -122,13 +122,13 @@ class PreOrderController extends GetxController implements GetxService {
 
   chooseDate() async {
     var initialDate = deliveryDateTime!.value == null
-        ? DateTime.now().add(Duration(days: 1))!
+        ? DateTime.now().add(Duration(days: 3))!
         : deliveryDateTime!.value;
     DateTime? pickedDate = await showDatePicker(
         context: Get.context!,
         initialDate: initialDate!,
-        firstDate: DateTime.now().add(Duration(days: 1)),
-        lastDate: DateTime.now().add(Duration(days: 30)));
+        firstDate: DateTime.now().add(Duration(days: 3)),
+        lastDate: DateTime.now().add(Duration(days: 33)));
     if (pickedDate != null &&
         pickedDate != preOrderModel.value.deliveryDateTime) {
       preOrderModel.value.deliveryDateTime = pickedDate;

@@ -1,17 +1,18 @@
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:kateringku_mobile/models/pre_order_detail_for_catering_model.dart';
+import 'package:kateringku_mobile/models/subs_order_detail_for_catering_model.dart';
 
 import '../data/repositories/order_repo.dart';
 
-class CateringPreOrderDetailController extends GetxController {
+class CateringSubsOrderDetailController extends GetxController {
   final OrderRepo orderRepo;
 
-  CateringPreOrderDetailController({required this.orderRepo});
+  CateringSubsOrderDetailController({required this.orderRepo});
 
   var isLoading = true.obs;
 
-  PreOrderDetailForCateringModel? preOrderDetailModel;
+  SubsOrderDetailForCateringModel? subsOrderDetailModel;
 
   Future<void> getOrderDetail(int id) async {
     isLoading.value = true;
@@ -20,11 +21,11 @@ class CateringPreOrderDetailController extends GetxController {
       maskType: EasyLoadingMaskType.black,
     );
 
-    Response response = await orderRepo.getCateringPreOrderDetail(id);
+    Response response = await orderRepo.getCateringSubsOrderDetail(id);
 
     if (response.statusCode == 200) {
-      preOrderDetailModel =
-          PreOrderDetailForCateringModel.fromJson(response.body['order']);
+      subsOrderDetailModel =
+          SubsOrderDetailForCateringModel.fromJson(response.body['order']);
     }
 
     EasyLoading.dismiss();
@@ -40,12 +41,28 @@ class CateringPreOrderDetailController extends GetxController {
 
     Map<String, dynamic> data = {};
 
-    data["orderId"] = preOrderDetailModel!.id;
+    data["orderId"] = subsOrderDetailModel!.id;
     data["newStatus"] = newStatus;
 
     Response response = await orderRepo.changeOrderStatusForCatering(data);
 
-    await getOrderDetail(preOrderDetailModel!.id!);
+    await getOrderDetail(subsOrderDetailModel!.id!);
+
+    EasyLoading.dismiss();
+    isLoading.value = false;
+  }
+
+  Future<void> changeOrderStatusForOneDay(Map<String, dynamic> data) async {
+    isLoading.value = true;
+    EasyLoading.show(
+      status: 'Loading...',
+      maskType: EasyLoadingMaskType.black,
+    );
+
+    Response response =
+        await orderRepo.changeOrderStatusOneDayForCatering(data);
+
+    await getOrderDetail(subsOrderDetailModel!.id!);
 
     EasyLoading.dismiss();
     isLoading.value = false;

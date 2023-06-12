@@ -444,6 +444,31 @@ class _SubsOrderDetailViewState extends State<SubsOrderDetailView> {
             text: "Komplain",
             bgColor: const Color(0xFFFFEEEE),
             textColor: const Color(0xffC63939));
+      } else if (orderStatus == "CANCEL_BY_SISTEM") {
+        return orderStatusBadge(
+            text: "Dibatalkan Otomatis",
+            bgColor: const Color(0xFFFFEBEB),
+            textColor: const Color(0xffD72E2E));
+      } else if (orderStatus == "REQUEST_CANCEL") {
+        return orderStatusBadge(
+            text: "Pengajuan Cancel",
+            bgColor: const Color(0xFFFFEBEB),
+            textColor: const Color(0xffD72E2E));
+      } else if (orderStatus == "APPROVED_CANCEL") {
+        return orderStatusBadge(
+            text: "Pembatalan Disetujui",
+            bgColor: const Color(0xFFFFEBEB),
+            textColor: const Color(0xffD72E2E));
+      } else if (orderStatus == "CANCEL_REJECTED") {
+        return orderStatusBadge(
+            text: "Pembatalan Gagal",
+            bgColor: const Color(0xFFFFEBEB),
+            textColor: const Color(0xffD72E2E));
+      } else if (orderStatus == "PENDING") {
+        return orderStatusBadge(
+            text: "Pending",
+            bgColor: const Color(0xFFFFEBEB),
+            textColor: const Color(0xffD72E2E));
       }
     }
   }
@@ -1155,6 +1180,9 @@ class _SubsOrderDetailViewState extends State<SubsOrderDetailView> {
                                           .orderDetail.value.deliveryPrice! +
                                       (orderDetailController
                                               .orderDetail.value.discount ??
+                                          0) +
+                                      (orderDetailController
+                                              .orderDetail.value.useBalance ??
                                           0),
                                   0),
                           style: AppTheme.textTheme.titleLarge!.copyWith(
@@ -1307,9 +1335,7 @@ class _SubsOrderDetailViewState extends State<SubsOrderDetailView> {
                               ? "..."
                               : CurrencyFormat.convertToIdr(
                                   orderDetailController
-                                          .orderDetail.value.totalPrice! -
-                                      orderDetailController
-                                          .orderDetail.value.useBalance,
+                                      .orderDetail.value.totalPrice!,
                                   0),
                           style: AppTheme.textTheme.titleLarge!.copyWith(
                               fontSize: 12, fontWeight: FontWeight.w400));

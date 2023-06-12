@@ -6,6 +6,7 @@ import 'package:kateringku_mobile/constants/image_path.dart';
 import 'package:kateringku_mobile/controllers/register_controller.dart';
 import 'package:kateringku_mobile/themes/app_theme.dart';
 import 'package:kateringku_mobile/components/primary_button.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({Key? key}) : super(key: key);
@@ -170,18 +171,38 @@ class _RegisterViewState extends State<RegisterView> {
                           Padding(
                             padding:
                                 const EdgeInsets.only(top: 40, bottom: 120),
-                            child: Obx(() => PrimaryButton(
-                                  title: 'Daftar Sekarang',
-                                  onTap: () {
-                                    // Get.toNamed(RouteHelper.getOtpValidation(
-                                    //     "anjay@gmail.com"));
-                                    // _registration();
-                                    registerControler
-                                        .checkFormRegisterValidation();
-                                  },
-                                  state: registerControler.isLoading.value
-                                      ? ButtonState.loading
-                                      : ButtonState.idle,
+                            child: Obx(() => Column(
+                                  children: [
+                                    PrimaryButton(
+                                      title: 'Daftar Sekarang',
+                                      onTap: () {
+                                        // Get.toNamed(RouteHelper.getOtpValidation(
+                                        //     "anjay@gmail.com"));
+                                        // _registration();
+                                        registerControler
+                                            .checkFormRegisterValidation();
+                                      },
+                                      state: registerControler.isLoading.value
+                                          ? ButtonState.loading
+                                          : ButtonState.idle,
+                                    ),
+                                    SizedBox(
+                                      height: 24,
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        var uri = Uri.parse(
+                                            "https://web.katering-ku.com");
+                                        launchUrl(uri,
+                                            mode:
+                                                LaunchMode.externalApplication);
+                                      },
+                                      child: Text(
+                                        "Ingin buka katering?",
+                                        style: AppTheme.textTheme.labelMedium,
+                                      ),
+                                    ),
+                                  ],
                                 )),
                           ),
                         ],
