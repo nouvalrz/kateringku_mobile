@@ -7,11 +7,10 @@ class OtpValidationController extends GetxController implements GetxService {
   final OtpValidationRepo otpValidationRepo;
   OtpValidationController({required this.otpValidationRepo});
 
-  bool _isLoading = false;
-  bool get isLoading => _isLoading;
+  var isLoading = false.obs;
 
   Future<ResponseModel> validate(OtpValidationBody otpValidationBody) async {
-    _isLoading = true;
+    isLoading.value = true;
     Response response = await otpValidationRepo.validate(otpValidationBody);
     late ResponseModel responseModel;
     if (response.statusCode == 200) {
@@ -22,8 +21,8 @@ class OtpValidationController extends GetxController implements GetxService {
       responseModel =
           ResponseModel(false, response.body["message"], response.body['type']);
     }
-    _isLoading = true;
     update();
+    isLoading.value = false;
     return responseModel;
   }
 }

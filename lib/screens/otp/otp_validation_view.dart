@@ -6,6 +6,7 @@ import 'package:kateringku_mobile/base/show_custom_snackbar.dart';
 import 'package:kateringku_mobile/components/primary_button.dart';
 import 'package:kateringku_mobile/controllers/otp_validation_controller.dart';
 import 'package:kateringku_mobile/models/otp_validation_body.dart';
+import 'package:kateringku_mobile/routes/route_helper.dart';
 import 'package:kateringku_mobile/themes/app_theme.dart';
 
 import '../../constants/vector_path.dart';
@@ -26,6 +27,7 @@ class _OtpValidationViewState extends State<OtpValidationView> {
   TextEditingController pin2 = TextEditingController();
   TextEditingController pin3 = TextEditingController();
   TextEditingController pin4 = TextEditingController();
+  var otpValidationController = Get.find<OtpValidationController>();
 
   @override
   Widget build(BuildContext context) {
@@ -138,33 +140,37 @@ class _OtpValidationViewState extends State<OtpValidationView> {
             ),
             Padding(
               padding: const EdgeInsets.only(top: 220),
-              child: PrimaryButton(
-                  title: 'Lanjutkan',
-                  onTap: () {
-                    var otpValidationController =
-                        Get.find<OtpValidationController>();
-                    var pin = "";
-                    pin = pin + pin1.text.trim();
-                    pin = pin + pin2.text.trim();
-                    pin = pin + pin3.text.trim();
-                    pin = pin + pin4.text.trim();
-                    OtpValidationBody otpValidationBody = OtpValidationBody(
-                        otp: pin,
-                        email: widget.email,
-                        password: widget.password);
-                    otpValidationController
-                        .validate(otpValidationBody)
-                        .then((status) {
-                      if (status.isSuccess) {
-                        showCustomSnackBar(
-                            message: "OTP Validation is success",
-                            title: "SUCCESS");
-
-                      } else {
-                        showCustomSnackBar(message: status.message);
-                      }
+              child: Obx(() {
+                return PrimaryButton(
+                    state: otpValidationController.isLoading.value
+                        ? ButtonState.loading
+                        : ButtonState.idle,
+                    title: 'Lanjutkan',
+                    onTap: () {
+                      var pin = "";
+                      pin = pin + pin1.text.trim();
+                      pin = pin + pin2.text.trim();
+                      pin = pin + pin3.text.trim();
+                      pin = pin + pin4.text.trim();
+                      OtpValidationBody otpValidationBody = OtpValidationBody(
+                          otp: pin,
+                          email: widget.email,
+                          password: widget.password);
+                      otpValidationController
+                          .validate(otpValidationBody)
+                          .then((status) {
+                        if (status.isSuccess) {
+                          showCustomSnackBar(
+                              message:
+                                  "Validasi OTP berhasil dilakukan, silahkan login!",
+                              title: "Berhasil");
+                          Get.offAllNamed(RouteHelper.onboard);
+                        } else {
+                          showCustomSnackBar(message: status.message);
+                        }
+                      });
                     });
-                  }),
+              }),
             ),
           ],
         ),

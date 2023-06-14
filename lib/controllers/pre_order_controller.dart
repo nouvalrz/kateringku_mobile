@@ -38,6 +38,8 @@ class PreOrderController extends GetxController implements GetxService {
 
   double? cateringLatitude;
   double? cateringLongitude;
+  int? cateringMinDistanceDelivery;
+  int? cateringDeliveryCost;
   String? cateringId;
   var deliveryDateTime = Rxn<DateTime>();
 
@@ -59,7 +61,7 @@ class PreOrderController extends GetxController implements GetxService {
     currentAddress = await setCurrentAddress();
     setSelectedAddress(currentAddress!, true);
     preOrderModel.value.setSubTotalPrices();
-    setDeliveryPrice();
+    await setDeliveryPrice();
     preOrderModel.value.setTotalPrice();
     EasyLoading.dismiss();
     isLoading.value = false;
@@ -84,23 +86,46 @@ class PreOrderController extends GetxController implements GetxService {
     this.isCurrentAddress.value = isCurrentAddress;
   }
 
-  void setDeliveryPrice() {
+  Future<void> setDeliveryPrice() async {
     isLoading.value = true;
-    var distance = Geolocator.distanceBetween(
-        double.parse(selectedAddress!.latitude!),
-        double.parse(selectedAddress!.longitude!),
-        cateringLatitude!,
-        cateringLongitude!);
+    // var distance = Geolocator.distanceBetween(
+    //     double.parse(selectedAddress!.latitude!),
+    //     double.parse(selectedAddress!.longitude!),
+    //     cateringLatitude!,
+    //     cateringLongitude!);
+    // distance = distance / 1000;
+    // var rounded_distance = distance.round();
+    // preOrderModel.value.deliveryPrice = rounded_distance * 4000;
+    Response response = await locationService.getDistanceFromCoordinates(
+        cateringLatitude: cateringLatitude!,
+        cateringLongitude: cateringLongitude!,
+        customerLatitude: double.parse(selectedAddress!.latitude!),
+        customerLongitude: double.parse(selectedAddress!.longitude!));
+
+    // var distance = Geolocator.distanceBetween(
+    //     double.parse(selectedAddress!.latitude!),
+    //     double.parse(selectedAddress!.longitude!),
+    //     cateringLatitude!,
+    //     cateringLongitude!);
+    var distance =
+        double.parse(response.body["routes"][0]["distance"].toString());
     distance = distance / 1000;
     var rounded_distance = distance.round();
-    preOrderModel.value.deliveryPrice = rounded_distance * 4000;
+
+    if (rounded_distance < cateringMinDistanceDelivery!) {
+      preOrderModel.value.deliveryPrice =
+          (cateringDeliveryCost! * cateringMinDistanceDelivery!);
+    } else {
+      preOrderModel.value.deliveryPrice =
+          (rounded_distance * cateringDeliveryCost!);
+    }
     isLoading.value = false;
   }
 
-  void recalculatePrice() {
+  void recalculatePrice() async {
     isLoading.value = true;
     preOrderModel.value.setSubTotalPrices();
-    setDeliveryPrice();
+    await setDeliveryPrice();
     preOrderModel.value.setTotalPrice();
     isLoading.value = false;
   }
@@ -168,7 +193,7 @@ class PreOrderController extends GetxController implements GetxService {
                       Flexible(
                         child: CupertinoDatePicker(
                           initialDateTime: deliveryAvailableTime!.start,
-                          minuteInterval: 30,
+                          // minuteInterval: 30,
                           mode: CupertinoDatePickerMode.time,
                           minimumDate: deliveryAvailableTime!.start,
                           maximumDate: deliveryAvailableTime!.end,

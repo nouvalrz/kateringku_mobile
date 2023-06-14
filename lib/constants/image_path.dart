@@ -38,4 +38,9 @@ class ImagePath {
 
 //  discount
   static const discount = "assets/images/discount.svg";
+
+//  Empty state
+  static const emptyCart = "assets/images/cart_empty.svg";
+  static const emptyOrder = "assets/images/order_empty.svg";
+  static const subsPeriodEmpty = "assets/images/subs_period_empty.svg";
 }

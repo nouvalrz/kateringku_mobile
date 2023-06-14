@@ -191,6 +191,7 @@ class Complaint {
   int? ordersId;
   String? status;
   String? problem;
+  String? solutionType;
   List<Images>? images;
 
   Complaint(
@@ -207,6 +208,7 @@ class Complaint {
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
     ordersId = json['orders_id'];
+    solutionType = json['solution_type'];
     status = json['status'];
     problem = json['problem'];
     if (json['images'] != null) {
@@ -214,6 +216,14 @@ class Complaint {
       json['images'].forEach((v) {
         images!.add(new Images.fromJson(v));
       });
+    }
+  }
+
+  String solutionWording() {
+    if (solutionType == "refund") {
+      return "Pengembalian Dana";
+    } else {
+      return "Pengiriman Ulang";
     }
   }
 

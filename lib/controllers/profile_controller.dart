@@ -74,6 +74,7 @@ class ProfileController extends GetxController implements GetxService {
           message: "Anda telah keluar dari akun",
           title: "Keluar Akun Berhasil");
       Get.offAllNamed(RouteHelper.onboard);
+      Get.deleteAll();
     }
 
     isLoading.value = false;

@@ -10,6 +10,7 @@ import 'package:kateringku_mobile/routes/route_helper.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 import '../../constants/app_constant.dart';
+import '../../constants/image_path.dart';
 import '../../constants/vector_path.dart';
 import '../../helpers/currency_format.dart';
 import '../../models/catering_display_model.dart';
@@ -326,11 +327,19 @@ class _SubsSetPeriodViewState extends State<SubsSetPeriodView> {
         Expanded(child: Obx(() {
           if (subsOrderController.isGenerateListOfOrderLoading.value) {
             return Center(
-                child: Text("Atur Periode Dahulu",
+                child: Column(
+              children: [
+                SvgPicture.asset(ImagePath.subsPeriodEmpty),
+                SizedBox(
+                  height: 8,
+                ),
+                Text("Atur Periode Dahulu",
                     style: AppTheme.textTheme.titleLarge!.copyWith(
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
-                        color: AppTheme.primaryBlack)));
+                        color: AppTheme.primaryBlack)),
+              ],
+            ));
           } else {
             if (subsOrderController.orderList.isNotEmpty) {
               return Column(
@@ -352,11 +361,21 @@ class _SubsSetPeriodViewState extends State<SubsSetPeriodView> {
                             onTap: () {
                               subsOrderController.repeatOrder();
                             },
-                            child: Text("Repeat Order",
-                                style: AppTheme.textTheme.titleLarge!.copyWith(
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w500,
-                                    color: AppTheme.primaryBlack)),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.repeat,
+                                  color: AppTheme.primaryOrange,
+                                  size: 18,
+                                ),
+                                Text("Ulangi Pesanan",
+                                    style: AppTheme.textTheme.titleLarge!
+                                        .copyWith(
+                                            fontSize: 13,
+                                            fontWeight: FontWeight.w500,
+                                            color: AppTheme.primaryBlack)),
+                              ],
+                            ),
                           ),
                       ],
                     ),
@@ -383,11 +402,24 @@ class _SubsSetPeriodViewState extends State<SubsSetPeriodView> {
               );
             } else {
               return Center(
-                  child: Text("Atur Periode Dahulu",
+                  child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    child: SvgPicture.asset(ImagePath.subsPeriodEmpty),
+                    height: 250,
+                    width: 250,
+                  ),
+                  SizedBox(
+                    height: 8,
+                  ),
+                  Text("Atur Periode Dahulu",
                       style: AppTheme.textTheme.titleLarge!.copyWith(
                           fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          color: AppTheme.primaryBlack)));
+                          fontWeight: FontWeight.w600,
+                          color: AppTheme.primaryBlack)),
+                ],
+              ));
             }
           }
         })),

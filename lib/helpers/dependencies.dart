@@ -78,11 +78,14 @@ Future<void> init() async {
   Get.lazyPut(() => CateringClientRepo(apiClient: Get.find()), fenix: true);
 
   // controllers
-  Get.lazyPut(() => AuthController(authRepo: Get.find()));
-  Get.lazyPut(() => RegisterController(registerRepo: Get.find()));
-  Get.lazyPut(() => OtpValidationController(otpValidationRepo: Get.find()));
-  Get.lazyPut(() =>
-      CustomerDashboardController(relevantCateringProductsRepo: Get.find()));
+  Get.lazyPut(() => AuthController(authRepo: Get.find()), fenix: true);
+  Get.lazyPut(() => RegisterController(registerRepo: Get.find()), fenix: true);
+  Get.lazyPut(() => OtpValidationController(otpValidationRepo: Get.find()),
+      fenix: true);
+  Get.lazyPut(
+      () =>
+          CustomerDashboardController(relevantCateringProductsRepo: Get.find()),
+      fenix: true);
   Get.lazyPut(() => CateringHomeController(
       cateringProductRepo: Get.find(), cartRepo: Get.find()));
   Get.lazyPut(() => CustomerAddressController(customerAddressRepo: Get.find()));

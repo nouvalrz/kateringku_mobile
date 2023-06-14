@@ -45,9 +45,9 @@ class Catering {
   String? phone;
   String? address;
   int? balance;
-  Null? provinceId;
-  Null? regencyId;
-  Null? districtId;
+  int? provinceId;
+  int? regencyId;
+  int? districtId;
   int? villageId;
   int? zipcode;
   String? latitude;

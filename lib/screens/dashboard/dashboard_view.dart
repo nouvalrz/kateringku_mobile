@@ -230,94 +230,138 @@ class _DashboardViewState extends State<DashboardView> {
                           ),
                         ),
                         Obx(() => !customerDashboardController.isLoading.value
-                            ? Expanded(
-                                child: ScrollConfiguration(
-                                  behavior: NoGlow(),
-                                  child: ListView.builder(
-                                      controller: controller,
-                                      padding: EdgeInsets.only(top: 15),
-                                      itemBuilder: ((context, index) {
-                                        return Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 25, right: 25, bottom: 4),
-                                          child: DashboardProductCard(
-                                            cateringDisplayModel:
-                                                customerDashboardController
-                                                    .relevantCaterings[index],
-                                            cateringLatitude: double.parse(
-                                                customerDashboardController
-                                                    .relevantCaterings[index]
-                                                    .latitude!),
-                                            cateringLongitude: double.parse(
-                                                customerDashboardController
-                                                    .relevantCaterings[index]
-                                                    .longitude!),
-                                            cateringImage:
-                                                customerDashboardController
-                                                    .relevantCaterings[index]
-                                                    .image!,
-                                            cateringName:
-                                                customerDashboardController
-                                                    .relevantCaterings[index]
-                                                    .name!,
-                                            cateringCategory:
-                                                customerDashboardController
-                                                    .relevantCaterings[index]
-                                                    .mergeCategories(),
-                                            cateringLocation:
-                                                customerDashboardController
-                                                    .relevantCaterings[index]
-                                                    .village!
-                                                    .name!
-                                                    .capitalize!,
-                                            categorySalesCount: 234,
-                                            bestProductCatering1:
-                                                customerDashboardController
-                                                    .relevantCaterings[index]
-                                                    .recommendationProducts![0]
-                                                    .name!,
-                                            bestProductCatering2:
-                                                customerDashboardController
-                                                    .relevantCaterings[index]
-                                                    .recommendationProducts![1]
-                                                    .name!,
-                                            bestProductCateringPrice1:
-                                                customerDashboardController
-                                                    .relevantCaterings[index]
-                                                    .recommendationProducts![0]
-                                                    .price!,
-                                            bestProductCateringPrice2:
-                                                customerDashboardController
-                                                    .relevantCaterings[index]
-                                                    .recommendationProducts![1]
-                                                    .price!,
-                                            bestProductCateringImage1:
-                                                customerDashboardController
-                                                    .relevantCaterings[index]
-                                                    .recommendationProducts![0]
-                                                    .image!,
-                                            bestProductCateringImage2:
-                                                customerDashboardController
-                                                    .relevantCaterings[index]
-                                                    .recommendationProducts![1]
-                                                    .image!,
-                                            cateringId:
-                                                customerDashboardController
-                                                    .relevantCaterings[index].id
-                                                    .toString(),
-                                            cateringRate:
-                                                customerDashboardController
-                                                    .relevantCaterings[index]
-                                                    .rate,
-                                          ),
-                                        );
-                                      }),
-                                      // physics: const NeverScrollableScrollPhysics(),
-                                      shrinkWrap: true,
-                                      itemCount: customerDashboardController
-                                          .relevantCaterings.length),
-                                ),
-                              )
+                            ? customerDashboardController
+                                    .relevantCaterings.isEmpty
+                                ? Column(
+                                    children: [
+                                      SizedBox(
+                                        child: SvgPicture.asset(
+                                            ImagePath.emptyOrder),
+                                        height: 260,
+                                        width: 260,
+                                      ),
+                                      SizedBox(
+                                        height: 26,
+                                      ),
+                                      Text("Belum ada katering disekitar anda",
+                                          style: AppTheme.textTheme.titleLarge!
+                                              .copyWith(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w600)),
+                                    ],
+                                  )
+                                : Expanded(
+                                    child: ScrollConfiguration(
+                                      behavior: NoGlow(),
+                                      child: ListView.builder(
+                                          controller: controller,
+                                          padding: EdgeInsets.only(top: 15),
+                                          itemBuilder: ((context, index) {
+                                            return Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 25,
+                                                  right: 25,
+                                                  bottom: 4),
+                                              child: DashboardProductCard(
+                                                cateringDisplayModel:
+                                                    customerDashboardController
+                                                            .relevantCaterings[
+                                                        index],
+                                                cateringLatitude: double.parse(
+                                                    customerDashboardController
+                                                        .relevantCaterings[
+                                                            index]
+                                                        .latitude!),
+                                                cateringLongitude: double.parse(
+                                                    customerDashboardController
+                                                        .relevantCaterings[
+                                                            index]
+                                                        .longitude!),
+                                                cateringImage:
+                                                    customerDashboardController
+                                                        .relevantCaterings[
+                                                            index]
+                                                        .image!,
+                                                cateringName:
+                                                    customerDashboardController
+                                                        .relevantCaterings[
+                                                            index]
+                                                        .name!,
+                                                cateringCategory:
+                                                    customerDashboardController
+                                                        .relevantCaterings[
+                                                            index]
+                                                        .mergeCategories(),
+                                                cateringLocation:
+                                                    customerDashboardController
+                                                        .relevantCaterings[
+                                                            index]
+                                                        .village!
+                                                        .name!
+                                                        .capitalize!,
+                                                categorySalesCount: 234,
+                                                bestProductCatering1:
+                                                    customerDashboardController
+                                                        .relevantCaterings[
+                                                            index]
+                                                        .recommendationProducts![
+                                                            0]
+                                                        .name!,
+                                                bestProductCatering2:
+                                                    customerDashboardController
+                                                        .relevantCaterings[
+                                                            index]
+                                                        .recommendationProducts![
+                                                            1]
+                                                        .name!,
+                                                bestProductCateringPrice1:
+                                                    customerDashboardController
+                                                        .relevantCaterings[
+                                                            index]
+                                                        .recommendationProducts![
+                                                            0]
+                                                        .price!,
+                                                bestProductCateringPrice2:
+                                                    customerDashboardController
+                                                        .relevantCaterings[
+                                                            index]
+                                                        .recommendationProducts![
+                                                            1]
+                                                        .price!,
+                                                bestProductCateringImage1:
+                                                    customerDashboardController
+                                                        .relevantCaterings[
+                                                            index]
+                                                        .recommendationProducts![
+                                                            0]
+                                                        .image!,
+                                                bestProductCateringImage2:
+                                                    customerDashboardController
+                                                        .relevantCaterings[
+                                                            index]
+                                                        .recommendationProducts![
+                                                            1]
+                                                        .image!,
+                                                cateringId:
+                                                    customerDashboardController
+                                                        .relevantCaterings[
+                                                            index]
+                                                        .id
+                                                        .toString(),
+                                                cateringRate:
+                                                    customerDashboardController
+                                                        .relevantCaterings[
+                                                            index]
+                                                        .rate,
+                                              ),
+                                            );
+                                          }),
+                                          // physics: const NeverScrollableScrollPhysics(),
+                                          shrinkWrap: true,
+                                          itemCount: customerDashboardController
+                                              .relevantCaterings.length),
+                                    ),
+                                  )
                             : const Center(
                                 child: CircularProgressIndicator(
                                   color: AppTheme.primaryGreen,

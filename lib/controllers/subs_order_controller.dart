@@ -32,6 +32,8 @@ class SubsOrderController extends GetxController implements GetxService {
       required this.cateringProductRepo,
       required this.orderRepo});
 
+  var isLoadingPostSubsOrder = false.obs;
+
   // Date Picker
   DateRangePickerController datePickerController = DateRangePickerController();
   var cateringWorkday = <String>[];
@@ -154,11 +156,12 @@ class SubsOrderController extends GetxController implements GetxService {
     //     double.parse(selectedAddress!.longitude!),
     //     cateringLatitude!,
     //     cateringLongitude!);
-    var distance = response.body["routes"][0]["distance"];
+    var distance =
+        double.parse(response.body["routes"][0]["distance"].toString());
     distance = distance / 1000;
     var rounded_distance = distance.round();
 
-    if (rounded_distance < cateringMinDistanceDelivery) {
+    if (rounded_distance < cateringMinDistanceDelivery!) {
       deliveryPrice!.value =
           (cateringDeliveryCost! * cateringMinDistanceDelivery!) *
               orderList.length;
@@ -313,7 +316,7 @@ class SubsOrderController extends GetxController implements GetxService {
                       Flexible(
                         child: CupertinoDatePicker(
                           initialDateTime: deliveryAvailableTime!.start,
-                          minuteInterval: 30,
+                          // minuteInterval: 30,
                           mode: CupertinoDatePickerMode.time,
                           minimumDate: deliveryAvailableTime!.start,
                           maximumDate: deliveryAvailableTime!.end,
@@ -599,6 +602,7 @@ class SubsOrderController extends GetxController implements GetxService {
   }
 
   Future<void> createSubsOrder() async {
+    isLoadingPostSubsOrder.value = true;
     Map<String, dynamic> data = {};
     data['address'] = selectedAddress!.toJson();
     data['delivery_cost'] = deliveryPrice.value;
@@ -648,6 +652,7 @@ class SubsOrderController extends GetxController implements GetxService {
       Get.until((route) => Get.currentRoute == RouteHelper.mainHome);
       Get.toNamed(RouteHelper.midtransPayment, arguments: [orderId]);
     }
+    isLoadingPostSubsOrder.value = false;
   }
 
   void useBalanceForPayment() {

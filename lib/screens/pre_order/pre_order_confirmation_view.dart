@@ -59,6 +59,8 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
     var cateringLongitude = state[3];
     stateCart = state[4];
     discountList = state[5] ?? null;
+    var cateringDeliveryCost = state[6];
+    var cateringMinDistanceDelivery = state[7];
 
     // EasyLoading.show(
     //   status: 'Loading...',
@@ -72,6 +74,9 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
     preOrderController.preOrderModel.value.discountId = null;
     preOrderController.preOrderModel.value.discount = 0;
     preOrderController.preOrderModel.value.useBalance = 0;
+    preOrderController.cateringDeliveryCost = cateringDeliveryCost;
+    preOrderController.cateringMinDistanceDelivery =
+        cateringMinDistanceDelivery;
 
     preOrderController.deliveryDateTime = Rxn<DateTime>();
 

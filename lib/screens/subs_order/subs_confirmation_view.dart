@@ -1016,13 +1016,20 @@ class _SubsConfirmationViewState extends State<SubsConfirmationView> {
                         height: 68,
                         width: 150,
                         color: AppTheme.primaryOrange,
-                        child: Center(
-                          child: Text("Pilih Pembayaran",
-                              style: AppTheme.textTheme.titleLarge!.copyWith(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white)),
-                        ),
+                        child: Center(child: Obx(() {
+                          if (subsOrderController
+                              .isLoadingPostSubsOrder.value) {
+                            return CircularProgressIndicator(
+                              color: Colors.white,
+                            );
+                          } else {
+                            return Text("Pilih Pembayaran",
+                                style: AppTheme.textTheme.titleLarge!.copyWith(
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white));
+                          }
+                        })),
                       ))
                 ],
               ),

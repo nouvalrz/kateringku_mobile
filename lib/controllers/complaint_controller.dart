@@ -19,6 +19,7 @@ class ComplaintController extends GetxController {
   var isLoading = false.obs;
 
   var problem = "";
+  var solution_type = "";
 
   Future<void> pickImageFromCamera() async {
     // isImageUpload.value = false;
@@ -83,13 +84,6 @@ class ComplaintController extends GetxController {
   }
 
   Future<void> postComplain({required String order_id}) async {
-    if (!isFormValid()) {
-      showCustomSnackBar(
-          message: "Anda perlu melengkapi semua data",
-          title: "Penuhi semua data!");
-      return;
-    }
-
     isLoading.value = true;
 
     late String problemType;
@@ -102,9 +96,18 @@ class ComplaintController extends GetxController {
       problemType = "incomplete";
     }
 
+    late String solution;
+
+    if (solution_type == "Pengembalian Dana") {
+      solution = "refund";
+    } else if (solution_type == "Pengiriman Ulang") {
+      solution = "retur";
+    }
+
     Map<String, dynamic> body = {
       'problem': problemType,
       'orders_id': order_id,
+      'solution_type': solution,
     };
 
     // var multipartImages = [];
@@ -137,6 +140,9 @@ class ComplaintController extends GetxController {
 
   bool isFormValid() {
     if (problem == "") {
+      return false;
+    }
+    if (solution_type == "") {
       return false;
     }
     if (images.value.length == 0) {

@@ -435,6 +435,7 @@ class _CateringViewState extends State<CateringView> {
                     ),
                     GestureDetector(
                       onTap: () {
+                        cateringProductController.clearController();
                         Get.toNamed(RouteHelper.subsSetPeriod, arguments: {
                           "cateringId": cateringModel.id!,
                           "cateringLatitude": cateringModel.latitude,
@@ -909,7 +910,9 @@ class _CateringViewState extends State<CateringView> {
                                 widget.catering_latitude,
                                 widget.catering_longitude,
                                 widget.fromCart == "true" ? stateCart : null,
-                                cateringModel.discounts
+                                cateringModel.discounts,
+                                cateringModel.deliveryCost,
+                                cateringModel.minDistanceDelivery
                               ]);
                         }
                       },

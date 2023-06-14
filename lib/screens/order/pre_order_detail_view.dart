@@ -247,6 +247,31 @@ class _PreOrderDetailViewState extends State<PreOrderDetailView> {
                               height: 10,
                             ),
                             Text(
+                              "Solusi yang Diinginkan",
+                              style: AppTheme.textTheme.labelMedium!.copyWith(
+                                  fontWeight: FontWeight.w500, fontSize: 13),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(8),
+                              child: Text(
+                                orderDetailController
+                                    .orderDetail.value.complaint!
+                                    .solutionWording()!,
+                                style: AppTheme.textTheme.labelMedium!.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 13,
+                                    color: Colors.white),
+                              ),
+                              decoration:
+                                  BoxDecoration(color: AppTheme.primaryGreen),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
                               "Gambar Bukti",
                               style: AppTheme.textTheme.labelMedium!.copyWith(
                                   fontWeight: FontWeight.w500, fontSize: 13),
@@ -299,7 +324,9 @@ class _PreOrderDetailViewState extends State<PreOrderDetailView> {
                                                       width: 80,
                                                       height: 80,
                                                       child: FancyShimmerImage(
-                                                        imageUrl:
+                                                        imageUrl: AppConstant
+                                                                .BASE_URL +
+                                                            "storage/complaints/" +
                                                             orderDetailController
                                                                 .orderDetail
                                                                 .value
@@ -444,6 +471,52 @@ class _PreOrderDetailViewState extends State<PreOrderDetailView> {
                                 "Makanan Rusak",
                                 "Belum Sampai",
                                 "Ada yang Kurang",
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              "Pilih Solusi",
+                              style: AppTheme.textTheme.labelMedium!.copyWith(
+                                  fontWeight: FontWeight.w500, fontSize: 13),
+                            ),
+                            SizedBox(
+                              height: 4,
+                            ),
+                            Text(
+                              "Anda bisa pilih solusi yang diinginkan",
+                              style: AppTheme.textTheme.labelMedium!.copyWith(
+                                  fontWeight: FontWeight.w400, fontSize: 11),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            GroupButton(
+                              options: GroupButtonOptions(
+                                  mainGroupAlignment: MainGroupAlignment.start,
+                                  borderRadius: BorderRadius.circular(5),
+                                  selectedColor: AppTheme.primaryGreen,
+                                  runSpacing: 2,
+                                  unselectedTextStyle:
+                                      AppTheme.textTheme.labelMedium!.copyWith(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 13),
+                                  selectedTextStyle:
+                                      AppTheme.textTheme.labelMedium!.copyWith(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 13,
+                                          color: Colors.white)),
+                              isRadio: true,
+                              onSelected: (value, index, isSelected) {
+                                complaintController.solution_type =
+                                    value.toString();
+                                print(value);
+                              },
+                              // onSelected: (index, isSelected) => print('$index button is selected'),
+                              buttons: [
+                                "Pengembalian Dana",
+                                "Pengiriman Ulang",
                               ],
                             ),
                             SizedBox(
@@ -649,18 +722,24 @@ class _PreOrderDetailViewState extends State<PreOrderDetailView> {
                         return PrimaryButton(
                             title: 'Ajukan',
                             onTap: () async {
-                              await complaintController.postComplain(
-                                  order_id: orderDetailController
-                                      .orderDetail!.value!.id!
-                                      .toString());
-                              // await reviewController.postReview(
-                              //     cateringId: orderDetailController
-                              //         .orderDetail.value.cateringId!,
-                              //     orderId: orderDetailController
-                              //         .orderDetail.value.id
-                              //         .toString());
-                              Get.back();
-                              orderDetailController.getOrderDetail(id!);
+                              if (complaintController.isFormValid()) {
+                                await complaintController.postComplain(
+                                    order_id: orderDetailController
+                                        .orderDetail!.value!.id!
+                                        .toString());
+                                // await reviewController.postReview(
+                                //     cateringId: orderDetailController
+                                //         .orderDetail.value.cateringId!,
+                                //     orderId: orderDetailController
+                                //         .orderDetail.value.id
+                                //         .toString());
+                                orderDetailController.getOrderDetail(id!);
+                                Get.back();
+                              } else {
+                                showCustomSnackBar(
+                                    message: "Isi semua data yang dibutuhkan",
+                                    title: "Lengkapi Data!");
+                              }
                             },
                             state: complaintController.isLoading.value
                                 ? ButtonState.loading

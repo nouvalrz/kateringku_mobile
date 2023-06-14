@@ -1,6 +1,7 @@
 import 'package:configurable_expansion_tile/configurable_expansion_tile.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -8,6 +9,7 @@ import 'package:kateringku_mobile/controllers/cart_controller.dart';
 import 'package:kateringku_mobile/models/catering_display_model.dart';
 import 'package:kateringku_mobile/screens/pre_order/pre_order_confirmation_view.dart';
 
+import '../../constants/image_path.dart';
 import '../../helpers/currency_format.dart';
 import '../../routes/route_helper.dart';
 import '../../themes/app_theme.dart';
@@ -98,7 +100,22 @@ class _CartViewState extends State<CartView> {
                         )
                       : cartController.carts.isEmpty
                           ? Center(
-                              child: Text("Keranjang anda masih kosong"),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    child:
+                                        SvgPicture.asset(ImagePath.emptyCart),
+                                    height: 300,
+                                    width: 300,
+                                  ),
+                                  Text("Keranjang Anda Masih Kosong",
+                                      style: AppTheme.textTheme.titleLarge!
+                                          .copyWith(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.w600)),
+                                ],
+                              ),
                             )
                           : RefreshIndicator(
                               onRefresh: () async {

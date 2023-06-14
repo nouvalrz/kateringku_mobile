@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -98,9 +99,22 @@ class _OrderViewState extends State<OrderView> {
                   if (orderListController.orders.isEmpty) {
                     return Expanded(
                         child: Center(
-                      child: Text("Anda belum mempunyai Pesanan",
-                          style: AppTheme.textTheme.titleLarge!.copyWith(
-                              fontSize: 14, fontWeight: FontWeight.w600)),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            child: SvgPicture.asset(ImagePath.emptyOrder),
+                            height: 260,
+                            width: 260,
+                          ),
+                          SizedBox(
+                            height: 26,
+                          ),
+                          Text("Pesanan Anda Masih Kosong",
+                              style: AppTheme.textTheme.titleLarge!.copyWith(
+                                  fontSize: 14, fontWeight: FontWeight.w600)),
+                        ],
+                      ),
                     ));
                   } else {
                     return Expanded(
