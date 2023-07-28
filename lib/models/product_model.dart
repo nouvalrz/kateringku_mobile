@@ -86,6 +86,8 @@ class ProductModel {
     data['id'] = this.id;
     data['price'] = this.fixPrice();
     data['quantity'] = this.orderQuantity;
+    setProductOptionSummary();
+    data['custom_desc'] = this.productOptionSummary;
     if (this.productOptions != null) {
       List<ProductOption> productOptionsTemp = [];
       productOptions!.forEach((element) {
@@ -143,6 +145,15 @@ class ProductModel {
       return false;
     } else {
       return true;
+    }
+  }
+
+  bool isAllOptionEmpty() {
+    setProductOptionSummary();
+    if (productOptionSummary == "") {
+      return true;
+    } else {
+      return false;
     }
   }
 

@@ -22,6 +22,7 @@ class CateringDisplayModel {
   int? totalSales;
   String? image;
   double? rate;
+  double? distance;
   List<ProductModel>? recommendationProducts;
   Village? village;
   List<Categories>? categories;
@@ -49,6 +50,7 @@ class CateringDisplayModel {
       this.categories});
 
   CateringDisplayModel.fromJson(Map<String, dynamic> json) {
+    distance = double.parse((json["distance"] / 1000).toStringAsFixed(1));
     id = json['id'];
     name = json['name'];
     email = json['email'];

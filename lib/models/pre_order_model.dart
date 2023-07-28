@@ -16,6 +16,7 @@ class PreOrderModel {
   int? discountId;
   String? discountName;
   int? discountPercentage;
+  int? discountCateringId;
   String? cateringId;
 
   PreOrderModel(
@@ -44,7 +45,9 @@ class PreOrderModel {
       Map<String, dynamic> discountData = {
         "nama": "${discountName!}",
         "persenan": discountPercentage!,
-        "jumlah": discount
+        "jumlah": discount,
+        "catering_id": discountCateringId,
+        "id": discountId
       };
       data["discount"] = json.encode(discountData);
     } else {
@@ -55,7 +58,8 @@ class PreOrderModel {
     }
     data['catering_id'] = cateringId;
     data['delivery_price'] = this.deliveryPrice;
-    data['total_price'] = this.totalPrice + this.useBalance;
+    data['total_price'] = (this.totalPrice + this.useBalance + this.discount) -
+        this.deliveryPrice!;
     data['delivery_date'] = this.deliveryDateTime!.toIso8601String();
     if (this.orderProducts != null) {
       data['products'] = this.orderProducts!.map((v) => v.toJson()).toList();
@@ -75,10 +79,12 @@ class PreOrderModel {
       }
       discountName = discountModel.title;
       discountPercentage = discountModel.percentage;
+      discountCateringId = discountModel.cateringId;
     } else {
       discount = 0;
       discountName = null;
       discountPercentage = null;
+      discountCateringId = null;
     }
     setTotalPrice();
   }

@@ -249,7 +249,11 @@ class _OrderCardState extends State<OrderCard> {
                 Text(
                     CurrencyFormat.convertToIdr(
                         orderListController.orders[widget.index].totalPrice! -
-                            orderListController.orders[widget.index].useBalance,
+                            orderListController
+                                .orders[widget.index].useBalance +
+                            orderListController
+                                .orders[widget.index].deliveryPrice -
+                            orderListController.orders[widget.index].discount,
                         0),
                     style: AppTheme.textTheme.titleLarge!
                         .copyWith(fontSize: 12, fontWeight: FontWeight.w500)),

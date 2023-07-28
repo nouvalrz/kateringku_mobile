@@ -72,6 +72,7 @@ class _ProfileViewState extends State<ProfileView> {
                 child: GestureDetector(
                   onTap: () {},
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       // Icon(
                       //   Icons.person_outline,
@@ -84,7 +85,16 @@ class _ProfileViewState extends State<ProfileView> {
                           style: AppTheme.textTheme.titleLarge!.copyWith(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
-                              color: Colors.white))
+                              color: Colors.white)),
+                      GestureDetector(
+                        onTap: () {
+                          profileController.getProfile();
+                        },
+                        child: Icon(
+                          Icons.refresh_rounded,
+                          color: Colors.white,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -207,7 +217,96 @@ class _ProfileViewState extends State<ProfileView> {
                     ],
                   ),
                   SizedBox(
-                    height: 68,
+                    height: 15,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: Container(
+                          padding: EdgeInsets.all(12),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Container(
+                                  child: Column(
+                                    children: [
+                                      Text("Pembelian Bulan Juli",
+                                          style: AppTheme.textTheme.titleLarge!
+                                              .copyWith(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w400)),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.shopping_bag_outlined,
+                                            color: Colors.grey,
+                                          ),
+                                          Text("4",
+                                              style: AppTheme
+                                                  .textTheme.titleLarge!
+                                                  .copyWith(
+                                                      fontSize: 13,
+                                                      fontWeight:
+                                                          FontWeight.w600)),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                width: 2,
+                              ),
+                              VerticalDivider(
+                                color: Colors.black,
+                                width: 10,
+                              ),
+                              SizedBox(
+                                width: 2,
+                              ),
+                              Expanded(
+                                child: Container(
+                                  child: Column(
+                                    children: [
+                                      Text("Pembelian Tahun 2023",
+                                          style: AppTheme.textTheme.titleLarge!
+                                              .copyWith(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w400)),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.shopping_bag_outlined,
+                                            color: Colors.grey,
+                                          ),
+                                          Text("29",
+                                              style: AppTheme
+                                                  .textTheme.titleLarge!
+                                                  .copyWith(
+                                                      fontSize: 13,
+                                                      fontWeight:
+                                                          FontWeight.w600)),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(8)),
+                        ),
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    height: 100,
                   ),
                 ],
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -217,7 +316,7 @@ class _ProfileViewState extends State<ProfileView> {
           Column(
             children: [
               SizedBox(
-                height: 280,
+                height: 360,
               ),
               Expanded(
                 child: Container(
@@ -229,30 +328,30 @@ class _ProfileViewState extends State<ProfileView> {
                   padding: EdgeInsets.only(left: 25, right: 25, top: 32),
                   child: Column(
                     children: [
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.map_outlined,
-                            color: AppTheme.primaryGreen,
-                            size: 28,
-                          ),
-                          SizedBox(
-                            width: 12,
-                          ),
-                          Text("Daftar Alamat",
-                              style: AppTheme.textTheme.titleLarge!.copyWith(
-                                  fontSize: 13, fontWeight: FontWeight.w500))
-                        ],
-                      ),
-                      SizedBox(
-                        height: 2,
-                      ),
-                      Divider(
-                        thickness: 0.7,
-                      ),
-                      SizedBox(
-                        height: 12,
-                      ),
+                      // Row(
+                      //   children: [
+                      //     Icon(
+                      //       Icons.map_outlined,
+                      //       color: AppTheme.primaryGreen,
+                      //       size: 28,
+                      //     ),
+                      //     SizedBox(
+                      //       width: 12,
+                      //     ),
+                      //     Text("Daftar Alamat",
+                      //         style: AppTheme.textTheme.titleLarge!.copyWith(
+                      //             fontSize: 13, fontWeight: FontWeight.w500))
+                      //   ],
+                      // ),
+                      // SizedBox(
+                      //   height: 2,
+                      // ),
+                      // Divider(
+                      //   thickness: 0.7,
+                      // ),
+                      // SizedBox(
+                      //   height: 12,
+                      // ),
                       GestureDetector(
                         onTap: () {
                           var homeController = Get.find<HomeController>();
@@ -261,14 +360,14 @@ class _ProfileViewState extends State<ProfileView> {
                         child: Row(
                           children: [
                             Icon(
-                              Icons.shopping_cart_outlined,
+                              Icons.message_outlined,
                               color: AppTheme.primaryGreen,
                               size: 28,
                             ),
                             SizedBox(
                               width: 12,
                             ),
-                            Text("Keranjang Anda",
+                            Text("Chat Anda",
                                 style: AppTheme.textTheme.titleLarge!.copyWith(
                                     fontSize: 13, fontWeight: FontWeight.w500))
                           ],

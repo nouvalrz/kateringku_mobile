@@ -13,6 +13,7 @@ import 'package:kateringku_mobile/models/address_model.dart';
 import 'package:kateringku_mobile/models/pre_order_model.dart';
 import 'package:kateringku_mobile/routes/route_helper.dart';
 import 'package:kateringku_mobile/services/location_service.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:time_picker_widget/time_picker_widget.dart';
 
 import '../data/repositories/order_repo.dart';
@@ -43,9 +44,30 @@ class PreOrderController extends GetxController implements GetxService {
   String? cateringId;
   var deliveryDateTime = Rxn<DateTime>();
 
+  //DATE
+  // Date Picker
+  DateRangePickerController datePickerController = DateRangePickerController();
+  var cateringWorkday = <String>[];
+  var blackOutDayList = <int>[];
+  var blackoutDateForCalendar = <DateTime>[];
+  var date = DateTime.monday;
+  DateTimeRange? deliveryAvailableTime;
+
+  var isListOrderExpand = false.obs;
+
+  Map<String, int> dayType = {
+    "senin": DateTime.monday,
+    "selasa": DateTime.tuesday,
+    "rabu": DateTime.wednesday,
+    "kamis": DateTime.thursday,
+    "jumat": DateTime.friday,
+    "sabtu": DateTime.saturday,
+    "minggu": DateTime.sunday
+  };
+
   // List<ProductModel>? orderProducts;
 
-  DateTimeRange? deliveryAvailableTime;
+  // DateTimeRange? deliveryAvailableTime;
 
   var isCurrentAddress = true.obs;
 
@@ -63,8 +85,52 @@ class PreOrderController extends GetxController implements GetxService {
     preOrderModel.value.setSubTotalPrices();
     await setDeliveryPrice();
     preOrderModel.value.setTotalPrice();
+
+    await getCateringOpenDay(cateringId: int.parse(cateringId!));
+    // await getCateringOpenTime(cateringId: int.parse(cateringId!));
+    generateBlackoutDayList();
+    generateBlackoutDateForCalendar();
+
     EasyLoading.dismiss();
     isLoading.value = false;
+  }
+
+  Future<void> getCateringOpenDay({required int cateringId}) async {
+    Response response =
+        await cateringRepo.getCateringWorkDay(cateringId.toString());
+    if (response.statusCode == 200) {
+      for (var i = 0; i < response.body["workday"].length; i++) {
+        cateringWorkday.add(response.body["workday"][i]);
+      }
+    }
+  }
+
+  Future<void> getCateringOpenTime({required int cateringId}) async {
+    Response response =
+        await cateringRepo.getCateringDeliveryTimeRange(cateringId.toString());
+
+    var startTime = response.body['delivery_start_time'];
+    var endTime = response.body['delivery_end_time'];
+
+    deliveryAvailableTime = DateTimeRange(
+        start: DateTime.parse("2000-01-01 $startTime"),
+        end: DateTime.parse("2000-01-01 $endTime"));
+  }
+
+  void generateBlackoutDayList() {
+    var blackOutDay = dayType;
+    blackOutDay.removeWhere((key, value) => cateringWorkday.contains(key));
+    blackOutDayList = blackOutDay.values.toList();
+  }
+
+  void generateBlackoutDateForCalendar() {
+    var startDate = DateTime.now().add(Duration(days: 3));
+    var endDate = DateTime.now().add(Duration(days: 33));
+    for (int i = 0; i <= endDate.difference(startDate).inDays; i++) {
+      if (blackOutDayList.contains(startDate.add(Duration(days: i)).weekday)) {
+        blackoutDateForCalendar.add(startDate.add(Duration(days: i)));
+      }
+    }
   }
 
   Future<AddressModel> setCurrentAddress() async {
@@ -102,15 +168,32 @@ class PreOrderController extends GetxController implements GetxService {
         customerLatitude: double.parse(selectedAddress!.latitude!),
         customerLongitude: double.parse(selectedAddress!.longitude!));
 
+    int rounded_distance = 0;
+
+    if (response.statusCode == 200) {
+      var distance =
+          double.parse(response.body["routes"][0]["distance"].toString());
+      distance = distance / 1000;
+      rounded_distance = distance.round();
+    } else {
+      rounded_distance = (Geolocator.distanceBetween(
+                  double.parse(selectedAddress!.latitude!),
+                  double.parse(selectedAddress!.longitude!),
+                  cateringLatitude!,
+                  cateringLongitude!) /
+              1000)
+          .round();
+    }
+
     // var distance = Geolocator.distanceBetween(
     //     double.parse(selectedAddress!.latitude!),
     //     double.parse(selectedAddress!.longitude!),
     //     cateringLatitude!,
     //     cateringLongitude!);
-    var distance =
-        double.parse(response.body["routes"][0]["distance"].toString());
-    distance = distance / 1000;
-    var rounded_distance = distance.round();
+    // var distance =
+    //     double.parse(response.body["routes"][0]["distance"].toString());
+    // distance = distance / 1000;
+    // var rounded_distance = distance.round();
 
     if (rounded_distance < cateringMinDistanceDelivery!) {
       preOrderModel.value.deliveryPrice =

@@ -22,7 +22,7 @@ class OrderListController extends GetxController {
     orders.clear();
     Response response = await orderRepo.getOrders();
 
-    print("lenght " + response.body['orders'].length.toString());
+    // print("lenght " + response.body['orders'].length.toString());
 
     for (var j = 0; j < response.body['orders'].length; j++) {
       // if(response.body['orders'].length == orders.length){

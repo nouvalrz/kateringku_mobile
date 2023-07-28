@@ -285,7 +285,10 @@ class _CateringReviewViewState extends State<CateringReviewView> {
               Text(reviewDesc,
                   style: AppTheme.textTheme.titleLarge!
                       .copyWith(fontSize: 12, fontWeight: FontWeight.w400)),
-              if (image != null && image!.isNotEmpty)
+              if (image != null &&
+                  image!.isNotEmpty &&
+                  image !=
+                      "https://api-kateringku.nouvalrz.my.id/storage/reviews")
                 Column(
                   children: [
                     SizedBox(

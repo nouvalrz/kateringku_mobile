@@ -1,3 +1,4 @@
+import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -284,13 +285,11 @@ class _ProductCardInOptionState extends State<ProductCardInOption> {
                     borderRadius: BorderRadius.circular(10)),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
-                  child: Image(
-                      image: NetworkImage(AppConstant.BASE_URL +
-                          subsOrderController.orderList.values
-                              .elementAt(orderIndex)
-                              .getProductById(productId)
-                              .image!
-                              .substring(1))),
+                  child: FancyShimmerImage(
+                      imageUrl: subsOrderController.orderList.values
+                          .elementAt(orderIndex)
+                          .getProductById(productId)
+                          .image!),
                 ),
               ),
               SizedBox(
@@ -559,6 +558,7 @@ class _ProductOptionDetailState extends State<ProductOptionDetail> {
                         Obx(() {
                           return SizedBox(
                             child: Checkbox(
+                              activeColor: AppTheme.primaryGreen,
                               value: subsOrderController.orderList.values
                                   .elementAt(widget.orderIndex)
                                   .getProductById(widget.productId)

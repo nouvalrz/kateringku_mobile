@@ -1048,6 +1048,11 @@ class _CateringSubsOrderDetailViewState
             text: "Menunggu Konfirmasi",
             bgColor: const Color(0xFFF5FFE0),
             textColor: const Color(0xff6a9316));
+      } else if (orderStatus == "ACCEPTED") {
+        return orderStatusBadge(
+            text: "Pesanan Diterima",
+            bgColor: const Color(0xFFE5F3FF),
+            textColor: const Color(0xff2569A8));
       } else if (orderStatus == "NOT_APPROVED") {
         return orderStatusBadge(
             text: "Dibatalkan Katering",
@@ -1055,7 +1060,7 @@ class _CateringSubsOrderDetailViewState
             textColor: const Color(0xffD72E2E));
       } else if (orderStatus == "PROCESSED") {
         return orderStatusBadge(
-            text: "Diproses",
+            text: "Sedang Diproses",
             bgColor: const Color(0xFFE8EAFF),
             textColor: const Color(0xff2D3BBC));
       } else if (orderStatus == "SEND") {
@@ -1068,7 +1073,7 @@ class _CateringSubsOrderDetailViewState
             text: "Sedang Berlangsung",
             bgColor: const Color(0xFFE6FFE2),
             textColor: const Color(0xff34A023));
-      } else if (orderStatus == "ACCEPTED") {
+      } else if (orderStatus == "RECEIVED") {
         return orderStatusBadge(
             text: "Diterima",
             bgColor: const Color(0xFFE5F3FF),
@@ -1078,6 +1083,31 @@ class _CateringSubsOrderDetailViewState
             text: "Komplain",
             bgColor: const Color(0xFFFFEEEE),
             textColor: const Color(0xffC63939));
+      } else if (orderStatus == "CANCEL_BY_SISTEM") {
+        return orderStatusBadge(
+            text: "Dibatalkan Otomatis",
+            bgColor: const Color(0xFFFFEBEB),
+            textColor: const Color(0xffD72E2E));
+      } else if (orderStatus == "REQUEST_CANCEL") {
+        return orderStatusBadge(
+            text: "Pengajuan Cancel",
+            bgColor: const Color(0xFFFFEBEB),
+            textColor: const Color(0xffD72E2E));
+      } else if (orderStatus == "APPROVED_CANCEL") {
+        return orderStatusBadge(
+            text: "Pembatalan Disetujui",
+            bgColor: const Color(0xFFFFEBEB),
+            textColor: const Color(0xffD72E2E));
+      } else if (orderStatus == "CANCEL_REJECTED") {
+        return orderStatusBadge(
+            text: "Pembatalan Gagal",
+            bgColor: const Color(0xFFFFEBEB),
+            textColor: const Color(0xffD72E2E));
+      } else if (orderStatus == "PENDING") {
+        return orderStatusBadge(
+            text: "Pending",
+            bgColor: const Color(0xFFFFEBEB),
+            textColor: const Color(0xffD72E2E));
       }
     }
   }
@@ -1330,7 +1360,11 @@ class _CateringSubsOrderDetailViewState
                                         orderDetailController
                                                 .subsOrderDetailModel!
                                                 .orderStatus! ==
-                                            "ONGOING"))
+                                            "ONGOING" ||
+                                        orderDetailController
+                                                .subsOrderDetailModel!
+                                                .orderStatus! ==
+                                            "RECEIVED"))
                                   getOrderStatusBadge(
                                       orderStatus: orderDetailController
                                           .subsOrderDetailModel!.orderStatus!)!,
@@ -1461,7 +1495,10 @@ class _CateringSubsOrderDetailViewState
                                     "NOT_APPROVED" ||
                                 orderDetailController
                                         .subsOrderDetailModel!.orderStatus! ==
-                                    "ONGOING")) {
+                                    "ONGOING" ||
+                                orderDetailController
+                                        .subsOrderDetailModel!.orderStatus! ==
+                                    "RECEIVED")) {
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
@@ -2203,13 +2240,13 @@ class _CateringSubsOrderDetailViewState
         "VOID",
         "NOT_APPROVED",
         "SEND",
-        "ACCEPTED",
+        "RECEIVED",
         "COMPLAINT",
         "ONGOING"
       ].contains(orderDetailController.subsOrderDetailModel!.orderStatus!)) {
         return PrimaryButton(
           title: orderDetailController.subsOrderDetailModel!.orderStatus! ==
-                  "ACCEPTED"
+                  "RECEIVED"
               ? "Pesanan Selesai"
               : "Ubah Status",
           onTap: () {},

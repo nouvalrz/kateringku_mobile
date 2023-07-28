@@ -23,6 +23,7 @@ import 'package:kateringku_mobile/models/catering_product_model.dart';
 import 'package:kateringku_mobile/models/new_cart_model.dart';
 import 'package:kateringku_mobile/models/product_model.dart';
 import 'package:kateringku_mobile/screens/home/home_view.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 import '../../components/primary_button.dart';
 import '../../constants/app_constant.dart';
@@ -82,6 +83,95 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
 
     preOrderController.onInit();
     preOrderController.getDeliveryTimeRange();
+  }
+
+  void showModalDatePicker() async {
+    await showModalBottomSheet(
+        // isScrollControlled: true,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(12), topRight: Radius.circular(12)),
+        ),
+        context: context,
+        // isScrollControlled: true,
+        builder: (context) {
+          return Padding(
+            padding: const EdgeInsets.all(10),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Atur Tanggal",
+                  style: AppTheme.textTheme.labelSmall!.copyWith(
+                      color: AppTheme.primaryBlack,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w400),
+                ),
+                Container(
+                  height: 400,
+                  child: SfDateRangePicker(
+                    controller: preOrderController.datePickerController,
+                    selectionColor: AppTheme.primaryOrange,
+                    todayHighlightColor: AppTheme.primaryOrange,
+                    showActionButtons: true,
+                    view: DateRangePickerView.month,
+                    minDate: DateTime.now().add(Duration(days: 3)),
+                    onCancel: () {
+                      Get.back();
+                    },
+                    maxDate: DateTime.now().add(Duration(days: 33)),
+                    selectionMode: DateRangePickerSelectionMode.single,
+                    monthViewSettings: DateRangePickerMonthViewSettings(
+                        blackoutDates:
+                            preOrderController.blackoutDateForCalendar),
+                    onSelectionChanged: (DateRangePickerSelectionChangedArgs
+                        dateRangePickerSelectionChangedArgs) {
+                      // print(dateRangePickerSelectionChangedArgs);
+                      if (dateRangePickerSelectionChangedArgs.value != null) {
+                        preOrderController
+                                .preOrderModel.value.deliveryDateTime =
+                            dateRangePickerSelectionChangedArgs.value;
+                        preOrderController.deliveryDateTime.value =
+                            dateRangePickerSelectionChangedArgs.value;
+                      }
+
+                      // if (preOrderController.pickedDate != null &&
+                      // pickedDate != preOrderModel.value.deliveryDateTime) {
+                      // preOrderModel.value.deliveryDateTime = pickedDate;
+                      // deliveryDateTime.value = pickedDate;
+                      //
+                      //               subsDateRange = DateTimeRange(
+                      //                   start: DateTime.parse(
+                      //                       dateRangePickerSelectionChangedArgs
+                      //                           .value.startDate
+                      //                           .toString()),
+                      //                   end: DateTime.parse(
+                      //                       dateRangePickerSelectionChangedArgs
+                      //                           .value.endDate
+                      //                           .toString()));
+                    },
+                    navigationDirection:
+                        DateRangePickerNavigationDirection.horizontal,
+                    onSubmit: (Object? value) {
+                      if (preOrderController
+                                  .preOrderModel.value.deliveryDateTime ==
+                              null &&
+                          preOrderController.deliveryDateTime.value == null) {
+                        showCustomSnackBar(
+                            message: "Isi periode terlebih dahulu",
+                            title: "Periode masih kosong");
+                      } else {
+                        // subsOrderController.generateListOfOrder(subsDateRange!);
+                        Get.back();
+                        preOrderController.chooseTime();
+                      }
+                    },
+                  ),
+                ),
+              ],
+            ),
+          );
+        });
   }
 
   void showModalDiscounts() async {
@@ -171,7 +261,7 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
-                                              "Min. pembelian ${CurrencyFormat.convertToIdr(discountList[index].minimumSpend, 0)}\nMaks. diskon ${CurrencyFormat.convertToIdr(discountList[index].maximumDisc, 0)}",
+                                              "Diskon ${discountList[index].percentage}%\nMin. pembelian ${CurrencyFormat.convertToIdr(discountList[index].minimumSpend, 0)}\nMaks. diskon ${CurrencyFormat.convertToIdr(discountList[index].maximumDisc, 0)}",
                                               style: AppTheme
                                                   .textTheme.labelMedium!
                                                   .copyWith(
@@ -393,8 +483,19 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                                                   } else {
                                                     return Text(
                                                         preOrderController
-                                                            .currentAddress!
-                                                            .address!,
+                                                                    .currentAddress!
+                                                                    .address!
+                                                                    .length >
+                                                                45
+                                                            ? preOrderController
+                                                                    .currentAddress!
+                                                                    .address!
+                                                                    .substring(
+                                                                        0, 45) +
+                                                                "..."
+                                                            : preOrderController
+                                                                .currentAddress!
+                                                                .address!,
                                                         style: AppTheme
                                                             .textTheme
                                                             .titleLarge!
@@ -544,7 +645,7 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                                 children: [
                                   GestureDetector(
                                     onTap: () {
-                                      preOrderController.chooseDate();
+                                      showModalDatePicker();
                                     },
                                     child: Container(
                                       width:
@@ -762,7 +863,22 @@ class _PreOrderConfirmationViewState extends State<PreOrderConfirmationView> {
                         else
                           ListView.builder(
                             itemBuilder: (context, index) {
+                              preOrderController
+                                  .preOrderModel.value.orderProducts![index]
+                                  .setProductOptionSummary();
                               return ProductCard(
+                                productOptionSummary: preOrderController
+                                            .preOrderModel
+                                            .value
+                                            .orderProducts![index]
+                                            .productOptionSummary ==
+                                        ""
+                                    ? null
+                                    : preOrderController
+                                        .preOrderModel
+                                        .value
+                                        .orderProducts![index]
+                                        .productOptionSummary,
                                 productName: preOrderController.preOrderModel
                                     .value.orderProducts![index].name!,
                                 productDesc: preOrderController.preOrderModel
@@ -1331,6 +1447,7 @@ class ProductCard extends StatelessWidget {
   int productPrice;
   String productImage;
   int productQuantity;
+  String? productOptionSummary;
 
   ProductCard(
       {Key? key,
@@ -1338,7 +1455,8 @@ class ProductCard extends StatelessWidget {
       required this.productImage,
       required this.productName,
       required this.productPrice,
-      required this.productQuantity})
+      required this.productQuantity,
+      this.productOptionSummary})
       : super(key: key);
 
   @override
@@ -1372,9 +1490,23 @@ class ProductCard extends StatelessWidget {
                       Text(productName,
                           style: AppTheme.textTheme.titleLarge!.copyWith(
                               fontSize: 14, fontWeight: FontWeight.w500)),
+                      SizedBox(
+                        height: 4,
+                      ),
                       Text(productDesc,
                           style: AppTheme.textTheme.titleLarge!.copyWith(
                               fontSize: 11, fontWeight: FontWeight.w300)),
+                      if (productOptionSummary != null)
+                        Column(
+                          children: [
+                            SizedBox(
+                              height: 2,
+                            ),
+                            Text("Kustom : " + productOptionSummary!,
+                                style: AppTheme.textTheme.titleLarge!.copyWith(
+                                    fontSize: 11, fontWeight: FontWeight.w300)),
+                          ],
+                        ),
                       const SizedBox(
                         height: 8,
                       ),

@@ -13,8 +13,8 @@ class CategoryController extends GetxController implements GetxService {
 
   var cateringResult = <CateringDisplayModel>[];
 
-
-  Future<void> getCategoryResult(String keyword, String district_name) async{
+  Future<void> getCategoryResult(String keyword, String district_name,
+      double customer_latitude, customer_longitude) async {
     isLoading.value = true;
 
     cateringResult.clear();
@@ -22,12 +22,21 @@ class CategoryController extends GetxController implements GetxService {
     Map<String, dynamic> keywordBody = <String, dynamic>{};
     keywordBody['keyword'] = keyword;
     keywordBody['district_name'] = district_name;
+    keywordBody['customer_latitude'] = customer_latitude;
+    keywordBody['customer_longitude'] = customer_longitude;
 
     Response response = await exploreRepo.getCategoryResult(keywordBody);
 
     if (response.statusCode == 200) {
       for (var i = 0; i < response.body['caterings'].length; i++) {
-        cateringResult.add(CateringDisplayModel.fromJson(response.body['caterings'][i]));
+        cateringResult
+            .add(CateringDisplayModel.fromJson(response.body['caterings'][i]));
+      }
+      for (var catering in cateringResult) {
+        for (var j = 0; j < response.body['admin_discounts'].length; j++) {
+          catering.discounts!
+              .add(Discount.fromJson(response.body['admin_discounts'][j]));
+        }
       }
       update();
     }

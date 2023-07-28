@@ -50,8 +50,9 @@ class _AddAddressMapViewState extends State<AddAddressMapView> {
     super.initState();
     addAddressController = Get.put(AddAddressController());
     _getUserLocation();
-    forEditRecommendation = Get.arguments != null ? Get.arguments["forEditRecommendation"] : false;
-    if(forEditRecommendation){
+    forEditRecommendation =
+        Get.arguments != null ? Get.arguments["forEditRecommendation"] : false;
+    if (forEditRecommendation) {
       customerDashboardController = Get.find<CustomerDashboardController>();
     }
   }
@@ -95,12 +96,21 @@ class _AddAddressMapViewState extends State<AddAddressMapView> {
                       // MapSample(currentPosition!)
                       MapboxMap(
                           trackCameraPosition: true,
-                          onCameraIdle: (){
-                            addAddressController.setCenterCoordinate(mapController!.cameraPosition!.target!);
+                          //   onCameraTrackingChanged: (MyLocationTrackingMode k) {
+                          //     print("MOVE");
+                          //   },
+                          //   compassEnabled: true,
+                          //   onCameraTrackingDismissed: () {
+                          //     print("MOVING");
+                          //   },
+                          // gestureRecognizers: ,
+                          onCameraIdle: () {
+                            addAddressController.setCenterCoordinate(
+                                mapController!.cameraPosition!.target!);
                           },
                           myLocationEnabled: true,
                           // onUserLocationUpdated: ,
-                          onMapCreated: (MapboxMapController controller){
+                          onMapCreated: (MapboxMapController controller) {
                             mapController = controller;
                           },
                           // onUserLocationUpdated: (UserLocation userLocation){
@@ -108,10 +118,9 @@ class _AddAddressMapViewState extends State<AddAddressMapView> {
                           //   print("${userLocation.position.longitude} || ${userLocation.position.latitude}");
                           // },
                           initialCameraPosition: CameraPosition(
-                          target: currentPosition!, zoom: 15),
+                              target: currentPosition!, zoom: 15),
                           accessToken:
                               "pk.eyJ1Ijoibm91dmFscnoiLCJhIjoiY2xnamhwdjhyMHI2cDNxbnZ6OW5oc2d0NSJ9.EnL9_Z49uEAmotdB2FGCBA",
-
                         )),
               SizedBox(
                 height: 220,
@@ -200,12 +209,25 @@ class _AddAddressMapViewState extends State<AddAddressMapView> {
                             child: PrimaryButton(
                                 title: 'Gunakan Lokasi',
                                 onTap: () {
-                                  if(forEditRecommendation){
-                                    var currentPosition = Position(longitude: addAddressController.centerCoordinate.longitude, latitude: addAddressController.centerCoordinate.latitude, timestamp: DateTime.now(), accuracy: 0.0, altitude: 0.0, heading: 0.0, speed: 0.0, speedAccuracy: 0.0);
-                                    customerDashboardController.getAgainRelevantCateringProducts(currentPosition);
-                                    customerDashboardController.currentCoordinates = currentPosition;
+                                  if (forEditRecommendation) {
+                                    var currentPosition = Position(
+                                        longitude: addAddressController
+                                            .centerCoordinate.longitude,
+                                        latitude: addAddressController
+                                            .centerCoordinate.latitude,
+                                        timestamp: DateTime.now(),
+                                        accuracy: 0.0,
+                                        altitude: 0.0,
+                                        heading: 0.0,
+                                        speed: 0.0,
+                                        speedAccuracy: 0.0);
+                                    customerDashboardController
+                                        .getAgainRelevantCateringProducts(
+                                            currentPosition);
+                                    customerDashboardController
+                                        .currentCoordinates = currentPosition;
                                     Get.back();
-                                  }else{
+                                  } else {
                                     Get.offNamed(
                                         RouteHelper.getAddAddressDetail(),
                                         arguments: [
@@ -233,7 +255,7 @@ class _AddAddressMapViewState extends State<AddAddressMapView> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 GestureDetector(
-                  onTap: () async{
+                  onTap: () async {
                     var position = await Geolocator.getCurrentPosition(
                         desiredAccuracy: LocationAccuracy.high);
                     mapController!.animateCamera(
@@ -246,16 +268,16 @@ class _AddAddressMapViewState extends State<AddAddressMapView> {
                     );
                   },
                   child: Container(
-                    child: Center(child: Text("Cari Lokasi Saat Ini",
-                        style: AppTheme.textTheme.titleLarge!
-                            .copyWith(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w600))),
+                    child: Center(
+                        child: Text("Cari Lokasi Saat Ini",
+                            style: AppTheme.textTheme.titleLarge!.copyWith(
+                                fontSize: 13, fontWeight: FontWeight.w600))),
                     width: 180,
                     height: 50,
                     decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(10), border: Border.all(color: AppTheme.primaryGreen)),
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: AppTheme.primaryGreen)),
                   ),
                 ),
               ],
@@ -275,9 +297,12 @@ class _AddAddressMapViewState extends State<AddAddressMapView> {
                   padding: const EdgeInsets.only(bottom: 50),
                   child: currentPosition != null
                       ? Icon(
-                          Icons.pin_drop,
+                          Icons.location_pin,
                           color: AppTheme.primaryGreen,
                           size: 50,
+                          shadows: <Shadow>[
+                            Shadow(color: Colors.grey, blurRadius: 12.0)
+                          ],
                         )
                       : Container(),
                 ))),

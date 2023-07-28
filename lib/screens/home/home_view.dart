@@ -3,13 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:kateringku_mobile/base/show_custom_snackbar.dart';
 import 'package:kateringku_mobile/screens/cart/cart_view.dart';
+import 'package:kateringku_mobile/screens/chat/chat_list_view.dart';
 import 'package:kateringku_mobile/screens/dashboard/dashboard_view.dart';
 import 'package:kateringku_mobile/screens/order/order_view.dart';
 import 'package:kateringku_mobile/screens/profile/profile_view.dart';
 import 'package:kateringku_mobile/themes/app_theme.dart';
 import 'package:need_resume/need_resume.dart';
 import 'package:persistent_bottom_nav_bar/persistent-tab-view.dart';
+import 'dart:io' show Platform, exit;
 
 class HomeView extends StatefulWidget {
   // int tabIndex;
@@ -68,7 +71,8 @@ class _HomeViewState extends State<HomeView> {
   List<Widget> _buildScreens() {
     return [
       const DashboardView(),
-      const CartView(),
+      // const CartView(),
+      ChatListView(),
       OrderView(),
       const ProfileView()
     ];
@@ -83,8 +87,8 @@ class _HomeViewState extends State<HomeView> {
         inactiveColorPrimary: AppTheme.secondaryBlack.withOpacity(0.6),
       ),
       PersistentBottomNavBarItem(
-        icon: const Icon(Icons.shopping_cart_outlined),
-        title: ("Keranjang"),
+        icon: const Icon(Icons.message_outlined),
+        title: ("Chat"),
         activeColorPrimary: AppTheme.primaryOrange,
         inactiveColorPrimary: AppTheme.secondaryBlack.withOpacity(0.6),
       ),
@@ -103,53 +107,74 @@ class _HomeViewState extends State<HomeView> {
     ];
   }
 
+  DateTime? _lastPressedTime;
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      return PersistentTabView(
-
-        context,
-        controller: homeController.tabController.value,
-        screens: _buildScreens(),
-        items: _navBarsItems(),
-        padding: const NavBarPadding.only(bottom: 12),
-        navBarHeight: 62,
-        confineInSafeArea: true,
-        backgroundColor: Colors.white,
-        // Default is Colors.white.
-        handleAndroidBackButtonPress: true,
-        // Default is true.
-        resizeToAvoidBottomInset: true,
-        // This needs to be true if you want to move up the screen when keyboard appears. Default is true.
-        stateManagement: true,
-        // Default is true.
-        hideNavigationBarWhenKeyboardShows: true,
-        // Recommended to set 'resizeToAvoidBottomInset' as true while using this argument. Default is true.
-        decoration: NavBarDecoration(
-          borderRadius: BorderRadius.circular(2.0),
-          colorBehindNavBar: Colors.white,
-          boxShadow: <BoxShadow>[
-            const BoxShadow(
-                color: Color.fromARGB(135, 158, 158, 158),
-                blurRadius: 7.0,
-                offset: Offset(0.0, 0.75))
-          ],
+      return WillPopScope(
+        onWillPop: () async {
+          if (_lastPressedTime == null ||
+              DateTime.now().difference(_lastPressedTime!) >
+                  Duration(seconds: 2)) {
+            // Update the last press time
+            showCustomSnackBar(
+                message: "Tekan kembali untuk keluar",
+                title: "Keluar Aplikasi",
+                duration: 2000);
+            _lastPressedTime = DateTime.now();
+            return false; // Return false to allow back button press
+          }
+          if (Platform.isAndroid) {
+            SystemNavigator.pop();
+          } else if (Platform.isIOS) {
+            exit(0);
+          }
+          return true;
+        },
+        child: PersistentTabView(
+          context,
+          controller: homeController.tabController.value,
+          screens: _buildScreens(),
+          items: _navBarsItems(),
+          padding: const NavBarPadding.only(bottom: 12),
+          navBarHeight: 62,
+          confineInSafeArea: true,
+          backgroundColor: Colors.white,
+          // Default is Colors.white.
+          handleAndroidBackButtonPress: false,
+          // Default is true.
+          resizeToAvoidBottomInset: true,
+          // This needs to be true if you want to move up the screen when keyboard appears. Default is true.
+          stateManagement: true,
+          // Default is true.
+          hideNavigationBarWhenKeyboardShows: true,
+          // Recommended to set 'resizeToAvoidBottomInset' as true while using this argument. Default is true.
+          decoration: NavBarDecoration(
+            borderRadius: BorderRadius.circular(2.0),
+            colorBehindNavBar: Colors.white,
+            boxShadow: <BoxShadow>[
+              const BoxShadow(
+                  color: Color.fromARGB(135, 158, 158, 158),
+                  blurRadius: 7.0,
+                  offset: Offset(0.0, 0.75))
+            ],
+          ),
+          popAllScreensOnTapOfSelectedTab: true,
+          popActionScreens: PopActionScreensType.all,
+          itemAnimationProperties: const ItemAnimationProperties(
+            // Navigation Bar's items animation properties.
+            duration: Duration(milliseconds: 200),
+            curve: Curves.ease,
+          ),
+          screenTransitionAnimation: const ScreenTransitionAnimation(
+            // Screen transition animation on change of selected tab.
+            animateTabTransition: true,
+            curve: Curves.ease,
+            duration: Duration(milliseconds: 200),
+          ),
+          navBarStyle: NavBarStyle
+              .style3, // Choose the nav bar style with this property.
         ),
-        popAllScreensOnTapOfSelectedTab: true,
-        popActionScreens: PopActionScreensType.all,
-        itemAnimationProperties: const ItemAnimationProperties(
-          // Navigation Bar's items animation properties.
-          duration: Duration(milliseconds: 200),
-          curve: Curves.ease,
-        ),
-        screenTransitionAnimation: const ScreenTransitionAnimation(
-          // Screen transition animation on change of selected tab.
-          animateTabTransition: true,
-          curve: Curves.ease,
-          duration: Duration(milliseconds: 200),
-        ),
-        navBarStyle:
-            NavBarStyle.style3, // Choose the nav bar style with this property.
       );
     });
   }

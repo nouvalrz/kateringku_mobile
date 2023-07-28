@@ -156,10 +156,21 @@ class SubsOrderController extends GetxController implements GetxService {
     //     double.parse(selectedAddress!.longitude!),
     //     cateringLatitude!,
     //     cateringLongitude!);
-    var distance =
-        double.parse(response.body["routes"][0]["distance"].toString());
-    distance = distance / 1000;
-    var rounded_distance = distance.round();
+    int rounded_distance = 0;
+
+    if (response.statusCode == 200) {
+      var distance =
+          double.parse(response.body["routes"][0]["distance"].toString());
+      distance = distance / 1000;
+      rounded_distance = distance.round();
+    } else {
+      rounded_distance = Geolocator.distanceBetween(
+              double.parse(selectedAddress!.latitude!),
+              double.parse(selectedAddress!.longitude!),
+              cateringLatitude!,
+              cateringLongitude!)
+          .round();
+    }
 
     if (rounded_distance < cateringMinDistanceDelivery!) {
       deliveryPrice!.value =
@@ -606,7 +617,9 @@ class SubsOrderController extends GetxController implements GetxService {
     Map<String, dynamic> data = {};
     data['address'] = selectedAddress!.toJson();
     data['delivery_cost'] = deliveryPrice.value;
-    data['total_price'] = fixOrderPrice.value + useBalance.value;
+    data['total_price'] =
+        (fixOrderPrice.value + useBalance.value + discount.value) -
+            deliveryPrice.value;
     data['use_balance'] = useBalance.value;
     data['start_date'] = orderList.values.first.deliveryDateTime.toString();
     data['end_date'] = orderList.values.last.deliveryDateTime.toString();

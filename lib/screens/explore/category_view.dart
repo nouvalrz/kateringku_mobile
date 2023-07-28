@@ -20,12 +20,17 @@ class _CategoryViewState extends State<CategoryView> {
   var categoryController = Get.find<CategoryController>();
   String? districtName;
   String? keyword;
+  double? customerLatitude;
+  double? customerLongitude;
 
   @override
   void initState() {
     keyword = Get.arguments!['keyword'];
     districtName = Get.arguments!['district_name'];
-    categoryController.getCategoryResult(keyword!, districtName!);
+    customerLatitude = double.parse(Get.arguments!['customer_latitude']);
+    customerLongitude = double.parse(Get.arguments!['customer_longitude']);
+    categoryController.getCategoryResult(
+        keyword!, districtName!, customerLatitude!, customerLongitude!);
   }
 
   @override
@@ -103,6 +108,8 @@ class _CategoryViewState extends State<CategoryView> {
                     return Padding(
                         padding: EdgeInsets.only(left: 25, right: 25),
                         child: DashboardProductCard(
+                          cateringDistance: categoryController
+                              .cateringResult[index].distance!,
                           cateringRate:
                               categoryController.cateringResult[index].rate,
                           fromSearch: true,

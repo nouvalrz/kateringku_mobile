@@ -55,10 +55,19 @@ class ComplaintController extends GetxController {
       problemType = "incomplete";
     }
 
+    late String solution;
+
+    if (solution_type == "Pengembalian Dana") {
+      solution = "refund";
+    } else if (solution_type == "Pengiriman Ulang") {
+      solution = "retur";
+    }
+
     Map<String, dynamic> body = {
       'problem': problemType,
       'orders_id': order_id,
       'delivery_datetime': deliveryDateTime.toString(),
+      'solution_type': solution
     };
 
     FormData reviewBody = FormData(body);

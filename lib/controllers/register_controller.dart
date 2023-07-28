@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:kateringku_mobile/base/show_custom_snackbar.dart';
 
 import 'package:kateringku_mobile/data/repositories/register_repo.dart';
 import 'package:kateringku_mobile/models/customer_check_email_body.dart';
@@ -122,6 +123,8 @@ class RegisterController extends GetxController implements GetxService {
     } else {
       responseModel = ResponseModel(false, response.body["status"].toString(),
           response.body["status"].toString());
+      showCustomSnackBar(
+          message: "Mohon coba registrasi kembali", title: "Terjadi Kesalahan");
     }
     isLoading.value = false;
     update();

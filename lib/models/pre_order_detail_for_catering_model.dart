@@ -70,7 +70,8 @@ class PreOrderDetailForCateringModel {
 
     if (json["discount"] != null) {
       Map<String, dynamic> discountDecode = jsonDecode(json["discount"]);
-      discount = discountDecode["jumlah"];
+      var discount_string = discountDecode["jumlah"].toString();
+      discount = int.parse(discount_string);
     }
   }
 

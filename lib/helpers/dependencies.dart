@@ -60,11 +60,13 @@ Future<void> init() async {
       () => AuthRepo(apiClient: Get.find(), sharedPreferences: Get.find()),
       fenix: true);
   Get.lazyPut(
-      () => RegisterRepo(apiClient: Get.find(), sharedPreferences: Get.find()));
+      () => RegisterRepo(apiClient: Get.find(), sharedPreferences: Get.find()),
+      fenix: true);
   Get.lazyPut(() =>
       OtpValidationRepo(apiClient: Get.find(), sharedPreferences: Get.find()));
 
-  Get.lazyPut(() => RelevantCateringProductsRepo(apiClient: Get.find()));
+  Get.lazyPut(() => RelevantCateringProductsRepo(apiClient: Get.find()),
+      fenix: true);
   Get.lazyPut(() => CateringProductRepo(apiClient: Get.find()), fenix: true);
   Get.lazyPut(() => CustomerAddressRepo(apiClient: Get.find()));
   Get.lazyPut(() => SaveAddressRepo(apiClient: Get.find()));
@@ -86,8 +88,10 @@ Future<void> init() async {
       () =>
           CustomerDashboardController(relevantCateringProductsRepo: Get.find()),
       fenix: true);
-  Get.lazyPut(() => CateringHomeController(
-      cateringProductRepo: Get.find(), cartRepo: Get.find()));
+  Get.lazyPut(
+      () => CateringHomeController(
+          cateringProductRepo: Get.find(), cartRepo: Get.find()),
+      fenix: true);
   Get.lazyPut(() => CustomerAddressController(customerAddressRepo: Get.find()));
   Get.lazyPut(() => SaveAddressController(saveAddressRepo: Get.find()));
   Get.lazyPut(

@@ -28,12 +28,18 @@ class _ProductOptionViewState extends State<ProductOptionView> {
   }
 
   Future<bool> _onWillPop() async {
-    if (cateringProductController.products[index].isAllOptionFulfilled()) {
+    if (cateringProductController.products[index].isAllOptionEmpty()) {
+      // cateringProductController.minusProductQuantity(index);
+      // print("jsjs");
       return true;
     } else {
-      showCustomSnackBar(
-          message: "Harap isi pilihan yang wajib!", title: "BELUM TERPENUHI");
-      return false;
+      if (cateringProductController.products[index].isAllOptionFulfilled()) {
+        return true;
+      } else {
+        showCustomSnackBar(
+            message: "Harap isi pilihan yang wajib!", title: "BELUM TERPENUHI");
+        return false;
+      }
     }
   }
 
@@ -70,12 +76,19 @@ class _ProductOptionViewState extends State<ProductOptionView> {
               child: GestureDetector(
                 onTap: () {
                   if (cateringProductController.products[index]
-                      .isAllOptionFulfilled()) {
+                      .isAllOptionEmpty()) {
+                    cateringProductController.products[index]
+                        .subtractQuantity();
                     Get.back();
                   } else {
-                    showCustomSnackBar(
-                        message: "Harap isi pilihan yang wajib!",
-                        title: "BELUM TERPENUHI");
+                    if (cateringProductController.products[index]
+                        .isAllOptionFulfilled()) {
+                      Get.back();
+                    } else {
+                      showCustomSnackBar(
+                          message: "Harap isi pilihan yang wajib!",
+                          title: "BELUM TERPENUHI");
+                    }
                   }
                 },
                 child: Row(
@@ -506,6 +519,7 @@ class _ProductOptionDetailState extends State<ProductOptionDetail> {
                         Obx(() {
                           return SizedBox(
                             child: Checkbox(
+                              activeColor: AppTheme.primaryGreen,
                               value: cateringProductController
                                   .products[widget.indexProduct]
                                   .productOptions![widget.indexProductOption]

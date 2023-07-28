@@ -3,10 +3,13 @@ import 'package:get/get.dart';
 import 'package:kateringku_mobile/themes/app_theme.dart';
 
 void showCustomSnackBar(
-    {bool isError = true, String title = "Error", required String message}) {
+    {bool isError = true,
+    String title = "Error",
+    required String message,
+    int duration = 5000}) {
   Get.snackbar(title, message,
       titleText: Text(title, style: AppTheme.textTheme.bodyLarge),
-      duration: const Duration(milliseconds: 5000),
+      duration: Duration(milliseconds: duration),
       messageText: Text(
         message,
       ),

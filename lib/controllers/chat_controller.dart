@@ -12,7 +12,7 @@ class ChatController extends GetxController {
   late types.User customerUser;
   late types.User cateringUser;
 
-  var listChat = <ChatCompactModel>[].obs;
+  var listChat = <ChatCompactModel>[];
 
   final ChatRepo chatRepo;
 
@@ -79,15 +79,17 @@ class ChatController extends GetxController {
     isLoadingList.value = true;
 
     listChat.clear();
+    listChat.clear();
 
     Response response = await chatRepo.getListChat();
 
     if (response.statusCode == 200) {
-      for (var i = 0; i < response.body["chats"].length; i++) {
-        ChatCompactModel chatCompactModel =
-            ChatCompactModel.fromJson(response.body['chats'][i]);
-        listChat.add(chatCompactModel);
+      for (var chat in response.body["chats"]) {
+        listChat.add(ChatCompactModel.fromJson(chat));
       }
+      // for (var i = 0; i < response.body["chats"].length; i++) {
+      //   listChat.add(ChatCompactModel.fromJson(response.body["chats"][i]));
+      // }
     }
     // listChat.sort((b, a) => DateTime.parse(a.lastChat!.createdAt!)
     //     .compareTo(DateTime.parse(b.lastChat!.createdAt!)));

@@ -1,5 +1,6 @@
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:focus_detector/focus_detector.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -9,6 +10,7 @@ import 'package:kateringku_mobile/base/no_glow.dart';
 import 'package:kateringku_mobile/controllers/chat_controller.dart';
 
 import '../../constants/app_constant.dart';
+import '../../constants/image_path.dart';
 import '../../routes/route_helper.dart';
 import '../../themes/app_theme.dart';
 
@@ -54,28 +56,47 @@ class _ChatListViewState extends State<ChatListView> {
                 child: Container(
                   child: GestureDetector(
                     onTap: () {
-                      Get.back();
+                      // Get.back();
                     },
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Icon(
-                          Icons.arrow_back,
-                          color: Colors.grey,
-                        ),
-                        SizedBox(
-                          width: 12,
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        Row(
                           children: [
-                            Text("Pesan",
-                                style: AppTheme.textTheme.titleLarge!.copyWith(
-                                    fontSize: 14, fontWeight: FontWeight.w600)),
+                            Transform.translate(
+                              offset: const Offset(0, 2),
+                              child: const Icon(
+                                Icons.message_outlined,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 12,
+                            ),
+                            // SizedBox(
+                            //   width: 10,
+                            // ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text("Pesan",
+                                    style: AppTheme.textTheme.titleLarge!
+                                        .copyWith(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.w600)),
+                              ],
+                            )
                           ],
-                        )
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            chatController.getListChat();
+                          },
+                          child: Icon(
+                            Icons.refresh_rounded,
+                            color: Colors.grey,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -84,25 +105,57 @@ class _ChatListViewState extends State<ChatListView> {
               SizedBox(
                 height: 30,
               ),
-              Expanded(child: Obx(() {
+              Obx(() {
                 if (chatController.isLoadingList.value) {
-                  return Center(
-                      child: CircularProgressIndicator(
-                    color: AppTheme.primaryGreen,
-                  ));
-                } else {
-                  return ScrollConfiguration(
-                    behavior: NoGlow(),
-                    child: ListView.builder(
-                      itemBuilder: (context, index) {
-                        return ChatCard(index: index);
-                      },
-                      itemCount: chatController.listChat.length,
-                      padding: EdgeInsets.only(top: 12, bottom: 12),
-                    ),
+                  return Expanded(
+                    child: Center(
+                        child: CircularProgressIndicator(
+                      color: AppTheme.primaryGreen,
+                    )),
                   );
+                } else {
+                  if (chatController.listChat.isEmpty) {
+                    return Expanded(
+                        child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            child: SvgPicture.asset(ImagePath.emptyCart),
+                            height: 260,
+                            width: 260,
+                          ),
+                          SizedBox(
+                            height: 26,
+                          ),
+                          Text("Chat Anda Masih Kosong",
+                              style: AppTheme.textTheme.titleLarge!.copyWith(
+                                  fontSize: 14, fontWeight: FontWeight.w600)),
+                        ],
+                      ),
+                    ));
+                  } else {
+                    return Expanded(
+                      child: RefreshIndicator(
+                        onRefresh: () async {
+                          chatController.getListChat();
+                        },
+                        color: Colors.white,
+                        backgroundColor: AppTheme.primaryGreen,
+                        child: ListView.builder(
+                          physics: AlwaysScrollableScrollPhysics(
+                              parent: BouncingScrollPhysics()),
+                          itemBuilder: (context, index) {
+                            return ChatCard(index: index);
+                          },
+                          itemCount: chatController.listChat.length,
+                          padding: EdgeInsets.only(top: 12, bottom: 12),
+                        ),
+                      ),
+                    );
+                  }
                 }
-              }))
+              })
             ]),
           ],
         ),
@@ -148,48 +201,40 @@ class ChatCard extends StatelessWidget {
                   SizedBox(
                     width: 10,
                   ),
-                  Expanded(
-                    child: Flexible(
-                      child: Column(
-                        children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                  chatController
-                                      .listChat[index].catering!.name!,
-                                  style: AppTheme.textTheme.titleLarge!
-                                      .copyWith(
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600)),
-                              Text(
-                                  chatController.listChat[index].latestChat!
-                                      .dateWording(),
-                                  style: AppTheme.textTheme.titleLarge!
-                                      .copyWith(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w400)),
-                            ],
-                          ),
-                          SizedBox(
-                            height: 2,
-                          ),
-                          Text(
-                            chatController.listChat[index].latestChat!.message!,
-                            style: AppTheme.textTheme.titleLarge!.copyWith(
-                                fontSize: 13,
-                                fontWeight: FontWeight.w500,
-                                color: AppTheme.secondaryBlack),
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                          SizedBox(
-                            height: 4,
-                          ),
-                          Divider()
-                        ],
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                      ),
+                  Flexible(
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(chatController.listChat[index].catering!.name!,
+                                style: AppTheme.textTheme.titleLarge!.copyWith(
+                                    fontSize: 14, fontWeight: FontWeight.w600)),
+                            Text(
+                                chatController.listChat[index].latestChat!
+                                    .dateWording(),
+                                style: AppTheme.textTheme.titleLarge!.copyWith(
+                                    fontSize: 12, fontWeight: FontWeight.w400)),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 2,
+                        ),
+                        Text(
+                          chatController.listChat[index].latestChat!.message!,
+                          style: AppTheme.textTheme.titleLarge!.copyWith(
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                              color: AppTheme.secondaryBlack),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                        SizedBox(
+                          height: 4,
+                        ),
+                        Divider()
+                      ],
+                      crossAxisAlignment: CrossAxisAlignment.start,
                     ),
                   ),
                 ],

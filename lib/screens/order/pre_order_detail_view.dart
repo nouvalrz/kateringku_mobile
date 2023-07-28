@@ -218,6 +218,38 @@ class _PreOrderDetailViewState extends State<PreOrderDetailView> {
                               decoration:
                                   BoxDecoration(color: AppTheme.primaryOrange),
                             ),
+                            if (orderDetailController.orderDetail.value
+                                        .complaint!.solutionType ==
+                                    "refund" &&
+                                orderDetailController
+                                        .orderDetail.value.complaint!.status ==
+                                    "approve")
+                              Padding(
+                                padding: const EdgeInsets.only(top: 3),
+                                child: Text(
+                                  "*Uang akan dikembalikan ke saldo, maks. 3 hari kerja.",
+                                  style: AppTheme.textTheme.labelMedium!
+                                      .copyWith(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 12),
+                                ),
+                              ),
+                            if (orderDetailController.orderDetail.value
+                                        .complaint!.solutionType !=
+                                    "refund" &&
+                                orderDetailController
+                                        .orderDetail.value.complaint!.status ==
+                                    "approve")
+                              Padding(
+                                padding: const EdgeInsets.only(top: 3),
+                                child: Text(
+                                  "*Mohon atur kesepakatan waktu pengantaran ulang oleh katering di fitur chat",
+                                  style: AppTheme.textTheme.labelMedium!
+                                      .copyWith(
+                                          fontWeight: FontWeight.w400,
+                                          fontSize: 12),
+                                ),
+                              ),
                             SizedBox(
                               height: 10,
                             ),
@@ -778,7 +810,7 @@ class _PreOrderDetailViewState extends State<PreOrderDetailView> {
                   Row(
                     children: [
                       Text(
-                        "Ajukan Komplain",
+                        "Beri Ulasan",
                         style: AppTheme.textTheme.labelMedium!.copyWith(
                             fontWeight: FontWeight.w600, fontSize: 14),
                       ),
@@ -1051,7 +1083,7 @@ class _PreOrderDetailViewState extends State<PreOrderDetailView> {
                             ),
                             if (orderDetailController
                                         .orderDetail.value.review!.hasImage !=
-                                    null ||
+                                    "https://api-kateringku.nouvalrz.my.id/storage/reviews" &&
                                 orderDetailController
                                         .orderDetail.value.review!.hasImage !=
                                     "")
@@ -1061,14 +1093,17 @@ class _PreOrderDetailViewState extends State<PreOrderDetailView> {
                                   children: [
                                     Expanded(
                                         child: Container(
-                                      child: FancyShimmerImage(
-                                        imageUrl: orderDetailController
-                                            .orderDetail
-                                            .value
-                                            .review!
-                                            .hasImage!,
+                                      child: SizedBox(
+                                        width: 10,
+                                        child: FancyShimmerImage(
+                                          imageUrl: orderDetailController
+                                              .orderDetail
+                                              .value
+                                              .review!
+                                              .hasImage!,
+                                        ),
                                       ),
-                                      height: 200,
+                                      width: 10,
                                       decoration: BoxDecoration(
                                           color: Colors.grey[100],
                                           borderRadius:
@@ -1112,6 +1147,11 @@ class _PreOrderDetailViewState extends State<PreOrderDetailView> {
             text: "Menunggu Konfirmasi",
             bgColor: const Color(0xFFF5FFE0),
             textColor: const Color(0xff6a9316));
+      } else if (orderStatus == "ACCEPTED") {
+        return orderStatusBadge(
+            text: "Pesanan Diterima",
+            bgColor: const Color(0xFFE5F3FF),
+            textColor: const Color(0xff2569A8));
       } else if (orderStatus == "NOT_APPROVED") {
         return orderStatusBadge(
             text: "Dibatalkan Katering",
@@ -1119,7 +1159,7 @@ class _PreOrderDetailViewState extends State<PreOrderDetailView> {
             textColor: const Color(0xffD72E2E));
       } else if (orderStatus == "PROCESSED") {
         return orderStatusBadge(
-            text: "Diproses",
+            text: "Sedang Diproses",
             bgColor: const Color(0xFFE8EAFF),
             textColor: const Color(0xff2D3BBC));
       } else if (orderStatus == "SEND") {
@@ -1132,7 +1172,7 @@ class _PreOrderDetailViewState extends State<PreOrderDetailView> {
             text: "Sedang Berlangsung",
             bgColor: const Color(0xFFE6FFE2),
             textColor: const Color(0xff34A023));
-      } else if (orderStatus == "ACCEPTED") {
+      } else if (orderStatus == "RECEIVED") {
         return orderStatusBadge(
             text: "Diterima",
             bgColor: const Color(0xFFE5F3FF),
@@ -1423,11 +1463,11 @@ class _PreOrderDetailViewState extends State<PreOrderDetailView> {
                                         orderDetailController
                                                 .orderDetail.value!.orderStatus! ==
                                             "PAID" ||
-                                        orderDetailController.orderDetail.value!
-                                                .orderStatus! ==
+                                        orderDetailController
+                                                .orderDetail.value!.orderStatus! ==
                                             "COMPLAINT" ||
-                                        orderDetailController.orderDetail.value!
-                                                .orderStatus! ==
+                                        orderDetailController
+                                                .orderDetail.value!.orderStatus! ==
                                             "REQUEST_CANCEL" ||
                                         orderDetailController.orderDetail.value!
                                                 .orderStatus! ==
@@ -1437,7 +1477,13 @@ class _PreOrderDetailViewState extends State<PreOrderDetailView> {
                                             "APPROVED_CANCEL" ||
                                         orderDetailController.orderDetail.value!
                                                 .orderStatus! ==
-                                            "CANCEL_REJECTED"))
+                                            "CANCEL_REJECTED" ||
+                                        orderDetailController.orderDetail.value!
+                                                .orderStatus! ==
+                                            "ACCEPTED" ||
+                                        orderDetailController.orderDetail.value!
+                                                .orderStatus! ==
+                                            "NOT_APPROVED"))
                                   getOrderStatusBadge(
                                       orderStatus: orderDetailController
                                           .orderDetail.value!.orderStatus!)!,
@@ -1459,6 +1505,51 @@ class _PreOrderDetailViewState extends State<PreOrderDetailView> {
                                                 fontWeight: FontWeight.w400,
                                                 decoration:
                                                     TextDecoration.underline),
+                                      ),
+                                    ),
+                                  ),
+                                if (!orderDetailController.isLoading.value &&
+                                    orderDetailController
+                                            .orderDetail.value!.orderStatus! ==
+                                        "NOT_APPROVED")
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 5),
+                                    child: Text(
+                                      "*Uang dikembalikan ke saldo KateringKu",
+                                      style: AppTheme.textTheme.titleLarge!
+                                          .copyWith(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w300,
+                                      ),
+                                    ),
+                                  ),
+                                if (!orderDetailController.isLoading.value &&
+                                    orderDetailController
+                                            .orderDetail.value!.orderStatus! ==
+                                        "APPROVED_CANCEL")
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 5),
+                                    child: Text(
+                                      "*Uang dikembalikan ke saldo KateringKu\ndalam 3 hari kerja.",
+                                      style: AppTheme.textTheme.titleLarge!
+                                          .copyWith(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w300,
+                                      ),
+                                    ),
+                                  ),
+                                if (!orderDetailController.isLoading.value &&
+                                    orderDetailController
+                                            .orderDetail.value!.orderStatus! ==
+                                        "CANCEL_REJECTED")
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 5),
+                                    child: Text(
+                                      "*Pembatalan ditolak! Pesanan\ntetap dilanjutkan.",
+                                      style: AppTheme.textTheme.titleLarge!
+                                          .copyWith(
+                                        fontSize: 10,
+                                        fontWeight: FontWeight.w300,
                                       ),
                                     ),
                                   ),
@@ -1575,7 +1666,13 @@ class _PreOrderDetailViewState extends State<PreOrderDetailView> {
                                     "APPROVED_CANCEL" ||
                                 orderDetailController
                                         .orderDetail.value!.orderStatus! ==
-                                    "CANCEL_REJECTED")) {
+                                    "CANCEL_REJECTED" ||
+                                orderDetailController
+                                        .orderDetail.value!.orderStatus! ==
+                                    "ACCEPTED" ||
+                                orderDetailController
+                                        .orderDetail.value!.orderStatus! ==
+                                    "NOT_APPROVED")) {
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
@@ -1872,12 +1969,7 @@ class _PreOrderDetailViewState extends State<PreOrderDetailView> {
                               ? "..."
                               : CurrencyFormat.convertToIdr(
                                   orderDetailController
-                                          .orderDetail.value.totalPrice! -
-                                      orderDetailController
-                                          .orderDetail.value.deliveryPrice! +
-                                      (orderDetailController
-                                              .orderDetail.value.discount ??
-                                          0),
+                                      .orderDetail.value.totalPrice!,
                                   0),
                           style: AppTheme.textTheme.titleLarge!.copyWith(
                               fontSize: 12, fontWeight: FontWeight.w400));
@@ -1917,8 +2009,7 @@ class _PreOrderDetailViewState extends State<PreOrderDetailView> {
                 if (orderDetailController.isLoading.value) {
                   return Container();
                 } else {
-                  if (orderDetailController.orderDetail.value.discount !=
-                      null) {
+                  if (orderDetailController.orderDetail.value.discount != 0) {
                     return Column(
                       children: [
                         const SizedBox(
@@ -2029,9 +2120,14 @@ class _PreOrderDetailViewState extends State<PreOrderDetailView> {
                               ? "..."
                               : CurrencyFormat.convertToIdr(
                                   orderDetailController
-                                          .orderDetail.value.totalPrice! -
-                                      orderDetailController
-                                          .orderDetail.value.useBalance,
+                                              .orderDetail.value.totalPrice! +
+                                          orderDetailController.orderDetail
+                                              .value.deliveryPrice! -
+                                          orderDetailController
+                                              .orderDetail.value.useBalance -
+                                          orderDetailController
+                                              .orderDetail.value.discount ??
+                                      0,
                                   0),
                           style: AppTheme.textTheme.titleLarge!.copyWith(
                               fontSize: 12, fontWeight: FontWeight.w400));
@@ -2072,7 +2168,7 @@ class _PreOrderDetailViewState extends State<PreOrderDetailView> {
                         );
                       } else if (orderDetailController
                               .orderDetail.value.orderStatus ==
-                          "ACCEPTED") {
+                          "RECEIVED") {
                         return PrimaryButton(
                             title: "Beri Ulasan",
                             onTap: () {
@@ -2172,7 +2268,11 @@ class _PreOrderDetailViewState extends State<PreOrderDetailView> {
                         .orderDetail!.value.deliveryDatetime!);
                     Duration difference = deliveryDay.difference(today);
                     if (orderDetailController.orderDetail.value.orderStatus ==
-                        "ACCEPTED") {
+                            "ACCEPTED" ||
+                        orderDetailController.orderDetail.value.orderStatus ==
+                            "PROCESSED" ||
+                        orderDetailController.orderDetail.value.orderStatus ==
+                            "SEND") {
                       showCustomSnackBar(
                           message: "Pesanan telah diterima!",
                           title: "Tidak bisa cancel");
@@ -2185,7 +2285,7 @@ class _PreOrderDetailViewState extends State<PreOrderDetailView> {
                       Get.defaultDialog(
                           contentPadding: EdgeInsets.all(12),
                           title: "Konfirmasi",
-                          textConfirm: "Hapus",
+                          textConfirm: "Iya, Konfirmasi",
                           textCancel: "Batal",
                           middleTextStyle: AppTheme.textTheme.titleLarge!
                               .copyWith(

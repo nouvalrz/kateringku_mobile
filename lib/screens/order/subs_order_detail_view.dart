@@ -56,6 +56,351 @@ class _SubsOrderDetailViewState extends State<SubsOrderDetailView> {
     initializeDateFormatting('id');
   }
 
+  void showModalDisplayReview() async {
+    await showModalBottomSheet(
+        // isScrollControlled: true,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(12), topRight: Radius.circular(12)),
+        ),
+        context: context,
+        isScrollControlled: true,
+        builder: (context) {
+          return SingleChildScrollView(
+            child: Padding(
+              padding: EdgeInsets.only(
+                  left: 25,
+                  right: 25,
+                  top: 20,
+                  bottom: MediaQuery.of(context).viewInsets.bottom + 20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        "Ulasan Anda",
+                        style: AppTheme.textTheme.labelMedium!.copyWith(
+                            fontWeight: FontWeight.w600, fontSize: 14),
+                      ),
+                      Text(
+                        orderDetailController.orderDetail.value.invoiceNumber!,
+                        style: AppTheme.textTheme.labelMedium!.copyWith(
+                            fontWeight: FontWeight.w400, fontSize: 12),
+                      ),
+                    ],
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  ),
+                  const SizedBox(
+                    height: 28,
+                  ),
+                  Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                          children: [
+                            Text(
+                              "Rating yang anda berikan",
+                              style: AppTheme.textTheme.labelMedium!.copyWith(
+                                  fontWeight: FontWeight.w500, fontSize: 13),
+                            ),
+                            const SizedBox(
+                              height: 8,
+                            ),
+                            RatingBar.builder(
+                              initialRating: orderDetailController
+                                  .orderDetail.value.review!.star!
+                                  .toDouble(),
+                              minRating: 1,
+                              direction: Axis.horizontal,
+                              allowHalfRating: false,
+                              itemCount: 5,
+                              ignoreGestures: true,
+                              itemPadding:
+                                  const EdgeInsets.symmetric(horizontal: 4.0),
+                              itemBuilder: (context, _) => const Icon(
+                                Icons.star,
+                                color: Colors.amber,
+                              ),
+                              onRatingUpdate: (rating) {},
+                            ),
+                            const SizedBox(
+                              height: 14,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Deskripsi Ulasan",
+                                  style: AppTheme.textTheme.labelMedium!
+                                      .copyWith(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 13),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 8,
+                            ),
+                            TextFormField(
+                              maxLines: 5,
+                              initialValue: orderDetailController
+                                  .orderDetail.value.review!.description,
+                              readOnly: true,
+                            ),
+                            const SizedBox(
+                              height: 12,
+                            ),
+                            if (orderDetailController
+                                        .orderDetail.value.review!.hasImage !=
+                                    "https://api.katering-ku.com/storage/reviews" &&
+                                orderDetailController
+                                        .orderDetail.value.review!.hasImage !=
+                                    "")
+                              Padding(
+                                padding: const EdgeInsets.only(bottom: 8),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                        child: Container(
+                                      child: SizedBox(
+                                        width: 10,
+                                        child: FancyShimmerImage(
+                                          imageUrl: orderDetailController
+                                              .orderDetail
+                                              .value
+                                              .review!
+                                              .hasImage!,
+                                        ),
+                                      ),
+                                      width: 10,
+                                      decoration: BoxDecoration(
+                                          color: Colors.grey[100],
+                                          borderRadius:
+                                              BorderRadius.circular(6),
+                                          border: Border.all(
+                                              color: AppTheme.greyOutline,
+                                              width: 0.6)),
+                                    )),
+                                  ],
+                                ),
+                              ),
+                            const SizedBox(
+                              height: 24,
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  void showModalSetReview() async {
+    await showModalBottomSheet(
+        // isScrollControlled: true,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(12), topRight: Radius.circular(12)),
+        ),
+        context: context,
+        isScrollControlled: true,
+        builder: (context) {
+          return SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Padding(
+              padding: EdgeInsets.only(
+                  left: 25,
+                  right: 25,
+                  top: 20,
+                  bottom: MediaQuery.of(context).viewInsets.bottom + 20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        "Beri Ulasan",
+                        style: AppTheme.textTheme.labelMedium!.copyWith(
+                            fontWeight: FontWeight.w600, fontSize: 14),
+                      ),
+                      Text(
+                        orderDetailController.orderDetail.value.invoiceNumber!,
+                        style: AppTheme.textTheme.labelMedium!.copyWith(
+                            fontWeight: FontWeight.w400, fontSize: 12),
+                      ),
+                    ],
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  ),
+                  const SizedBox(
+                    height: 28,
+                  ),
+                  Container(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                          children: [
+                            Text(
+                              "Kasih ratingmu untuk katering ini",
+                              style: AppTheme.textTheme.labelMedium!.copyWith(
+                                  fontWeight: FontWeight.w500, fontSize: 13),
+                            ),
+                            const SizedBox(
+                              height: 8,
+                            ),
+                            RatingBar.builder(
+                              initialRating: 0,
+                              minRating: 1,
+                              direction: Axis.horizontal,
+                              allowHalfRating: false,
+                              itemCount: 5,
+                              itemPadding:
+                                  const EdgeInsets.symmetric(horizontal: 4.0),
+                              itemBuilder: (context, _) => const Icon(
+                                Icons.star,
+                                color: Colors.amber,
+                              ),
+                              onRatingUpdate: (rating) {
+                                reviewController.ratingStar.value = rating;
+                              },
+                            ),
+                            const SizedBox(
+                              height: 14,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Tambah deskripsi",
+                                  style: AppTheme.textTheme.labelMedium!
+                                      .copyWith(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 13),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(
+                              height: 8,
+                            ),
+                            TextFormField(
+                              maxLines: 5,
+                              controller:
+                                  reviewController.reviewDescriptionController,
+                            ),
+                            const SizedBox(
+                              height: 12,
+                            ),
+                            Obx(() {
+                              if (reviewController.isImageUpload.value) {
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 8),
+                                  child: Row(
+                                    children: [
+                                      Expanded(
+                                          child: Container(
+                                        child: Image.file(File(reviewController
+                                            .reviewImage!.path)),
+                                        height: 200,
+                                        decoration: BoxDecoration(
+                                            color: Colors.grey[100],
+                                            borderRadius:
+                                                BorderRadius.circular(6),
+                                            border: Border.all(
+                                                color: AppTheme.greyOutline,
+                                                width: 0.6)),
+                                      )),
+                                    ],
+                                  ),
+                                );
+                              } else {
+                                return Container();
+                              }
+                            }),
+                            GestureDetector(
+                              onTap: () async {
+                                await reviewController.pickImageFromCamera();
+                              },
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                      child: Container(
+                                    height: 46,
+                                    decoration: BoxDecoration(
+                                        color: Colors.grey[100],
+                                        borderRadius: BorderRadius.circular(6),
+                                        border: Border.all(
+                                            color: AppTheme.greyOutline,
+                                            width: 0.6)),
+                                    child: Center(
+                                      child: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          const Icon(
+                                            Icons.camera_alt_outlined,
+                                            color: Colors.grey,
+                                            size: 21,
+                                          ),
+                                          const SizedBox(
+                                            width: 4,
+                                          ),
+                                          Text(
+                                            "Unggah Gambar",
+                                            style: AppTheme
+                                                .textTheme.labelMedium!
+                                                .copyWith(
+                                                    fontWeight: FontWeight.w400,
+                                                    fontSize: 12),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ))
+                                ],
+                              ),
+                            ),
+                            const SizedBox(
+                              height: 24,
+                            ),
+                          ],
+                        )
+                      ],
+                    ),
+                  ),
+                  Row(
+                    children: [
+                      Expanded(child: Obx(() {
+                        return PrimaryButton(
+                            title: 'Konfirmasi',
+                            onTap: () async {
+                              await reviewController.postReview(
+                                  cateringId: orderDetailController
+                                      .orderDetail.value.cateringId!
+                                      .toString(),
+                                  orderId: orderDetailController
+                                      .orderDetail.value.id
+                                      .toString());
+                              Get.back();
+                              orderDetailController.getOrderDetail(id!);
+                            },
+                            state: reviewController.isLoading.value
+                                ? ButtonState.loading
+                                : ButtonState.idle);
+                      }))
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
   //
   // void showModalSetReview() async {
   //   await showModalBottomSheet(
@@ -414,6 +759,11 @@ class _SubsOrderDetailViewState extends State<SubsOrderDetailView> {
             text: "Menunggu Konfirmasi",
             bgColor: const Color(0xFFF5FFE0),
             textColor: const Color(0xff6a9316));
+      } else if (orderStatus == "ACCEPTED") {
+        return orderStatusBadge(
+            text: "Pesanan Diterima",
+            bgColor: const Color(0xFFE5F3FF),
+            textColor: const Color(0xff2569A8));
       } else if (orderStatus == "NOT_APPROVED") {
         return orderStatusBadge(
             text: "Dibatalkan Katering",
@@ -421,7 +771,7 @@ class _SubsOrderDetailViewState extends State<SubsOrderDetailView> {
             textColor: const Color(0xffD72E2E));
       } else if (orderStatus == "PROCESSED") {
         return orderStatusBadge(
-            text: "Diproses",
+            text: "Sedang Diproses",
             bgColor: const Color(0xFFE8EAFF),
             textColor: const Color(0xff2D3BBC));
       } else if (orderStatus == "SEND") {
@@ -434,7 +784,7 @@ class _SubsOrderDetailViewState extends State<SubsOrderDetailView> {
             text: "Sedang Berlangsung",
             bgColor: const Color(0xFFE6FFE2),
             textColor: const Color(0xff34A023));
-      } else if (orderStatus == "ACCEPTED") {
+      } else if (orderStatus == "RECEIVED") {
         return orderStatusBadge(
             text: "Diterima",
             bgColor: const Color(0xFFE5F3FF),
@@ -603,7 +953,10 @@ class _SubsOrderDetailViewState extends State<SubsOrderDetailView> {
                       const Divider(),
                       Obx(() {
                         if (orderDetailController.orderDetail.value.review !=
-                            null) {
+                                null ||
+                            orderDetailController
+                                    .orderDetail.value.orderStatus ==
+                                "RECEIVED") {
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -633,45 +986,97 @@ class _SubsOrderDetailViewState extends State<SubsOrderDetailView> {
                                   //   onRatingUpdate: (rating) {
                                   //   },
                                   // ),
-                                  Container(
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          Icons.star,
-                                          color: AppTheme.primaryOrange,
-                                          size: 20,
-                                        ),
-                                        Text(
-                                            orderDetailController
-                                                .orderDetail.value.review!.star!
-                                                .toString(),
-                                            style: AppTheme
-                                                .textTheme.titleLarge!
-                                                .copyWith(
-                                                    fontSize: 13,
-                                                    fontWeight:
-                                                        FontWeight.w400)),
-                                        SizedBox(
-                                          width: 6,
-                                        ),
-                                        GestureDetector(
-                                          onTap: () {
-                                            // showModalDisplayReview();
-                                          },
-                                          child: Text(
-                                            "Lihat",
-                                            style: AppTheme
-                                                .textTheme.titleLarge!
-                                                .copyWith(
-                                                    fontSize: 13,
-                                                    fontWeight: FontWeight.w400,
-                                                    decoration: TextDecoration
-                                                        .underline),
+                                  if (orderDetailController
+                                          .orderDetail.value.review !=
+                                      null)
+                                    Container(
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            Icons.star,
+                                            color: AppTheme.primaryOrange,
+                                            size: 20,
                                           ),
-                                        )
-                                      ],
+                                          Text(
+                                              orderDetailController.orderDetail
+                                                  .value.review!.star!
+                                                  .toString(),
+                                              style: AppTheme
+                                                  .textTheme.titleLarge!
+                                                  .copyWith(
+                                                      fontSize: 13,
+                                                      fontWeight:
+                                                          FontWeight.w400)),
+                                          SizedBox(
+                                            width: 6,
+                                          ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              showModalDisplayReview();
+                                            },
+                                            child: Text(
+                                              "Lihat",
+                                              style: AppTheme
+                                                  .textTheme.titleLarge!
+                                                  .copyWith(
+                                                      fontSize: 13,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      decoration: TextDecoration
+                                                          .underline),
+                                            ),
+                                          )
+                                        ],
+                                      ),
                                     ),
-                                  )
+                                  if (orderDetailController
+                                              .orderDetail.value.orderStatus ==
+                                          "RECEIVED" &&
+                                      orderDetailController
+                                              .orderDetail.value.review ==
+                                          null)
+                                    Container(
+                                      child: Row(
+                                        children: [
+                                          // Icon(
+                                          //   Icons.star,
+                                          //   color: AppTheme.primaryOrange,
+                                          //   size: 20,
+                                          // ),
+                                          // Text(
+                                          //     orderDetailController
+                                          //         .orderDetail.value.review!.star!
+                                          //         .toString(),
+                                          //     style: AppTheme
+                                          //         .textTheme.titleLarge!
+                                          //         .copyWith(
+                                          //         fontSize: 13,
+                                          //         fontWeight:
+                                          //         FontWeight.w400)),
+                                          // SizedBox(
+                                          //   width: 6,
+                                          // ),
+                                          GestureDetector(
+                                            onTap: () {
+                                              reviewController =
+                                                  Get.find<ReviewController>();
+                                              showModalSetReview();
+                                            },
+                                            child: Text(
+                                              "Tambah Ulasan",
+                                              style: AppTheme
+                                                  .textTheme.titleLarge!
+                                                  .copyWith(
+                                                      fontSize: 13,
+                                                      fontWeight:
+                                                          FontWeight.w400,
+                                                      decoration: TextDecoration
+                                                          .underline),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    )
                                 ],
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -1175,15 +1580,7 @@ class _SubsOrderDetailViewState extends State<SubsOrderDetailView> {
                               ? "..."
                               : CurrencyFormat.convertToIdr(
                                   orderDetailController
-                                          .orderDetail.value.totalPrice! -
-                                      orderDetailController
-                                          .orderDetail.value.deliveryPrice! +
-                                      (orderDetailController
-                                              .orderDetail.value.discount ??
-                                          0) +
-                                      (orderDetailController
-                                              .orderDetail.value.useBalance ??
-                                          0),
+                                      .orderDetail.value.totalPrice!,
                                   0),
                           style: AppTheme.textTheme.titleLarge!.copyWith(
                               fontSize: 12, fontWeight: FontWeight.w400));
@@ -1223,8 +1620,7 @@ class _SubsOrderDetailViewState extends State<SubsOrderDetailView> {
                 if (orderDetailController.isLoading.value) {
                   return Container();
                 } else {
-                  if (orderDetailController.orderDetail.value.discount !=
-                      null) {
+                  if (orderDetailController.orderDetail.value.discount != 0) {
                     return Column(
                       children: [
                         const SizedBox(
@@ -1335,7 +1731,13 @@ class _SubsOrderDetailViewState extends State<SubsOrderDetailView> {
                               ? "..."
                               : CurrencyFormat.convertToIdr(
                                   orderDetailController
-                                      .orderDetail.value.totalPrice!,
+                                          .orderDetail.value.totalPrice! +
+                                      orderDetailController
+                                          .orderDetail.value.deliveryPrice! -
+                                      orderDetailController
+                                          .orderDetail.value.useBalance -
+                                      orderDetailController
+                                          .orderDetail.value.discount,
                                   0),
                           style: AppTheme.textTheme.titleLarge!.copyWith(
                               fontSize: 12, fontWeight: FontWeight.w400));
@@ -1790,6 +2192,52 @@ class _OrderComponentState extends State<OrderComponent> {
                               height: 10,
                             ),
                             Text(
+                              "Pilih Solusi",
+                              style: AppTheme.textTheme.labelMedium!.copyWith(
+                                  fontWeight: FontWeight.w500, fontSize: 13),
+                            ),
+                            SizedBox(
+                              height: 4,
+                            ),
+                            Text(
+                              "Anda bisa pilih solusi yang diinginkan",
+                              style: AppTheme.textTheme.labelMedium!.copyWith(
+                                  fontWeight: FontWeight.w400, fontSize: 11),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            GroupButton(
+                              options: GroupButtonOptions(
+                                  mainGroupAlignment: MainGroupAlignment.start,
+                                  borderRadius: BorderRadius.circular(5),
+                                  selectedColor: AppTheme.primaryGreen,
+                                  runSpacing: 2,
+                                  unselectedTextStyle:
+                                      AppTheme.textTheme.labelMedium!.copyWith(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 13),
+                                  selectedTextStyle:
+                                      AppTheme.textTheme.labelMedium!.copyWith(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 13,
+                                          color: Colors.white)),
+                              isRadio: true,
+                              onSelected: (value, index, isSelected) {
+                                complaintController.solution_type =
+                                    value.toString();
+                                print(value);
+                              },
+                              // onSelected: (index, isSelected) => print('$index button is selected'),
+                              buttons: [
+                                "Pengembalian Dana",
+                                "Pengiriman Ulang",
+                              ],
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
                               "Gambar Bukti",
                               style: AppTheme.textTheme.labelMedium!.copyWith(
                                   fontWeight: FontWeight.w500, fontSize: 13),
@@ -2204,6 +2652,74 @@ class _OrderComponentState extends State<OrderComponent> {
                               decoration:
                                   BoxDecoration(color: AppTheme.primaryOrange),
                             ),
+                            if (subsOrderDetailController
+                                        .orderDetail
+                                        .value
+                                        .orders![widget.orderIndex]
+                                        .complaint!
+                                        .status ==
+                                    "approve" &&
+                                subsOrderDetailController
+                                        .orderDetail
+                                        .value
+                                        .orders![widget.orderIndex]
+                                        .complaint!
+                                        .solutionType ==
+                                    "refund")
+                              Padding(
+                                padding: const EdgeInsets.only(top: 5),
+                                child: Text(
+                                  "*Uang dalam proses pengembalian ke saldo KateringKu",
+                                  style:
+                                      AppTheme.textTheme.titleLarge!.copyWith(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w300,
+                                  ),
+                                ),
+                              ),
+                            if (subsOrderDetailController
+                                        .orderDetail
+                                        .value
+                                        .orders![widget.orderIndex]
+                                        .complaint!
+                                        .status ==
+                                    "approve" &&
+                                subsOrderDetailController
+                                        .orderDetail
+                                        .value
+                                        .orders![widget.orderIndex]
+                                        .complaint!
+                                        .solutionType ==
+                                    "retur")
+                              Padding(
+                                padding: const EdgeInsets.only(top: 5),
+                                child: Text(
+                                  "*Pesanan akan dikirimkan ulang. Silahkan diskusi waktu pengantaran dengan katering melalui chat",
+                                  style:
+                                      AppTheme.textTheme.titleLarge!.copyWith(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w300,
+                                  ),
+                                ),
+                              ),
+                            if (subsOrderDetailController
+                                    .orderDetail
+                                    .value
+                                    .orders![widget.orderIndex]
+                                    .complaint!
+                                    .status ==
+                                "reject")
+                              Padding(
+                                padding: const EdgeInsets.only(top: 5),
+                                child: Text(
+                                  "*Komplain tidak diterima",
+                                  style:
+                                      AppTheme.textTheme.titleLarge!.copyWith(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w300,
+                                  ),
+                                ),
+                              ),
                             SizedBox(
                               height: 10,
                             ),
@@ -2221,6 +2737,31 @@ class _OrderComponentState extends State<OrderComponent> {
                                 subsOrderDetailController.orderDetail.value
                                     .orders![widget.orderIndex].complaint!
                                     .problemWording()!,
+                                style: AppTheme.textTheme.labelMedium!.copyWith(
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 13,
+                                    color: Colors.white),
+                              ),
+                              decoration:
+                                  BoxDecoration(color: AppTheme.primaryGreen),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Text(
+                              "Solusi yang Diinginkan",
+                              style: AppTheme.textTheme.labelMedium!.copyWith(
+                                  fontWeight: FontWeight.w500, fontSize: 13),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(8),
+                              child: Text(
+                                subsOrderDetailController.orderDetail.value
+                                    .orders![widget.orderIndex].complaint!
+                                    .solutionWording(),
                                 style: AppTheme.textTheme.labelMedium!.copyWith(
                                     fontWeight: FontWeight.w500,
                                     fontSize: 13,
@@ -2285,7 +2826,9 @@ class _OrderComponentState extends State<OrderComponent> {
                                                       width: 80,
                                                       height: 80,
                                                       child: FancyShimmerImage(
-                                                        imageUrl:
+                                                        imageUrl: AppConstant
+                                                                .BASE_URL +
+                                                            "storage/complaints/" +
                                                             subsOrderDetailController
                                                                 .orderDetail
                                                                 .value
@@ -2432,6 +2975,21 @@ class _OrderComponentState extends State<OrderComponent> {
                                 .statusWording(),
                             style: AppTheme.textTheme.titleLarge!.copyWith(
                                 fontSize: 13, fontWeight: FontWeight.w400)),
+                        if (subsOrderDetailController.orderDetail.value!
+                                .orders![widget.orderIndex].status ==
+                            "delivered")
+                          Row(
+                            children: [
+                              SizedBox(
+                                width: 4,
+                              ),
+                              Icon(
+                                Icons.check_circle_outline_rounded,
+                                color: AppTheme.primaryGreen,
+                                size: 15,
+                              ),
+                            ],
+                          )
                         // Text(
                         //     subsOrderDetailController
                         //         .orderDetail.value!.orders![widget.orderIndex]

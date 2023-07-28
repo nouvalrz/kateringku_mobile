@@ -280,252 +280,288 @@ class _CateringViewState extends State<CateringView> {
                 const SizedBox(
                   height: 8,
                 ),
-                Column(
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: 65,
-                          height: 65,
-                          decoration: BoxDecoration(
-                              color: Colors.grey[300],
-                              borderRadius: BorderRadius.circular(10)),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: FancyShimmerImage(
-                                imageUrl: cateringModel!.image!),
-                          ),
+                IntrinsicHeight(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: 65,
+                        height: 65,
+                        decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.circular(10)),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: FancyShimmerImage(
+                              imageUrl: cateringModel!.image!),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 20),
-                          child: Row(
-                            children: [
-                              Column(
+                      ),
+                      SizedBox(
+                        width: 20,
+                      ),
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Flexible(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    cateringModel.name!,
-                                    style: AppTheme.textTheme.titleLarge!
-                                        .copyWith(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600),
-                                  ),
-                                  const SizedBox(
-                                    height: 2,
-                                  ),
-                                  Text(cateringModel.mergeCategories(),
-                                      style: AppTheme.textTheme.titleLarge!
-                                          .copyWith(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w400)),
-                                  const SizedBox(
-                                    height: 6,
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        cateringModel.name!,
+                                        style: AppTheme.textTheme.titleLarge!
+                                            .copyWith(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600),
+                                      ),
+                                      const SizedBox(
+                                        height: 2,
+                                      ),
+                                      Text(cateringModel.mergeCategories(),
+                                          style: AppTheme.textTheme.titleLarge!
+                                              .copyWith(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.w400)),
+                                    ],
                                   ),
                                   Row(
                                     children: [
-                                      Transform.translate(
-                                        child: Icon(
-                                          Icons.location_on_outlined,
-                                          color: Colors.grey[600],
-                                          size: 20,
-                                        ),
-                                        offset: const Offset(-3, 0),
-                                      ),
-                                      Text(
-                                        cateringModel
-                                            .village!.name!.capitalize!,
-                                        style: AppTheme.textTheme.labelSmall!
-                                            .copyWith(fontSize: 11),
-                                      ),
-                                      SizedBox(
-                                        child: VerticalDivider(
-                                          color: Colors.grey[500],
-                                          thickness: 0.7,
-                                        ),
-                                        height: 16,
-                                      ),
-                                      Text(
-                                        "Terjual ${cateringModel.totalSales}",
-                                        style: AppTheme.textTheme.labelSmall!
-                                            .copyWith(fontSize: 11),
-                                      ),
-                                      SizedBox(
-                                        child: VerticalDivider(
-                                          color: Colors.grey[500],
-                                          thickness: 0.7,
-                                        ),
-                                        height: 16,
-                                      ),
                                       GestureDetector(
                                         onTap: () {
-                                          if (cateringModel.rate != null) {
-                                            Get.toNamed(
-                                                RouteHelper.cateringReview,
-                                                arguments: {
-                                                  "cateringId":
-                                                      cateringModel.id!,
-                                                  "cateringName":
-                                                      cateringModel.name!
-                                                });
-                                          }
+                                          Get.toNamed(RouteHelper.chat,
+                                              arguments: {
+                                                "cateringId":
+                                                    cateringModel.id.toString(),
+                                                "cateringName":
+                                                    cateringModel.name,
+                                                "cateringImage":
+                                                    cateringModel.image!
+                                              });
                                         },
-                                        child: reviewBadge(
-                                            cateringRate:
-                                                cateringModel.rate ?? null),
-                                      )
+                                        child: Container(
+                                          child: Container(
+                                            child: const Padding(
+                                              padding: EdgeInsets.all(8),
+                                              child: Icon(
+                                                Icons.message_outlined,
+                                                color: AppTheme.primaryGreen,
+                                                size: 18,
+                                              ),
+                                            ),
+                                            decoration: BoxDecoration(
+                                                color: Colors.white,
+                                                border: Border.all(
+                                                    color:
+                                                        AppTheme.primaryGreen),
+                                                borderRadius:
+                                                    BorderRadius.circular(7)),
+                                          ),
+                                        ),
+                                      ),
                                     ],
-                                  ),
-                                  // SizedBox(
-                                  //   height: 10,
-                                  // ),
-                                  // SizedBox(
-                                  //   child: PrimaryButton(
-                                  //     title: "Pesan Langganan",
-                                  //     onTap: () {},
-                                  //     titleStyle: AppTheme.textTheme.titleLarge!
-                                  //         .copyWith(
-                                  //             fontSize: 13,
-                                  //             fontWeight: FontWeight.w600,
-                                  //             color: Colors.white),
-                                  //   ),
-                                  //   width: 175,
-                                  //   height: 44,
-                                  // )
+                                  )
                                 ],
-                                crossAxisAlignment: CrossAxisAlignment.start,
                               ),
-                            ],
-                          ),
-                        ),
-                        Expanded(
-                            child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            GestureDetector(
-                              onTap: () {
-                                Get.toNamed(RouteHelper.chat, arguments: {
-                                  "cateringId": cateringModel.id.toString(),
-                                  "cateringName": cateringModel.name,
-                                  "cateringImage": cateringModel.image!
-                                });
-                              },
-                              child: Container(
-                                child: const Padding(
-                                  padding: EdgeInsets.all(8),
+                            ),
+                            const SizedBox(
+                              height: 6,
+                            ),
+                            Row(
+                              children: [
+                                Transform.translate(
                                   child: Icon(
-                                    Icons.message_outlined,
-                                    color: AppTheme.primaryGreen,
-                                    size: 18,
+                                    Icons.location_on_outlined,
+                                    color: Colors.grey[600],
+                                    size: 20,
                                   ),
+                                  offset: const Offset(-3, 0),
                                 ),
-                                decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    border: Border.all(
-                                        color: AppTheme.primaryGreen),
-                                    borderRadius: BorderRadius.circular(7)),
-                              ),
-                            )
+                                Text(
+                                  cateringModel.village!.name!.capitalize!,
+                                  style: AppTheme.textTheme.labelSmall!
+                                      .copyWith(fontSize: 11),
+                                ),
+                                SizedBox(
+                                  child: VerticalDivider(
+                                    color: Colors.grey[500],
+                                    thickness: 0.7,
+                                  ),
+                                  height: 16,
+                                ),
+                                Text(
+                                  "Terjual ${cateringModel.totalSales}",
+                                  style: AppTheme.textTheme.labelSmall!
+                                      .copyWith(fontSize: 11),
+                                ),
+                                SizedBox(
+                                  child: VerticalDivider(
+                                    color: Colors.grey[500],
+                                    thickness: 0.7,
+                                  ),
+                                  height: 16,
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    if (cateringModel.rate != null) {
+                                      Get.toNamed(RouteHelper.cateringReview,
+                                          arguments: {
+                                            "cateringId": cateringModel.id!,
+                                            "cateringName": cateringModel.name!
+                                          });
+                                    }
+                                  },
+                                  child: reviewBadge(
+                                      cateringRate: cateringModel.rate ?? null),
+                                )
+                              ],
+                            ),
+                            // SizedBox(
+                            //   height: 10,
+                            // ),
+                            // SizedBox(
+                            //   child: PrimaryButton(
+                            //     title: "Pesan Langganan",
+                            //     onTap: () {},
+                            //     titleStyle: AppTheme.textTheme.titleLarge!
+                            //         .copyWith(
+                            //             fontSize: 13,
+                            //             fontWeight: FontWeight.w600,
+                            //             color: Colors.white),
+                            //   ),
+                            //   width: 175,
+                            //   height: 44,
+                            // )
                           ],
-                        ))
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 12,
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        cateringProductController.clearController();
-                        Get.toNamed(RouteHelper.subsSetPeriod, arguments: {
-                          "cateringId": cateringModel.id!,
-                          "cateringLatitude": cateringModel.latitude,
-                          "cateringLongitude": cateringModel.longitude,
-                          "cateringDiscount": cateringModel.discounts,
-                          "cateringDeliveryCost": cateringModel.deliveryCost,
-                          "cateringMinDistanceDelivery":
-                              cateringModel.minDistanceDelivery
-                        });
-                      },
-                      child: Stack(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                        ),
+                      ),
+                      // Expanded(
+                      //     child: Row(
+                      //   crossAxisAlignment: CrossAxisAlignment.end,
+                      //   mainAxisAlignment: MainAxisAlignment.end,
+                      //   children: [
+                      //     // GestureDetector(
+                      //     //   onTap: () {
+                      //     //     Get.toNamed(RouteHelper.chat, arguments: {
+                      //     //       "cateringId": cateringModel.id.toString(),
+                      //     //       "cateringName": cateringModel.name,
+                      //     //       "cateringImage": cateringModel.image!
+                      //     //     });
+                      //     //   },
+                      //     //   child: Container(
+                      //     //     child: const Padding(
+                      //     //       padding: EdgeInsets.all(8),
+                      //     //       child: Icon(
+                      //     //         Icons.message_outlined,
+                      //     //         color: AppTheme.primaryGreen,
+                      //     //         size: 18,
+                      //     //       ),
+                      //     //     ),
+                      //     //     decoration: BoxDecoration(
+                      //     //         color: Colors.white,
+                      //     //         border: Border.all(
+                      //     //             color: AppTheme.primaryGreen),
+                      //     //         borderRadius: BorderRadius.circular(7)),
+                      //     //   ),
+                      //     // )
+                      //   ],
+                      // ))
+                    ],
+                  ),
+                ),
+                const SizedBox(
+                  height: 12,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    cateringProductController.clearController();
+                    Get.toNamed(RouteHelper.subsSetPeriod, arguments: {
+                      "cateringId": cateringModel.id!,
+                      "cateringLatitude": cateringModel.latitude,
+                      "cateringLongitude": cateringModel.longitude,
+                      "cateringDiscount": cateringModel.discounts,
+                      "cateringDeliveryCost": cateringModel.deliveryCost,
+                      "cateringMinDistanceDelivery":
+                          cateringModel.minDistanceDelivery
+                    });
+                  },
+                  child: Stack(
+                    children: [
+                      Container(
+                        height: 60,
+                        decoration: BoxDecoration(
+                            color: AppTheme.primaryGreen,
+                            borderRadius: BorderRadius.circular(9),
+                            border: Border.all(color: AppTheme.primaryGreen)),
+                        child: Row(),
+                      ),
+                      Row(
                         children: [
-                          Container(
-                            height: 60,
-                            decoration: BoxDecoration(
-                                color: AppTheme.primaryGreen,
-                                borderRadius: BorderRadius.circular(9),
-                                border:
-                                    Border.all(color: AppTheme.primaryGreen)),
-                            child: Row(),
+                          const SizedBox(
+                            width: 15,
                           ),
-                          Row(
-                            children: [
-                              const SizedBox(
-                                width: 15,
-                              ),
-                              Expanded(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(9),
-                                      border: Border.all(
-                                          color: AppTheme.primaryGreen)),
-                                  height: 60,
-                                  child: Column(
+                          Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(9),
+                                  border:
+                                      Border.all(color: AppTheme.primaryGreen)),
+                              height: 60,
+                              child: Column(
+                                children: [
+                                  const SizedBox(
+                                    height: 10,
+                                  ),
+                                  Row(
                                     children: [
                                       const SizedBox(
-                                        height: 10,
+                                        width: 12,
                                       ),
-                                      Row(
-                                        children: [
-                                          const SizedBox(
-                                            width: 12,
-                                          ),
-                                          Text(
-                                            "Mau pesanan berlangganan dan terjadwal? Klik Ini",
-                                            style: AppTheme
-                                                .textTheme.labelSmall!
-                                                .copyWith(
-                                                    fontSize: 11,
-                                                    fontWeight:
-                                                        FontWeight.w400),
-                                          ),
-                                        ],
+                                      Text(
+                                        "Mau pesanan berlangganan dan terjadwal? Klik Ini",
+                                        style: AppTheme.textTheme.labelSmall!
+                                            .copyWith(
+                                                fontSize: 11,
+                                                fontWeight: FontWeight.w400),
                                       ),
-                                      const SizedBox(height: 6),
-                                      Row(
-                                        children: [
-                                          const SizedBox(
-                                            width: 12,
-                                          ),
-                                          const Icon(
-                                            Icons.calendar_today_outlined,
-                                            color: Colors.black54,
-                                            size: 16,
-                                          ),
-                                          const SizedBox(
-                                            width: 6,
-                                          ),
-                                          Text(
-                                            "Pesan Berlangganan",
-                                            style: AppTheme
-                                                .textTheme.labelSmall!
-                                                .copyWith(
-                                                    fontSize: 13,
-                                                    fontWeight:
-                                                        FontWeight.w600),
-                                          ),
-                                        ],
-                                      )
                                     ],
                                   ),
-                                ),
+                                  const SizedBox(height: 6),
+                                  Row(
+                                    children: [
+                                      const SizedBox(
+                                        width: 12,
+                                      ),
+                                      const Icon(
+                                        Icons.calendar_today_outlined,
+                                        color: Colors.black54,
+                                        size: 16,
+                                      ),
+                                      const SizedBox(
+                                        width: 6,
+                                      ),
+                                      Text(
+                                        "Pesan Berlangganan",
+                                        style: AppTheme.textTheme.labelSmall!
+                                            .copyWith(
+                                                fontSize: 13,
+                                                fontWeight: FontWeight.w600),
+                                      ),
+                                    ],
+                                  )
+                                ],
                               ),
-                            ],
-                          )
+                            ),
+                          ),
                         ],
-                      ),
-                    )
-                  ],
+                      )
+                    ],
+                  ),
                 ),
                 const SizedBox(
                   height: 36,
@@ -536,7 +572,8 @@ class _CateringViewState extends State<CateringView> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if (cateringModel.discountsCount != 0)
+                      if (cateringModel.discounts! != null &&
+                          cateringModel.discounts!.length != 0)
                         GestureDetector(
                           onTap: () {
                             showModalDiscounts();
@@ -562,7 +599,7 @@ class _CateringViewState extends State<CateringView> {
                                       width: 18,
                                     ),
                                     Text(
-                                        'Lihat Ada ${cateringModel.discountsCount} Diskon untuk kamu',
+                                        'Lihat Ada ${cateringModel.discounts!.length} Diskon untuk kamu',
                                         style: AppTheme.textTheme.titleLarge!
                                             .copyWith(
                                                 fontSize: 12,
@@ -706,194 +743,194 @@ class _CateringViewState extends State<CateringView> {
                     const SizedBox(
                       width: 18,
                     ),
-                    GestureDetector(
-                      onTap: () async {
-                        if (cateringProductController.totalQuantity.value ==
-                            0) {
-                          showCustomSnackBar(
-                              message: "Tambahkan produk terlebih dahulu",
-                              title: "Produk Kosong!");
-                        } else {
-                          return await showModalBottomSheet(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12.0),
-                              ),
-                              context: context,
-                              builder: (context) {
-                                return Container(
-                                  height: 400,
-                                  decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(12)),
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 12,
-                                        right: 16,
-                                        top: 20,
-                                        bottom: 20),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          children: [
-                                            Row(
-                                              children: [
-                                                const SizedBox(
-                                                  width: 6,
-                                                ),
-                                                Text(
-                                                  "Konfirmasi Pesanan",
-                                                  style: AppTheme
-                                                      .textTheme.labelMedium!
-                                                      .copyWith(
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                          fontSize: 14),
-                                                ),
-                                              ],
-                                            ),
-                                            GestureDetector(
-                                              onTap: () {
-                                                // Get.back();
-                                                // Get.offAllNamed(RouteHelper.getMainHome());
-                                                Get.until((route) =>
-                                                    Get.currentRoute ==
-                                                    RouteHelper.mainHome);
-                                                // Get.back();
-                                              },
-                                              child: Container(
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          top: 8,
-                                                          bottom: 8,
-                                                          left: 14,
-                                                          right: 14),
-                                                  child: Text(
-                                                    "Batalkan Pesanan",
-                                                    style: AppTheme
-                                                        .textTheme.labelMedium!
-                                                        .copyWith(
-                                                            fontWeight:
-                                                                FontWeight.w400,
-                                                            fontSize: 12),
-                                                  ),
-                                                ),
-                                                decoration: BoxDecoration(
-                                                    color: Colors.grey[200],
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20)),
-                                              ),
-                                            )
-                                          ],
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                        ),
-                                        const SizedBox(
-                                          height: 12,
-                                        ),
-                                        Container(
-                                          child: SvgPicture.asset(
-                                              ImagePath.addToCart),
-                                          width: 250,
-                                          height: 200,
-                                        ),
-                                        Text(
-                                          "Yah, anda belum menyelesaikan pesanan...\nIngin menyimpan ke Keranjang?",
-                                          textAlign: TextAlign.center,
-                                          style: AppTheme.textTheme.labelMedium!
-                                              .copyWith(
-                                                  fontWeight: FontWeight.w500,
-                                                  fontSize: 13),
-                                        ),
-                                        Expanded(
-                                          child: Container(),
-                                        ),
-                                        Row(
-                                          children: [
-                                            GestureDetector(
-                                              onTap: () {
-                                                Get.back();
-                                              },
-                                              child: Container(
-                                                child: Center(
-                                                  child: Text(
-                                                    "Ubah\nPesanan",
-                                                    textAlign: TextAlign.center,
-                                                    style: AppTheme
-                                                        .textTheme.labelMedium!
-                                                        .copyWith(
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                            fontSize: 14,
-                                                            color: AppTheme
-                                                                .primaryGreen),
-                                                  ),
-                                                ),
-                                                width: 120,
-                                                height: 60,
-                                                decoration: BoxDecoration(
-                                                  color: Colors.white,
-                                                  border: Border.all(
-                                                      color: AppTheme
-                                                          .primaryGreen),
-                                                  borderRadius:
-                                                      BorderRadius.circular(10),
-                                                ),
-                                              ),
-                                            ),
-                                            const SizedBox(
-                                              width: 12,
-                                            ),
-                                            Expanded(
-                                              child: Obx(() {
-                                                return PrimaryButton(
-                                                    title:
-                                                        'Simpan ke Keranjang',
-                                                    onTap: () {
-                                                      cateringProductController
-                                                          .postCart();
-                                                      // var product_list = <ProductForCart>[];
-                                                      // allOrderList.forEach((element) {
-                                                      //   ProductForCart product = ProductForCart(
-                                                      //       product_id: element.product_id,
-                                                      //       quantity: element.quantity);
-                                                      //   product_list.add(product);
-                                                      // });
-                                                      // AddCartBody addCartBody = AddCartBody(
-                                                      //     catering_id: cateringId.toString(),
-                                                      //     product_list: product_list);
-                                                      // cartController.saveCart(addCartBody);
-                                                    },
-                                                    state:
-                                                        cateringProductController
-                                                                .isCartLoading
-                                                                .value
-                                                            ? ButtonState
-                                                                .loading
-                                                            : ButtonState.idle);
-                                              }),
-                                            )
-                                          ],
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              });
-                        }
-                      },
-                      child: Container(
-                        height: 72,
-                        width: 72,
-                        color: AppTheme.primaryGreen,
-                        child: const Center(
-                            child: Icon(
-                          Icons.add_shopping_cart_rounded,
-                          color: Colors.white,
-                        )),
-                      ),
-                    ),
+                    // GestureDetector(
+                    //   onTap: () async {
+                    //     if (cateringProductController.totalQuantity.value ==
+                    //         0) {
+                    //       showCustomSnackBar(
+                    //           message: "Tambahkan produk terlebih dahulu",
+                    //           title: "Produk Kosong!");
+                    //     } else {
+                    //       return await showModalBottomSheet(
+                    //           shape: RoundedRectangleBorder(
+                    //             borderRadius: BorderRadius.circular(12.0),
+                    //           ),
+                    //           context: context,
+                    //           builder: (context) {
+                    //             return Container(
+                    //               height: 400,
+                    //               decoration: BoxDecoration(
+                    //                   color: Colors.white,
+                    //                   borderRadius: BorderRadius.circular(12)),
+                    //               child: Padding(
+                    //                 padding: const EdgeInsets.only(
+                    //                     left: 12,
+                    //                     right: 16,
+                    //                     top: 20,
+                    //                     bottom: 20),
+                    //                 child: Column(
+                    //                   children: [
+                    //                     Row(
+                    //                       children: [
+                    //                         Row(
+                    //                           children: [
+                    //                             const SizedBox(
+                    //                               width: 6,
+                    //                             ),
+                    //                             Text(
+                    //                               "Konfirmasi Pesanan",
+                    //                               style: AppTheme
+                    //                                   .textTheme.labelMedium!
+                    //                                   .copyWith(
+                    //                                       fontWeight:
+                    //                                           FontWeight.w600,
+                    //                                       fontSize: 14),
+                    //                             ),
+                    //                           ],
+                    //                         ),
+                    //                         GestureDetector(
+                    //                           onTap: () {
+                    //                             // Get.back();
+                    //                             // Get.offAllNamed(RouteHelper.getMainHome());
+                    //                             Get.until((route) =>
+                    //                                 Get.currentRoute ==
+                    //                                 RouteHelper.mainHome);
+                    //                             // Get.back();
+                    //                           },
+                    //                           child: Container(
+                    //                             child: Padding(
+                    //                               padding:
+                    //                                   const EdgeInsets.only(
+                    //                                       top: 8,
+                    //                                       bottom: 8,
+                    //                                       left: 14,
+                    //                                       right: 14),
+                    //                               child: Text(
+                    //                                 "Batalkan Pesanan",
+                    //                                 style: AppTheme
+                    //                                     .textTheme.labelMedium!
+                    //                                     .copyWith(
+                    //                                         fontWeight:
+                    //                                             FontWeight.w400,
+                    //                                         fontSize: 12),
+                    //                               ),
+                    //                             ),
+                    //                             decoration: BoxDecoration(
+                    //                                 color: Colors.grey[200],
+                    //                                 borderRadius:
+                    //                                     BorderRadius.circular(
+                    //                                         20)),
+                    //                           ),
+                    //                         )
+                    //                       ],
+                    //                       mainAxisAlignment:
+                    //                           MainAxisAlignment.spaceBetween,
+                    //                     ),
+                    //                     const SizedBox(
+                    //                       height: 12,
+                    //                     ),
+                    //                     Container(
+                    //                       child: SvgPicture.asset(
+                    //                           ImagePath.addToCart),
+                    //                       width: 250,
+                    //                       height: 200,
+                    //                     ),
+                    //                     Text(
+                    //                       "Yah, anda belum menyelesaikan pesanan...\nIngin menyimpan ke Keranjang?",
+                    //                       textAlign: TextAlign.center,
+                    //                       style: AppTheme.textTheme.labelMedium!
+                    //                           .copyWith(
+                    //                               fontWeight: FontWeight.w500,
+                    //                               fontSize: 13),
+                    //                     ),
+                    //                     Expanded(
+                    //                       child: Container(),
+                    //                     ),
+                    //                     Row(
+                    //                       children: [
+                    //                         GestureDetector(
+                    //                           onTap: () {
+                    //                             Get.back();
+                    //                           },
+                    //                           child: Container(
+                    //                             child: Center(
+                    //                               child: Text(
+                    //                                 "Ubah\nPesanan",
+                    //                                 textAlign: TextAlign.center,
+                    //                                 style: AppTheme
+                    //                                     .textTheme.labelMedium!
+                    //                                     .copyWith(
+                    //                                         fontWeight:
+                    //                                             FontWeight.w500,
+                    //                                         fontSize: 14,
+                    //                                         color: AppTheme
+                    //                                             .primaryGreen),
+                    //                               ),
+                    //                             ),
+                    //                             width: 120,
+                    //                             height: 60,
+                    //                             decoration: BoxDecoration(
+                    //                               color: Colors.white,
+                    //                               border: Border.all(
+                    //                                   color: AppTheme
+                    //                                       .primaryGreen),
+                    //                               borderRadius:
+                    //                                   BorderRadius.circular(10),
+                    //                             ),
+                    //                           ),
+                    //                         ),
+                    //                         const SizedBox(
+                    //                           width: 12,
+                    //                         ),
+                    //                         Expanded(
+                    //                           child: Obx(() {
+                    //                             return PrimaryButton(
+                    //                                 title:
+                    //                                     'Simpan ke Keranjang',
+                    //                                 onTap: () {
+                    //                                   cateringProductController
+                    //                                       .postCart();
+                    //                                   // var product_list = <ProductForCart>[];
+                    //                                   // allOrderList.forEach((element) {
+                    //                                   //   ProductForCart product = ProductForCart(
+                    //                                   //       product_id: element.product_id,
+                    //                                   //       quantity: element.quantity);
+                    //                                   //   product_list.add(product);
+                    //                                   // });
+                    //                                   // AddCartBody addCartBody = AddCartBody(
+                    //                                   //     catering_id: cateringId.toString(),
+                    //                                   //     product_list: product_list);
+                    //                                   // cartController.saveCart(addCartBody);
+                    //                                 },
+                    //                                 state:
+                    //                                     cateringProductController
+                    //                                             .isCartLoading
+                    //                                             .value
+                    //                                         ? ButtonState
+                    //                                             .loading
+                    //                                         : ButtonState.idle);
+                    //                           }),
+                    //                         )
+                    //                       ],
+                    //                     ),
+                    //                   ],
+                    //                 ),
+                    //               ),
+                    //             );
+                    //           });
+                    //     }
+                    //   },
+                    //   child: Container(
+                    //     height: 72,
+                    //     width: 72,
+                    //     color: AppTheme.primaryGreen,
+                    //     child: const Center(
+                    //         child: Icon(
+                    //       Icons.add_shopping_cart_rounded,
+                    //       color: Colors.white,
+                    //     )),
+                    //   ),
+                    // ),
                     GestureDetector(
                       onTap: () {
                         if (cateringProductController.totalQuantity == 0) {
@@ -1037,10 +1074,17 @@ class ProductCard extends StatelessWidget {
                                   await Get.toNamed(
                                       RouteHelper.getProductOption(),
                                       arguments: [index]);
+                                  if (cateringProductController.products[index]
+                                      .isAllOptionEmpty()) {
+                                  } else {
+                                    cateringProductController
+                                        .addProductQuantity(index);
+                                  }
                                   cateringProductController.totalPrices();
+                                } else {
+                                  cateringProductController
+                                      .addProductQuantity(index);
                                 }
-                                cateringProductController
-                                    .addProductQuantity(index);
                               },
                               child: Container(
                                 decoration: BoxDecoration(
@@ -1175,31 +1219,22 @@ class ProductCard extends StatelessWidget {
                       children: [
                         if (cateringProductController.products[index]
                             .isProductCustomable())
-                          GestureDetector(
-                            onTap: () async {
-                              await Get.toNamed(RouteHelper.getProductOption(),
-                                  arguments: [index]);
-                              cateringProductController.totalPrices();
-                            },
-                            child: Row(
-                              children: [
-                                Transform.translate(
-                                  child: Icon(
-                                    Icons.dashboard_customize_rounded,
-                                    size: 18,
-                                    color: Colors.grey[500],
-                                  ),
-                                  offset: const Offset(-3, 0),
+                          Row(
+                            children: [
+                              Transform.translate(
+                                child: Icon(
+                                  Icons.dashboard_customize_rounded,
+                                  size: 18,
+                                  color: Colors.grey[500],
                                 ),
-                                Text(
-                                  "Bisa Custom",
-                                  style: AppTheme.textTheme.titleLarge!
-                                      .copyWith(
-                                          fontSize: 11,
-                                          fontWeight: FontWeight.w400),
-                                )
-                              ],
-                            ),
+                                offset: const Offset(-3, 0),
+                              ),
+                              Text(
+                                "Bisa Custom",
+                                style: AppTheme.textTheme.titleLarge!.copyWith(
+                                    fontSize: 11, fontWeight: FontWeight.w400),
+                              )
+                            ],
                           )
                       ],
                     )

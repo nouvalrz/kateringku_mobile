@@ -2,13 +2,13 @@ class AppConstant {
   // static const BASE_URL = "https://catering-marketplace.nouvalrz.my.id/";
   // static const BASE_URL = "http://10.0.2.2:8080/";
   // static const BASE_URL = "http://127.0.0.1:8080/";
-  static const BASE_URL = "https://api.katering-ku.com/";
+  static const BASE_URL = "https://api-kateringku.nouvalrz.my.id/";
   static const TOKEN = "token";
   static const TYPE = "type";
   static const MAIN_ADDRESS = "main_address";
 
   // NGROK for midtrans
-  static const BASE_URL_NGROK = "https://api.katering-ku.com/";
+  static const BASE_URL_NGROK = "https://api-kateringku.nouvalrz.my.id/";
 
   // auth endpoint
   static const LOGIN_URI = "api/customer/login";

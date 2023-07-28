@@ -35,6 +35,7 @@ class SubsOrderDetailController extends GetxController {
   Future<void> setOrderToAccepted({required Map<String, dynamic> date}) async {
     isSetOrderToAcceptedLoading.value = true;
     Response response = await orderRepo.setSubsOrderToAccepted(date);
+    isSetOrderToAcceptedLoading.value = false;
     isLoading.value = false;
   }
 }

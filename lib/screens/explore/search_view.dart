@@ -19,13 +19,18 @@ class _SearchViewState extends State<SearchView> {
   var searchController = Get.find<SearchController>();
   String? districtName;
   String? keyword;
+  double? customerLatitude;
+  double? customerLongitude;
 
   @override
   void initState() {
     keyword = Get.arguments!['keyword'];
     districtName = Get.arguments!['district_name'];
+    customerLatitude = double.parse(Get.arguments!['customer_latitude']);
+    customerLongitude = double.parse(Get.arguments!['customer_longitude']);
     searchController.searchTextController.text = keyword!;
-    searchController.getSearchResult(keyword!, districtName!);
+    searchController.getSearchResult(
+        keyword!, districtName!, customerLatitude!, customerLongitude!);
   }
 
   @override
@@ -58,7 +63,8 @@ class _SearchViewState extends State<SearchView> {
             child: TextFormField(
                 controller: searchController.searchTextController,
                 onFieldSubmitted: (value) {
-                  searchController.getSearchResult(value, districtName!);
+                  searchController.getSearchResult(value, districtName!,
+                      customerLatitude!, customerLongitude!);
                 },
                 decoration: InputDecoration(
                     hintText: "Mau cari apa?",
@@ -92,6 +98,8 @@ class _SearchViewState extends State<SearchView> {
                     return Padding(
                         padding: EdgeInsets.only(left: 25, right: 25),
                         child: DashboardProductCard(
+                          cateringDistance:
+                              searchController.cateringResult[index].distance!,
                           cateringRate:
                               searchController.cateringResult[index].rate,
                           fromSearch: true,

@@ -84,20 +84,34 @@ class _DashboardViewState extends State<DashboardView> {
                                   Padding(
                                     padding: const EdgeInsets.only(left: 4),
                                     child: Obx(
-                                      () => Text(
-                                        customerDashboardController
-                                                    .location.value.length >
-                                                35
-                                            ? customerDashboardController
-                                                    .location.value
-                                                    .substring(0, 35) +
-                                                "..."
-                                            : customerDashboardController
-                                                .location.value,
-                                        style: AppTheme.textTheme.labelMedium!
-                                            .copyWith(
-                                                color: Colors.white,
-                                                fontWeight: FontWeight.w500),
+                                      () => Row(
+                                        children: [
+                                          Text(
+                                            customerDashboardController
+                                                        .location.value.length >
+                                                    45
+                                                ? customerDashboardController
+                                                        .location.value
+                                                        .substring(0, 45) +
+                                                    "..."
+                                                : customerDashboardController
+                                                    .location.value,
+                                            style: AppTheme
+                                                .textTheme.labelMedium!
+                                                .copyWith(
+                                                    color: Colors.white,
+                                                    fontWeight:
+                                                        FontWeight.w500),
+                                          ),
+                                          SizedBox(
+                                            width: 2,
+                                          ),
+                                          Icon(
+                                            Icons.arrow_forward_ios_rounded,
+                                            color: Colors.white,
+                                            size: 13,
+                                          )
+                                        ],
                                       ),
                                     ),
                                   ),
@@ -107,15 +121,15 @@ class _DashboardViewState extends State<DashboardView> {
                           ],
                         ),
                       ),
-                      GestureDetector(
-                        onTap: () {
-                          Get.toNamed(RouteHelper.chatList);
-                        },
-                        child: const Icon(
-                          Icons.message_outlined,
-                          color: Colors.white,
-                        ),
-                      )
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     Get.toNamed(RouteHelper.chatList);
+                      //   },
+                      //   child: const Icon(
+                      //     Icons.message_outlined,
+                      //     color: Colors.white,
+                      //   ),
+                      // )
                     ],
                   ),
                 ),
@@ -157,7 +171,7 @@ class _DashboardViewState extends State<DashboardView> {
                       scrollDirection: Axis.horizontal,
                       children: [
                         DashboardCategory(
-                          title: "Aneka Nasi",
+                          title: "Nasi",
                           imagePath: ImagePath.riceboxCategory,
                           imageHeight: 35,
                         ),
@@ -263,6 +277,11 @@ class _DashboardViewState extends State<DashboardView> {
                                                   right: 25,
                                                   bottom: 4),
                                               child: DashboardProductCard(
+                                                cateringDistance:
+                                                    customerDashboardController
+                                                        .relevantCaterings[
+                                                            index]
+                                                        .distance!,
                                                 cateringDisplayModel:
                                                     customerDashboardController
                                                             .relevantCaterings[
@@ -394,6 +413,7 @@ class DashboardProductCard extends StatefulWidget {
   int bestProductCateringPrice1;
   String bestProductCateringImage1;
   String? bestProductCateringImage2;
+  double cateringDistance;
   int? bestProductCateringPrice2;
   CateringDisplayModel cateringDisplayModel;
 
@@ -417,6 +437,7 @@ class DashboardProductCard extends StatefulWidget {
       required this.cateringLongitude,
       required this.cateringDisplayModel,
       required this.cateringRate,
+      required this.cateringDistance,
       this.fromSearch = false})
       : super(key: key);
 
@@ -642,7 +663,9 @@ class _DashboardProductCardState extends State<DashboardProductCard> {
                                   const SizedBox(
                                     width: 4,
                                   ),
-                                  Text(widget.cateringLocation,
+                                  Text(
+                                      widget.cateringLocation +
+                                          " (${widget.cateringDistance}km)",
                                       style: AppTheme.textTheme.labelSmall!
                                           .copyWith(fontSize: 11)),
                                   Text(" | ",
@@ -756,7 +779,11 @@ class DashboardCategory extends StatelessWidget {
         Get.toNamed(RouteHelper.category, arguments: {
           "district_name":
               customerDashboardController.addressModel!.districtName!,
-          "keyword": title
+          "keyword": title,
+          "customer_latitude":
+              customerDashboardController.addressModel!.latitude,
+          "customer_longitude":
+              customerDashboardController.addressModel!.longitude,
         });
       },
       child: Padding(

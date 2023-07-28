@@ -59,9 +59,16 @@ class SubsOrderDetailForCateringModel {
         : null;
     if (json["discount"] != null) {
       Map<String, dynamic> discountDecode = jsonDecode(json["discount"]);
-      discount = discountDecode["jumlah"];
+      discount = parseInt(discountDecode["jumlah"]) == 0
+          ? null
+          : parseInt(discountDecode["jumlah"]);
     }
     review = json['review'] != null ? Review.fromJson(json['review']) : null;
+  }
+
+  int parseInt(dynamic s) {
+    if (s.runtimeType == String) return int.parse(s);
+    return s as int;
   }
 
   String orderTypeWording() {

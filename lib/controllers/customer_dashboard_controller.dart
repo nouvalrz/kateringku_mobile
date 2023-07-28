@@ -14,9 +14,8 @@ import 'dart:developer';
 
 import 'package:kateringku_mobile/services/location_service.dart';
 
-
-class CustomerDashboardController extends GetxController implements GetxService {
-
+class CustomerDashboardController extends GetxController
+    implements GetxService {
   // For Get Location
   late StreamSubscription<Position> streamSubscription;
   Position? currentCoordinates;
@@ -30,33 +29,37 @@ class CustomerDashboardController extends GetxController implements GetxService 
   LocationService locationService = LocationService();
   final RelevantCateringProductsRepo relevantCateringProductsRepo;
 
-  CustomerDashboardController(
-      {required this.relevantCateringProductsRepo});
+  CustomerDashboardController({required this.relevantCateringProductsRepo});
 
   @override
   void onInit() async {
     super.onInit();
 
     currentCoordinates = await locationService.getCoordinates();
-     addressModel = await locationService.getAddressFromCoordinates(currentCoordinates!);
+    addressModel =
+        await locationService.getAddressFromCoordinates(currentCoordinates!);
     location.value = addressModel!.address!;
 
     RelevantCateringProductsRequestBody relevantCateringProductsRequestBody =
-        RelevantCateringProductsRequestBody(location: addressModel!.districtName!);
+        RelevantCateringProductsRequestBody(
+            location: addressModel!.districtName!,
+            latitude: double.parse(addressModel!.latitude!),
+            longitude: double.parse(addressModel!.longitude!));
     await getRelevantCateringProducts(relevantCateringProductsRequestBody);
   }
 
-  Future<void> getAgainRelevantCateringProducts(Position position) async{
+  Future<void> getAgainRelevantCateringProducts(Position position) async {
     location.value = "...";
     addressModel = await locationService.getAddressFromCoordinates(position);
     location.value = addressModel!.address!;
 
-
     RelevantCateringProductsRequestBody relevantCateringProductsRequestBody =
-    RelevantCateringProductsRequestBody(location: addressModel!.districtName!);
+        RelevantCateringProductsRequestBody(
+            location: addressModel!.districtName!,
+            latitude: double.parse(addressModel!.latitude!),
+            longitude: double.parse(addressModel!.longitude!));
     await getRelevantCateringProducts(relevantCateringProductsRequestBody);
-}
-
+  }
 
   Future<void> getRelevantCateringProducts(
       RelevantCateringProductsRequestBody
@@ -67,16 +70,28 @@ class CustomerDashboardController extends GetxController implements GetxService 
         .getRelevantCateringProducts(relevantCateringProductsRequestBody);
     if (response.statusCode == 200) {
       for (var i = 0; i < response.body['caterings'].length; i++) {
-        relevantCaterings.add(CateringDisplayModel.fromJson(response.body['caterings'][i]));
+        relevantCaterings
+            .add(CateringDisplayModel.fromJson(response.body['caterings'][i]));
+      }
+      for (var catering in relevantCaterings) {
+        for (var j = 0; j < response.body['admin_discounts'].length; j++) {
+          catering.discounts!
+              .add(Discount.fromJson(response.body['admin_discounts'][j]));
+        }
       }
       isLoading.value = false;
       update();
     }
   }
 
-  void search(){
+  void search() {
     var keyword = searchInputController.value.text;
-    Get.toNamed(RouteHelper.search, arguments: {"keyword": keyword, "district_name": addressModel!.districtName!});
+    Get.toNamed(RouteHelper.search, arguments: {
+      "keyword": keyword,
+      "district_name": addressModel!.districtName!,
+      'customer_latitude': addressModel!.latitude!,
+      'customer_longitude': addressModel!.longitude!
+    });
   }
 
   // void getRelavantCatering() async {

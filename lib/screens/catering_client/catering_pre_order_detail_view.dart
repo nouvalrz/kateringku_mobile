@@ -1040,6 +1040,11 @@ class _CateringPreOrderDetailViewState
             text: "Menunggu Konfirmasi",
             bgColor: const Color(0xFFF5FFE0),
             textColor: const Color(0xff6a9316));
+      } else if (orderStatus == "ACCEPTED") {
+        return orderStatusBadge(
+            text: "Pesanan Diterima",
+            bgColor: const Color(0xFFE5F3FF),
+            textColor: const Color(0xff2569A8));
       } else if (orderStatus == "NOT_APPROVED") {
         return orderStatusBadge(
             text: "Dibatalkan Katering",
@@ -1047,7 +1052,7 @@ class _CateringPreOrderDetailViewState
             textColor: const Color(0xffD72E2E));
       } else if (orderStatus == "PROCESSED") {
         return orderStatusBadge(
-            text: "Diproses",
+            text: "Sedang Diproses",
             bgColor: const Color(0xFFE8EAFF),
             textColor: const Color(0xff2D3BBC));
       } else if (orderStatus == "SEND") {
@@ -1060,7 +1065,7 @@ class _CateringPreOrderDetailViewState
             text: "Sedang Berlangsung",
             bgColor: const Color(0xFFE6FFE2),
             textColor: const Color(0xff34A023));
-      } else if (orderStatus == "ACCEPTED") {
+      } else if (orderStatus == "RECEIVED") {
         return orderStatusBadge(
             text: "Diterima",
             bgColor: const Color(0xFFE5F3FF),
@@ -1070,6 +1075,31 @@ class _CateringPreOrderDetailViewState
             text: "Komplain",
             bgColor: const Color(0xFFFFEEEE),
             textColor: const Color(0xffC63939));
+      } else if (orderStatus == "CANCEL_BY_SISTEM") {
+        return orderStatusBadge(
+            text: "Dibatalkan Otomatis",
+            bgColor: const Color(0xFFFFEBEB),
+            textColor: const Color(0xffD72E2E));
+      } else if (orderStatus == "REQUEST_CANCEL") {
+        return orderStatusBadge(
+            text: "Pengajuan Cancel",
+            bgColor: const Color(0xFFFFEBEB),
+            textColor: const Color(0xffD72E2E));
+      } else if (orderStatus == "APPROVED_CANCEL") {
+        return orderStatusBadge(
+            text: "Pembatalan Disetujui",
+            bgColor: const Color(0xFFFFEBEB),
+            textColor: const Color(0xffD72E2E));
+      } else if (orderStatus == "CANCEL_REJECTED") {
+        return orderStatusBadge(
+            text: "Pembatalan Gagal",
+            bgColor: const Color(0xFFFFEBEB),
+            textColor: const Color(0xffD72E2E));
+      } else if (orderStatus == "PENDING") {
+        return orderStatusBadge(
+            text: "Pending",
+            bgColor: const Color(0xFFFFEBEB),
+            textColor: const Color(0xffD72E2E));
       }
     }
   }
@@ -1301,8 +1331,7 @@ class _CateringPreOrderDetailViewState
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
                                 if (!orderDetailController.isLoading.value &&
-                                    (orderDetailController.preOrderDetailModel!.orderStatus! ==
-                                            "UNPAID" ||
+                                    (orderDetailController.preOrderDetailModel!.orderStatus! == "UNPAID" ||
                                         orderDetailController
                                                 .preOrderDetailModel!
                                                 .orderStatus! ==
@@ -1318,7 +1347,11 @@ class _CateringPreOrderDetailViewState
                                         orderDetailController
                                                 .preOrderDetailModel!
                                                 .orderStatus! ==
-                                            "NOT_APPROVED"))
+                                            "NOT_APPROVED" ||
+                                        orderDetailController
+                                                .preOrderDetailModel!
+                                                .orderStatus! ==
+                                            "ACCEPTED"))
                                   getOrderStatusBadge(
                                       orderStatus: orderDetailController
                                           .preOrderDetailModel!.orderStatus!)!,
@@ -1445,7 +1478,10 @@ class _CateringPreOrderDetailViewState
                                     "COMPLAINT" ||
                                 orderDetailController
                                         .preOrderDetailModel!.orderStatus! ==
-                                    "NOT_APPROVED")) {
+                                    "NOT_APPROVED" ||
+                                orderDetailController
+                                        .preOrderDetailModel!.orderStatus! ==
+                                    "ACCEPTED")) {
                           return Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
@@ -1793,12 +1829,7 @@ class _CateringPreOrderDetailViewState
                               ? "..."
                               : CurrencyFormat.convertToIdr(
                                   orderDetailController
-                                          .preOrderDetailModel!.totalPrice! -
-                                      orderDetailController
-                                          .preOrderDetailModel!.deliveryPrice! +
-                                      (orderDetailController
-                                              .preOrderDetailModel!.discount ??
-                                          0),
+                                      .preOrderDetailModel!.totalPrice!,
                                   0),
                           style: AppTheme.textTheme.titleLarge!.copyWith(
                               fontSize: 12, fontWeight: FontWeight.w400));
@@ -1839,7 +1870,7 @@ class _CateringPreOrderDetailViewState
                   return Container();
                 } else {
                   if (orderDetailController.preOrderDetailModel!.discount !=
-                      null) {
+                      0) {
                     return Column(
                       children: [
                         const SizedBox(
@@ -1951,7 +1982,12 @@ class _CateringPreOrderDetailViewState
                               ? "..."
                               : CurrencyFormat.convertToIdr(
                                   orderDetailController
-                                      .preOrderDetailModel!.totalPrice!,
+                                          .preOrderDetailModel!.totalPrice! +
+                                      orderDetailController
+                                          .preOrderDetailModel!.deliveryPrice! -
+                                      (orderDetailController
+                                              .preOrderDetailModel!.discount ??
+                                          0),
                                   0),
                           style: AppTheme.textTheme.titleLarge!.copyWith(
                               fontSize: 12, fontWeight: FontWeight.w400));
@@ -2101,7 +2137,7 @@ class _CateringPreOrderDetailViewState
               child: PrimaryButton(
                 title: "Terima",
                 onTap: () {
-                  showModalChangeStatus("PROCESSED", "Pesanan Diterima");
+                  showModalChangeStatus("ACCEPTED", "Pesanan Diterima");
                   // orderDetailController.changeOrderStatus("PROCESSED");
                 },
                 state: ButtonState.idle,
@@ -2122,17 +2158,29 @@ class _CateringPreOrderDetailViewState
           state: ButtonState.idle,
         );
         //  Status is another else, disabled button.
+      } else if (orderDetailController.preOrderDetailModel!.orderStatus! ==
+          "ACCEPTED") {
+        return PrimaryButton(
+          title: "Proses Pesanan",
+          onTap: () {
+            showModalChangeStatus("PROCESSED", "Pesanan Diproses");
+
+            // orderDetailController.changeOrderStatus("SEND");
+          },
+          state: ButtonState.idle,
+        );
+        //  Status is another else, disabled button.
       } else if ([
         "UNPAID",
         "VOID",
         "NOT_APPROVED",
         "SEND",
-        "ACCEPTED",
+        "RECEIVED",
         "COMPLAINT"
       ].contains(orderDetailController.preOrderDetailModel!.orderStatus!)) {
         return PrimaryButton(
           title: orderDetailController.preOrderDetailModel!.orderStatus! ==
-                  "ACCEPTED"
+                  "RECEIVED"
               ? "Pesanan Selesai"
               : "Ubah Status",
           onTap: () {},

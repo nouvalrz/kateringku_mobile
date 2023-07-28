@@ -20,7 +20,7 @@ class PreOrderDetailModel {
   String? image;
   String? cateringId;
   String? paymentExpiry;
-  int? discount;
+  int discount = 0;
   Review? review;
   Complaint? complaint;
   int useBalance = 0;
