@@ -9,7 +9,7 @@ The solution is to develop a mobile application that serves as a marketplace, al
 
 Overall, this marketplace app bridges the gap between caterers and customers, enhancing the accessibility and efficiency of the catering industry.
 
-##
+## Preview
 ![Preview](screenshots/app-preview.png)
 
 ## Tech Requirements
