@@ -44,6 +44,7 @@ class RouteHelper {
   static const String midtransPayment = '/midtrans-payment';
   static const String orderDetail = '/order-detail';
   static const String subsOrderDetail = '/subs-order-detail';
+  
 
   static const String search = "/search";
   static const String category = "/category";

@@ -19,6 +19,8 @@ class AddAddressController extends GetxController{
     getAddressFromLatLang(center);
   }
 
+  void o
+
   Future<void> getAddressFromLatLang(LatLng latLng) async {
     isLoading.value = true;
     List<Placemark> placemark =
