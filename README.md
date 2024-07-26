@@ -1,16 +1,23 @@
-# kateringku_mobile
+# KateringKu
 
-A new Flutter project.
+A comprehensive marketplace application, developed using Flutter and Laravel, that connects caterers with buyers, enabling seamless transactions with features for direct ordering and payment within the app, ensuring a smooth and efficient food purchasing experience.
 
-## Getting Started
+## Problem & Solution
+The problem addressed is the difficulty faced by many catering businesses in establishing an online presence and the mismatch between popular online food delivery apps like GoFood and GrabFood with their production systems. 
 
-This project is a starting point for a Flutter application.
+The solution is to develop a mobile application that serves as a marketplace, allowing catering services to market their products online. This platform would include features for easy ordering and payment within the app. Additionally, buyers would have the option to subscribe to meal plans with flexible delivery schedules suited to their needs.
 
-A few resources to get you started if this is your first Flutter project:
+Overall, this marketplace app bridges the gap between caterers and customers, enhancing the accessibility and efficiency of the catering industry.
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+##
+image
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Tech Requirements
+- Flutter
+- Laravel (RestAPI)
+- MySQL
+- Firebase Cloud Messaging
+- Mapbox
+- Midtrans
+
+
